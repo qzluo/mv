@@ -1,0 +1,16 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/zoomin.png</file>
+        <file>images/zoomout.png</file>
+        <file>images/inspect_icon.png</file>
+        <file>images/tool_icon.png</file>
+        <file>images/waiting_icon.png</file>
+        <file>images/camera.png</file>
+        <file>images/start_sys.png</file>
+        <file>images/stop_sys.png</file>
+        <file>images/start.png</file>
+        <file>images/stop.png</file>
+        <file>images/calibration.png</file>
+        <file>images/parameter.png</file>
+    </qresource>
+</RCC>
