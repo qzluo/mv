@@ -7,9 +7,7 @@
 #include "qselectcameratypedlg.h"
 #include "qframecalinfosetupdlg.h"
 #include "qalgparassetupdlg.h"
-
-#include <QDateTime>
-
+#include "qrtuoperatordlg.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -51,16 +49,21 @@ MainWindow::MainWindow(QWidget *parent) :
 
     QMenu* setupMenu = new QMenu(this);
     QAction* frameCalSetupAction = new QAction(QPixmap(":/images/calibration.png"),
-                                               "Frame Calibration Setup", this);
+                                               tr("Frame Calibration Setup"), this);
     QAction* algParasSetupAction = new QAction(QPixmap(":/images/parameter.png"),
-                                               "Algorithm Parameters Setup", this);
+                                               tr("Algorithm Parameters Setup"), this);
+    modbusCmdAction = new QAction(QPixmap(":/images/parameter.png"),
+                                               tr("Modbus Command"), this);
     connect(frameCalSetupAction, &QAction::triggered,
             this, &MainWindow::onFrameCalActionTriggered);
     connect(algParasSetupAction, &QAction::triggered,
             this, &MainWindow::onAlgParasActionTriggered);
+    connect(modbusCmdAction, &QAction::triggered,
+            this, &MainWindow::onModbusCmdActionTriggered);
 
     setupMenu->addAction(frameCalSetupAction);
     setupMenu->addAction(algParasSetupAction);
+    setupMenu->addAction(modbusCmdAction);
 
     setupToolBtn->setMenu(setupMenu);
     setupToolBtn->setPopupMode(QToolButton::MenuButtonPopup);
@@ -72,17 +75,18 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->mainToolBar->addSeparator();
     ui->mainToolBar->addWidget(setupToolBtn);
 
+    onSystemStateStopped();
+
     qDebug() << "Current currentThreadId" << QThread::currentThreadId();
 
     plot = new GraphicsWidget(this);
 
     QLabel* resultLabel = new QLabel("Result:", this);
-    resultLE = new QLineEdit(this);
+    resultTB = new QTextBrowser(this);
 
     QVBoxLayout* btnLayout = new QVBoxLayout;
-    btnLayout->addStretch();
     btnLayout->addWidget(resultLabel);
-    btnLayout->addWidget(resultLE);
+    btnLayout->addWidget(resultTB);
 
     QWidget* mainWidget = new QWidget();
     QHBoxLayout* topLayout = new QHBoxLayout(mainWidget);
@@ -91,20 +95,68 @@ MainWindow::MainWindow(QWidget *parent) :
 
     setCentralWidget(mainWidget);
 
-    //connect
-    connect(&rc, &MainResource::hasImage,
-            this, &MainWindow::onHasImage);
-
-    connect(&rc, &MainResource::inspectDone,
-            this, &MainWindow::onInspectDone);
-
     setWindowState(this->windowState() ^ Qt::WindowMaximized);
     setWindowTitle(tr("Jujube Inspect Program"));
+
+//    tester.testInit();
+//    tester.testZaoInspect();
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::init()
+{
+    mic->init();
+
+    //connect
+    connect(mic, &MainResource::hasImage,
+            this, &MainWindow::onHasImage);
+
+    connect(mic, &MainResource::inspectDone,
+            this, &MainWindow::onInspectDone);
+}
+
+void MainWindow::onSystemStateStarted()
+{
+    selCamTypeToolBtn->setEnabled(false);
+    startSysToolBtn->setIcon(QPixmap(":/images/stop_sys.png"));
+    startSysToolBtn->setText(tr("Stop System"));
+
+    startInspectToolBtn->setEnabled(true);
+    modbusCmdAction->setEnabled(true);
+}
+
+void MainWindow::onSystemStateStopped()
+{
+    selCamTypeToolBtn->setEnabled(true);
+    startSysToolBtn->setIcon(QPixmap(":/images/start_sys.png"));
+    startSysToolBtn->setText(tr("Start System"));
+
+    startInspectToolBtn->setIcon(QPixmap(":/images/start.png"));
+    startInspectToolBtn->setText(tr("Start Inspect"));
+    startInspectToolBtn->setEnabled(false);
+
+    modbusCmdAction->setEnabled(false);
+    setupToolBtn->setEnabled(true);
+}
+
+void MainWindow::onInspectStateStarted()
+{
+    startInspectToolBtn->setIcon(QPixmap(":/images/stop.png"));
+    startInspectToolBtn->setText(tr("Stop Inspect"));
+
+    setupToolBtn->setEnabled(false);
+}
+
+void MainWindow::onInspectStateStopped()
+{
+    startInspectToolBtn->setIcon(QPixmap(":/images/start.png"));
+    startInspectToolBtn->setText(tr("Start Inspect"));
+
+    setupToolBtn->setEnabled(true);
 }
 
 void MainWindow::onHasImage(const QImage& image)
@@ -114,61 +166,69 @@ void MainWindow::onHasImage(const QImage& image)
 
 void MainWindow::onInspectDone(DetectResult result)
 {
-    resultLE->setText(QString("%1: %2").arg(result.frameId).arg(result.result));
+    QString strText = QString(tr("Current Frame id: %1\n")).arg(result.frameId);
+    if (result.result < 0)
+        strText += QString(tr("Current Inspect result: Faile\n"));
+    else {
+        strText += QString(tr("Current Inspect result: Succeed\n"));
+        strText += QString(tr("Left Colume Result: %1\n")).arg(result.left_col_result);
+        strText += QString(tr("Right Colume Result: %1\n")).arg(result.right_col_result);
 
-    if (rc.getInspectState() == INSPECT_STATE_INSPECTED)
+        QVector<ZaoInfo> vecZaoInfo = result.curFrameZaoInfo.value<QVector<ZaoInfo> >();
+        strText += QString(tr("Product Count: %1\n")).arg(vecZaoInfo.size());
+        strText += QString(tr("Product Info:\n"));
+        for (int i = 0; i < vecZaoInfo.size(); ++i) {
+            strText += QString(tr("  %1. Product Class: %2,"
+                                  " Product Positon: (%3, %4, %5, %6)\n")).
+                    arg(i + 1).arg(vecZaoInfo[i].classId).
+                    arg(vecZaoInfo[i].zaoPos.x).arg(vecZaoInfo[i].zaoPos.y).
+                    arg(vecZaoInfo[i].zaoPos.width).arg(vecZaoInfo[i].zaoPos.height);
+        }
+    }
+
+    resultTB->setText(strText);
+
+    if (mic->getInspectState() == INSPECT_STATE_INSPECTED)
         cic->startNewCache(1);
 }
 
 void MainWindow::onSelCamTypeBtnClicked()
 {
     QSelectCameraTypeDlg dlg;
-    dlg.setPSysInfo(rc.getPSysInfo());
+    dlg.setPSysInfo(mic->getPSysInfo());
     dlg.exec();
 }
 
 void MainWindow::onStartSysBtnClicked()
 {
-    if (rc.getSysState() == SYS_STATE_IDLE) {
-        if (rc.startSys() == 0) {
-            selCamTypeToolBtn->setEnabled(false);
-            startSysToolBtn->setIcon(QPixmap(":/images/stop_sys.png"));
-            startSysToolBtn->setText(tr("Stop System"));
-
-            startInspectToolBtn->setEnabled(true);
+    if (mic->getSysState() == SYS_STATE_IDLE) {
+        if (mic->startSys() == 0) {
+            onSystemStateStarted();
         }
+        else
+            QMessageBox::information(this, QString(tr("Start System Failed")),
+                                     QString(tr("Start system failed."
+                                                " Please check whether the"
+                                                " camera or the serial com"
+                                                " is connect correctly.")));
     }
     else {
-        if (rc.stopSys() == 0) {
-            selCamTypeToolBtn->setEnabled(true);
-            startSysToolBtn->setIcon(QPixmap(":/images/start_sys.png"));
-            startSysToolBtn->setText(tr("Start System"));
-
-            startInspectToolBtn->setIcon(QPixmap(":/images/start.png"));
-            startInspectToolBtn->setText(tr("Start Inspect"));
-            startInspectToolBtn->setEnabled(false);
-
-            setupToolBtn->setEnabled(true);
+        if (mic->stopSys() == 0) {
+            onSystemStateStopped();
         }
     }
 }
 
 void MainWindow::onStartInspectBtnClicked()
 {
-    if (rc.getInspectState() == INSPECT_STATE_WAIT) {
-        if (rc.startInspect() == 0) {
-            startInspectToolBtn->setIcon(QPixmap(":/images/stop.png"));
-            startInspectToolBtn->setText(tr("Stop Inspect"));
-
-            setupToolBtn->setEnabled(false);
+    if (mic->getInspectState() == INSPECT_STATE_WAIT) {
+        if (mic->startInspect() == 0) {
+            onInspectStateStarted();
         }
     }
-    else if (rc.getInspectState() == INSPECT_STATE_INSPECTED) {
-        if (rc.stopInspect() == 0) {
-            startInspectToolBtn->setIcon(QPixmap(":/images/start.png"));
-            startInspectToolBtn->setText(tr("Start Inspect"));
-
-            setupToolBtn->setEnabled(true);
+    else if (mic->getInspectState() == INSPECT_STATE_INSPECTED) {
+        if (mic->stopInspect() == 0) {
+            onInspectStateStopped();
         }
     }
 }
@@ -176,15 +236,22 @@ void MainWindow::onStartInspectBtnClicked()
 void MainWindow::onFrameCalActionTriggered()
 {
     QFrameCalInfoSetupDlg dlg;
-    dlg.setPFramCalInfo(rc.getPFrameCalInfo());
+    dlg.setPFramCalInfo(mic->getPFrameCalInfo());
     if (dlg.exec() == QDialog::Accepted)
-        rc.initAlg();
+        mic->initAlg();
 }
 
 void MainWindow::onAlgParasActionTriggered()
 {
     QAlgParasSetupDlg dlg;
-    dlg.setPInspectAlgParas(rc.getPInspectAlgParas());
+    dlg.setPInspectAlgParas(mic->getPInspectAlgParas());
+    dlg.exec();
+}
+
+void MainWindow::onModbusCmdActionTriggered()
+{
+    QRtuOperatorDlg dlg;
+    dlg.setRwCommInst(mic->getRwCommInst());
     dlg.exec();
 }
 

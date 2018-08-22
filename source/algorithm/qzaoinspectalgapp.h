@@ -14,6 +14,9 @@
 #include "qzaoinspectalgparas.h"
 #include "qsysdefine.h"
 
+#include "HQEDetector.h"
+#include "HQERecognizer.h"
+
 typedef struct tagDetectResult {
     int result;
     int frameId;
@@ -32,16 +35,6 @@ Q_DECLARE_METATYPE(ZaoInfo)
 
 
 ///
-/// \brief zaoInspect: 枣检测及识别算法接口
-/// \param imageIn -- [in]待检测图片
-/// \param zaoInfo -- [out]图片中识别的枣信息
-/// \param zaoCount -- [out]共识别出的枣个数
-/// \return 0 -- 无异常， -1 -- 异常，错误
-///
-extern int zaoInspect(cv::Mat imageIn, ZaoInfo zaoInfo[], int* zaoCount);
-
-
-///
 /// \brief The QZaoInspectAlgApp class
 /// 1. 检测当前帧的枣信息
 /// 2. 处理当前帧的枣信息，包括将好枣根据设置的阈值分类及将枣归入实现划分的区域里
@@ -51,6 +44,8 @@ class QZaoInspectAlgApp
 {
 public:
     QZaoInspectAlgApp();
+
+    ~QZaoInspectAlgApp();
 
     enum EResDataId {
         E_Inspect_Result = 0,
@@ -67,6 +62,7 @@ public:
     };
 
     int init(void);
+    int reset(void);
     int loadCfgFile(void);
 
     int inspect(const QImage &cameraImg, QImage& outImg = QImage());
@@ -85,7 +81,7 @@ public:
 
 //private:
 
-    void reset(void);
+    void clear(void);
 
     //计算区域数，将图片分割成一条条带状，物料将依次在带中移动
     int calcRegionCount();
@@ -99,6 +95,14 @@ public:
     //综合枣等级
     int mergeZaoClasses(int class1, int class2, int* retClass);
 
+    ///
+    /// \brief zaoInspect: 枣检测及识别算法接口
+    /// \param imageIn -- [in]待检测图片
+    /// \param vecZaoInfo -- [out]图片中识别的枣信息
+    /// \param zaoCount -- [out]共识别出的枣个数
+    /// \return 0 -- 无异常， -1 -- 异常，错误
+    ///
+    int zaoInspect(cv::Mat imageIn, QVector<ZaoInfo>& vecZaoInfo, int *zaoCount);
 
 private:
     unsigned int last_frame_id;     //上一次检测的图片帧号
@@ -111,6 +115,9 @@ private:
 
     QFrameCalInfo frameCalInfo;
     QZaoInspectAlgParas zaoInspectAlgParas;
+
+    void* detectHandle;
+    void* recognizeHandle;
 };
 
 #endif // QZAOINSPECTALGAPP_H

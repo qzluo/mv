@@ -16,8 +16,8 @@ CameraImageCache::CameraImageCache(QObject *parent) : QObject(parent)
     frameId = 0;
     inspectFrameId = 0;
 
-    imageWidth = 0;
-    imageHeight = 0;
+    imageWidth = 1280;
+    imageHeight = 960;
 }
 
 void CameraImageCache::startNewCache(int cacheNum)

@@ -24,3 +24,14 @@ QString QSysDefine::GetInspectAlgParasFileName()
     QDir dir;
     return dir.currentPath() + "//algParameter.xml";
 }
+
+QString QSysDefine::GetRecognizeModelFilePath()
+{
+    QDir dir;
+    return dir.currentPath();
+}
+
+QString QSysDefine::GetRecognizeModelFileName()
+{
+    return QString("model");
+}

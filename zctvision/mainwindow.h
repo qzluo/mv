@@ -8,6 +8,8 @@
 
 #include "mainresource.h"
 
+#include "qzaoinspectalgapptester.h"
+
 namespace Ui {
 class MainWindow;
 }
@@ -20,6 +22,14 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+    void init(void);
+
+private:
+    void onSystemStateStarted();
+    void onSystemStateStopped();
+    void onInspectStateStarted();
+    void onInspectStateStopped();
+
 public slots:
     void onHasImage(const QImage& image);
     void onInspectDone(DetectResult result);
@@ -28,6 +38,7 @@ public slots:
     void onStartInspectBtnClicked();
     void onFrameCalActionTriggered();
     void onAlgParasActionTriggered();
+    void onModbusCmdActionTriggered();
 
 private:
     Ui::MainWindow *ui;
@@ -37,11 +48,14 @@ private:
     QToolButton *startInspectToolBtn;
 
     QToolButton *setupToolBtn;
+    QAction* modbusCmdAction;
 
-    QLineEdit* resultLE;
+    QTextBrowser* resultTB;
 
-    MainResource rc;
+//    MainResource rc;
     GraphicsWidget* plot;
+
+    QZaoInspectAlgAppTester tester;
 };
 
 #endif // MAINWINDOW_H

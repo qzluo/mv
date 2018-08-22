@@ -15,6 +15,7 @@ public:
     void testInit();
     int testCalctZaoClass(void);
     int testCalcZaoRegionId(void);
+    int testZaoInspect(void);
     int testInspect(void);
 
 signals:

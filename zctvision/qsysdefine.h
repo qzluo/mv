@@ -23,6 +23,8 @@ public:
     static QString GetSettingSysFileName();
     static QString GetFrameCalInfoFileName();
     static QString GetInspectAlgParasFileName();
+    static QString GetRecognizeModelFilePath();
+    static QString GetRecognizeModelFileName();
 };
 
 #endif // QSYSDEFINE_H

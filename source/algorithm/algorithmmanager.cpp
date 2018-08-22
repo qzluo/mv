@@ -11,6 +11,11 @@ int AlgorithmManager::init()
     return zaoInspectAlg.init();
 }
 
+int AlgorithmManager::reset()
+{
+    return zaoInspectAlg.reset();
+}
+
 int AlgorithmManager::inspect(const QImage &cameraImg, QImage &outImg)
 {
     qDebug() << "AlgorithmManager::inspect";

@@ -12,20 +12,75 @@ QZaoInspectAlgApp::QZaoInspectAlgApp()
     imageWidth = 1280;
     imageHeight = 960;
 
-    loadCfgFile();
+    detectHandle = NULL;
+    recognizeHandle = NULL;
+}
+
+QZaoInspectAlgApp::~QZaoInspectAlgApp()
+{
+    if (detectHandle) {
+        HQEDestoryDetector(detectHandle);
+        detectHandle = NULL;
+    }
+
+    if (recognizeHandle) {
+        HQEDestoryRecognizer(recognizeHandle);
+        recognizeHandle = NULL;
+    }
 }
 
 int QZaoInspectAlgApp::init()
+{
+    if (loadCfgFile() < 0) {
+        logFile(FileLogger::warn, "load alg cfg failed.");
+        return -1;
+    }
+
+    detectHandle = HQECreateDetector(imageWidth, imageHeight);
+    if (!detectHandle) {
+        logFile(FileLogger::warn, "Create detector failed.");
+        return -1;
+    }
+
+    recognizeHandle = HQECreateRecognizer();
+    if (!recognizeHandle) {
+        logFile(FileLogger::warn, "Create recognizer failed.");
+        return -1;
+    }
+
+    //加载模型
+    HQELoadModel(recognizeHandle,
+                 QSysDefine::GetRecognizeModelFilePath().toLatin1().data(),
+                 QSysDefine::GetRecognizeModelFileName().toLatin1().data());
+
+    return 0;
+}
+
+int QZaoInspectAlgApp::reset()
 {
     logFile(FileLogger::info, "Init QZaoInspectAlgApp!");
 
     //init image size
     cic->getImageSize(&imageWidth, &imageHeight);
+
     char msg[1024] = {};
     sprintf(msg, "imageWidth = %d, imageHeight = %d",
             imageWidth, imageHeight);
 
     logFile(FileLogger::info, msg);    
+
+    if (detectHandle) {
+        HQEDestoryDetector(detectHandle);
+        detectHandle = NULL;
+    }
+
+    detectHandle = HQECreateDetector(imageWidth, imageHeight);
+//    HQEDetectorParams params;
+//    params.Wmin = 100;
+//    params.Hmin = 100;
+//    HQESetParams(detectHandle, params);
+
+    //set detect parameters and recognization parameters??????????????
 
     //init 枣结果
     last_frame_id = 0;
@@ -87,7 +142,7 @@ int QZaoInspectAlgApp::loadCfgFile()
 
 int QZaoInspectAlgApp::inspect(const QImage &cameraImg, QImage &outImg)
 {
-    reset();
+    clear();
 
     //当前的检测图片帧号
     unsigned int cur_frame_id = cic->getCurFrameId();
@@ -97,16 +152,21 @@ int QZaoInspectAlgApp::inspect(const QImage &cameraImg, QImage &outImg)
     cv::Mat mat = ImageTransform::QImageToMat(cameraImg);
 
     //检测图片及识别种类
-    ZaoInfo zaoInfo[20] = {};
-    int zaoCount = 10;
-    zaoInspect(mat, zaoInfo, &zaoCount);
+    QVector<ZaoInfo> vecZaoInfo;
+    int zaoCount = 0;
+    if (zaoInspect(mat, vecZaoInfo, &zaoCount) < 0) {
+        logFile(FileLogger::warn, "inspect error!");
+        setDataVariant(getResDataDescFromId(E_Inspect_Result),
+                       QVariant(-1));
+        return -1;
+    }
 
     //生成当前检测结果，并分别放入左右队列中
     int regionCount = left_col_result.size();
     if (regionCount <= 0) {
         logFile(FileLogger::warn, "regionCount error!");
         setDataVariant(getResDataDescFromId(E_Inspect_Result),
-                       QVariant(0));
+                       QVariant(-1));
         return -1;
     }
 
@@ -120,22 +180,22 @@ int QZaoInspectAlgApp::inspect(const QImage &cameraImg, QImage &outImg)
 
     for (int i = 0; i < zaoCount; ++i) {
         int zaoClass = ZAO_CLASS_GOOD1;
-        if (calctZaoClass(zaoInfo[i], &zaoClass) < 0) {
+        if (calctZaoClass(vecZaoInfo[i], &zaoClass) < 0) {
             logFile(FileLogger::warn, "calc zao class error!");
             setDataVariant(getResDataDescFromId(E_Inspect_Result),
-                           QVariant(0));
+                           QVariant(-1));
             return -1;
         }
 
-        zaoInfo[i].classId = zaoClass;
+        vecZaoInfo[i].classId = zaoClass;
 
         int leftOrRight = ZAO_COL_POS_LEFT;
         int regionId = 0;
 
-        if (calcZaoRegionId(zaoInfo[i], &leftOrRight, &regionId) < 0) {
+        if (calcZaoRegionId(vecZaoInfo[i], &leftOrRight, &regionId) < 0) {
             logFile(FileLogger::warn, "calc zao calcZaoRegionId error!");
             setDataVariant(getResDataDescFromId(E_Inspect_Result),
-                           QVariant(0));
+                           QVariant(-1));
             return -1;
         }
 
@@ -169,12 +229,6 @@ int QZaoInspectAlgApp::inspect(const QImage &cameraImg, QImage &outImg)
     //更新帧序号
     last_frame_id = cur_frame_id;
 
-    //更新本次检测结果
-    QList<ZaoInfo> cur_zao_infos;
-    for (int i = 0; i < zaoCount; ++i) {
-        cur_zao_infos.append(zaoInfo[i]);
-    }
-
     //保存结果
     setDataVariant(getResDataDescFromId(E_Inspect_Result),
                    QVariant(0));
@@ -182,7 +236,7 @@ int QZaoInspectAlgApp::inspect(const QImage &cameraImg, QImage &outImg)
                    QVariant(left_col_result[0]));
     setDataVariant(getResDataDescFromId(E_Right_Col_Result),
                    QVariant(right_col_result[0]));
-    QVariant variant = QVariant::fromValue(cur_zao_infos);
+    QVariant variant = QVariant::fromValue(vecZaoInfo);
     setDataVariant(getResDataDescFromId(E_Cur_Frame_Product_Info),
                    variant);
 
@@ -235,7 +289,7 @@ QZaoInspectAlgParas *QZaoInspectAlgApp::getPInspectAlgParas()
     return &zaoInspectAlgParas;
 }
 
-void QZaoInspectAlgApp::reset()
+void QZaoInspectAlgApp::clear()
 {
     dataResultMap.clear();
 }
@@ -366,36 +420,34 @@ int QZaoInspectAlgApp::mergeZaoClasses(int class1, int class2, int *retClass)
     return 0;
 }
 
-int zaoInspect(cv::Mat imageIn, ZaoInfo zaoInfo[], int *zaoCount)
+int QZaoInspectAlgApp::zaoInspect(cv::Mat imageIn, QVector<ZaoInfo>& vecZaoInfo, int *zaoCount)
 {
-    static int testId = 0;
-    if (testId == 0) {
-        *zaoCount = 4;
-        zaoInfo[0].classId = ZAO_CLASS_BAD1;
-        zaoInfo[0].zaoPos = cv::Rect(315, 905, 10, 10);
+    if (!detectHandle || !recognizeHandle)
+        return -1;
 
-        zaoInfo[1].classId = ZAO_CLASS_GOOD3;
-        zaoInfo[1].zaoPos = cv::Rect(940, 905, 10, 10);
+    //detection
+    cv::Mat mask;
+    std::vector<Rect> rect_vec;
+    std::vector<cv::Mat>  img_roi_vec;
+    HQEDetection(detectHandle, imageIn, mask, img_roi_vec, rect_vec);
+    Q_ASSERT(img_roi_vec.size() == rect_vec.size());
 
-        zaoInfo[2].classId = ZAO_CLASS_BAD2;
-        zaoInfo[2].zaoPos = cv::Rect(315, 805, 10, 10);
+    //recognition
+    std::vector<int> label_vec;
+    HQERecognization(recognizeHandle, img_roi_vec, label_vec);
+    Q_ASSERT(img_roi_vec.size() == label_vec.size());
 
-        zaoInfo[3].classId = ZAO_CLASS_BAD3;
-        zaoInfo[3].zaoPos = cv::Rect(940, 805, 10, 10);
+    *zaoCount = img_roi_vec.size();
+
+    vecZaoInfo.clear();
+    for (int i = 0; i < *zaoCount; ++i) {
+        ZaoInfo zaoInfo = {};
+        //1-好;2-皮皮;3-破皮;4-裂痕;5-黑枣
+        zaoInfo.classId = label_vec[i] + ZAO_CLASS_BAD1 - 2;
+        zaoInfo.zaoPos = rect_vec[i];
+
+        vecZaoInfo.append(zaoInfo);
     }
-    else if (testId == 1) {
-        *zaoCount = 2;
-        zaoInfo[0].classId = ZAO_CLASS_BAD4;
-        zaoInfo[0].zaoPos = cv::Rect(315, 905, 10, 10);
-
-        zaoInfo[1].classId = ZAO_CLASS_BAD4;
-        zaoInfo[1].zaoPos = cv::Rect(940, 905, 10, 10);
-    }
-    else {
-        *zaoCount = 0;
-    }
-
-    testId++;
 
     return 0;
 }

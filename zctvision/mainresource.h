@@ -25,13 +25,22 @@ enum E_INSPECT_STATE {
     INSPECT_STATE_INSPECTED,
 };
 
+#define mic MainResource::getInstance()
+
 class MainResource : public QObject
 {
     Q_OBJECT
 
 public:
+    static MainResource* getInstance();
+
+private:
     explicit MainResource(QObject *parent = 0);
+
+public:    
     ~MainResource();
+
+    int init(void);
 
     int startSys(void);
     int stopSys(void);
@@ -50,6 +59,9 @@ public:
 
     E_INSPECT_STATE getInspectState() const;
     void setInspectState(const E_INSPECT_STATE &value);
+
+    QRWCommController *getRwCommInst() const;
+    void setRwCommInst(QRWCommController *value);
 
 private:
     //初始化资源
@@ -70,6 +82,8 @@ private:
     int initRwComm(void);
 
 private:
+    static MainResource* instance;
+
     E_SYS_STATE sysState;
     E_INSPECT_STATE inspectState;
 

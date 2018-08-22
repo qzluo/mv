@@ -12,7 +12,7 @@ void QZaoInspectAlgAppTester::testInit()
 {
     qDebug() << "QZaoInspectAlgAppTester::testInit()";
 
-    inst.init();
+    inst.reset();
 
     qDebug() << "region count: " << inst.calcRegionCount();
 }
@@ -179,9 +179,43 @@ int QZaoInspectAlgAppTester::testCalcZaoRegionId()
     return 0;
 }
 
+int QZaoInspectAlgAppTester::testZaoInspect()
+{
+    qDebug() << "QZaoInspectAlgAppTester::testZaoInspect()";
+
+    char* imageName = "E:\\project\\test\\test\\images\\Camera GED130C#C0A800EE-Snapshot-20180407103104-12346905765.bmp";
+    Mat img;
+    img = imread(imageName, 1);
+    QVector<ZaoInfo> vecZaoInfo;
+    int zaoCount = 0;
+
+    int ret = inst.zaoInspect(img, vecZaoInfo, &zaoCount);
+
+    if (ret < 0) {
+        qDebug() << "zao inspect failed.";
+        return -1;
+    }
+
+    qDebug() << "zao count: " << zaoCount;
+    for (int i = 0; i < vecZaoInfo.size(); ++i) {
+        qDebug() << vecZaoInfo[i].classId;
+        rectangle(img, Point(vecZaoInfo[i].zaoPos.x, vecZaoInfo[i].zaoPos.y),
+                  Point(vecZaoInfo[i].zaoPos.x + vecZaoInfo[i].zaoPos.width,
+                        vecZaoInfo[i].zaoPos.y + vecZaoInfo[i].zaoPos.height),
+                  Scalar(0, 255, 0), 2, 8);
+    }
+
+    namedWindow("result", WINDOW_AUTOSIZE);
+    imshow("result", img);
+    waitKey(0);
+
+    return 0;
+}
+
 int QZaoInspectAlgAppTester::testInspect()
 {
     qDebug() << "QZaoInspectAlgAppTester::testInspect()";
+
 
     inst.inspect(QImage());
 

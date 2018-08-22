@@ -1,6 +1,12 @@
 #include "mainresource.h"
 #include "FileLogger.h"
 
+MainResource* MainResource::instance = new MainResource();
+
+MainResource *MainResource::getInstance()
+{
+    return instance;
+}
 
 MainResource::MainResource(QObject *parent) : QObject(parent)
 {
@@ -9,24 +15,37 @@ MainResource::MainResource(QObject *parent) : QObject(parent)
 
     pCamCtl = NULL;
     rwCommInst = NULL;
+}
 
+MainResource::~MainResource()
+{
+    releaseRc();
+}
+
+int MainResource::init()
+{
     //read cfg
-    if (sysInfo.load() < 0)
+    sysInfo.load();
+    if (sysInfo.load() < 0) {
         logFile(FileLogger::warn, "Load sysinfo file failed!");
+        return -1;
+    }
 
     inspectObj = new QInspectCtl(this);
-    inspectObj->initThread();    
+    inspectObj->initThread();
     inspectObj->setAlgorithmManager(&algorithmManager);
 
     qRegisterMetaType<DetectResult>("DetectResult");
 
     connect(inspectObj, &QInspectCtl::inspectDone,
             this, &MainResource::onInspectDone);
-}
 
-MainResource::~MainResource()
-{
-    releaseRc();
+    if (algorithmManager.init() < 0) {
+        logFile(FileLogger::warn, "Init algorithm failed!");
+        return -1;
+    }
+
+    return 0;
 }
 
 int MainResource::startSys()
@@ -97,7 +116,7 @@ int MainResource::stopInspect()
 
 void MainResource::initAlg()
 {
-    algorithmManager.init();
+    algorithmManager.reset();
 }
 
 int MainResource::initRc()
@@ -114,8 +133,11 @@ int MainResource::initRc()
         return -2;
     }
 
-    //initial algorithm manager
-    algorithmManager.init();
+    //reset algorithm manager
+    if (algorithmManager.reset() < 0) {
+        logFile(FileLogger::warn, "Reset algorithm failed!");
+        return -3;
+    }
 
     return 0;
 }
@@ -258,6 +280,16 @@ int MainResource::initRwComm()
     }
 
     return 0;
+}
+
+QRWCommController *MainResource::getRwCommInst() const
+{
+    return rwCommInst;
+}
+
+void MainResource::setRwCommInst(QRWCommController *value)
+{
+    rwCommInst = value;
 }
 
 E_INSPECT_STATE MainResource::getInspectState() const

@@ -39,6 +39,16 @@ private:
     double class_good2_width;
     double class_good3_length;
     double class_good3_width;
+
+//    uchar Imin;//����,Y
+//	uchar Bmin;//Cb
+//	uchar Rmin;//Cr
+//	uchar Imax;
+//	uchar Bmax;
+//	uchar Rmax;
+//	int   Wmin;//min width of an object
+//	int   Hmin;//min height of an object;
+//	float RatioMax;//max long_edge/short_edge
 };
 
 #endif // QZAOINSPECTALGPARAS_H

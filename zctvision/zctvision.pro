@@ -31,7 +31,8 @@ SOURCES += main.cpp\
     qsysdefine.cpp \
     ui/qselectcameratypedlg.cpp \
     ui/qframecalinfosetupdlg.cpp \
-    ui/qalgparassetupdlg.cpp
+    ui/qalgparassetupdlg.cpp \
+    ui/qrtuoperatordlg.cpp
 
 HEADERS  += mainwindow.h \
     graphicswidget.h \
@@ -40,7 +41,8 @@ HEADERS  += mainwindow.h \
     qsysdefine.h \
     ui/qselectcameratypedlg.h \
     ui/qframecalinfosetupdlg.h \
-    ui/qalgparassetupdlg.h
+    ui/qalgparassetupdlg.h \
+    ui/qrtuoperatordlg.h
 
 FORMS    += mainwindow.ui
 
