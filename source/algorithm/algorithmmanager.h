@@ -13,6 +13,8 @@ public:
     explicit AlgorithmManager(QObject *parent = 0);
 
     int init(void);
+
+    int resetImageSize(int imgWidth, int imgHeight);
     int reset(void);
 
     int inspect(const QImage &cameraImg, QImage& outImg = QImage());

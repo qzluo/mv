@@ -48,7 +48,7 @@ public:
     int startInspect(void);
     int stopInspect(void);
 
-    void initAlg(void);
+    void resetAlg(void);
 
     ProjectSysInfo* getPSysInfo();
     QFrameCalInfo* getPFrameCalInfo(void);

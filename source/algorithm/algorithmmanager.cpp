@@ -11,6 +11,11 @@ int AlgorithmManager::init()
     return zaoInspectAlg.init();
 }
 
+int AlgorithmManager::resetImageSize(int imgWidth, int imgHeight)
+{
+    return zaoInspectAlg.resetImageSize(imgWidth, imgHeight);
+}
+
 int AlgorithmManager::reset()
 {
     return zaoInspectAlg.reset();

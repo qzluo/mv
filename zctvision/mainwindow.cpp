@@ -238,14 +238,15 @@ void MainWindow::onFrameCalActionTriggered()
     QFrameCalInfoSetupDlg dlg;
     dlg.setPFramCalInfo(mic->getPFrameCalInfo());
     if (dlg.exec() == QDialog::Accepted)
-        mic->initAlg();
+        mic->resetAlg();
 }
 
 void MainWindow::onAlgParasActionTriggered()
 {
     QAlgParasSetupDlg dlg;
     dlg.setPInspectAlgParas(mic->getPInspectAlgParas());
-    dlg.exec();
+    if (dlg.exec() == QDialog::Accepted)
+        mic->resetAlg();
 }
 
 void MainWindow::onModbusCmdActionTriggered()

@@ -53,21 +53,28 @@ int QZaoInspectAlgApp::init()
                  QSysDefine::GetRecognizeModelFilePath().toLatin1().data(),
                  QSysDefine::GetRecognizeModelFileName().toLatin1().data());
 
+    //set detect parameters and recognization parameters??????????????
+    HQEDetectorParams detectParas = zaoInspectAlgParas.cerateDetectParas();
+    HQESetParams(detectHandle, detectParas);
+
     return 0;
 }
 
-int QZaoInspectAlgApp::reset()
+int QZaoInspectAlgApp::resetImageSize(int imgWidth, int imgHeight)
 {
-    logFile(FileLogger::info, "Init QZaoInspectAlgApp!");
+    logFile(FileLogger::info, "resetImageSize");
 
-    //init image size
-    cic->getImageSize(&imageWidth, &imageHeight);
+    if (imgWidth <= 0 || imgHeight <= 0)
+        return -1;
+
+    imageWidth = imgWidth;
+    imageHeight = imgHeight;
 
     char msg[1024] = {};
     sprintf(msg, "imageWidth = %d, imageHeight = %d",
             imageWidth, imageHeight);
 
-    logFile(FileLogger::info, msg);    
+    logFile(FileLogger::info, msg);
 
     if (detectHandle) {
         HQEDestoryDetector(detectHandle);
@@ -75,12 +82,16 @@ int QZaoInspectAlgApp::reset()
     }
 
     detectHandle = HQECreateDetector(imageWidth, imageHeight);
-//    HQEDetectorParams params;
-//    params.Wmin = 100;
-//    params.Hmin = 100;
-//    HQESetParams(detectHandle, params);
+    HQEDetectorParams detectParas = zaoInspectAlgParas.cerateDetectParas();
+    HQESetParams(detectHandle, detectParas);
 
-    //set detect parameters and recognization parameters??????????????
+    return 0;
+}
+
+int QZaoInspectAlgApp::reset()
+{
+    logFile(FileLogger::info, "Reset QZaoInspectAlgApp!");
+    char msg[1024] = {};
 
     //init 枣结果
     last_frame_id = 0;
@@ -99,7 +110,19 @@ int QZaoInspectAlgApp::reset()
         right_col_result << ZAO_CLASS_NONE;
     }
 
+    resetInspectParas();
+
     return 0;
+}
+
+void QZaoInspectAlgApp::resetInspectParas()
+{
+    if (!detectHandle)
+        return;
+
+    //set detect parameters and recognization parameters??????????????
+    HQEDetectorParams detectParas = zaoInspectAlgParas.cerateDetectParas();
+    HQESetParams(detectHandle, detectParas);
 }
 
 int QZaoInspectAlgApp::loadCfgFile()
@@ -179,16 +202,6 @@ int QZaoInspectAlgApp::inspect(const QImage &cameraImg, QImage &outImg)
     }
 
     for (int i = 0; i < zaoCount; ++i) {
-        int zaoClass = ZAO_CLASS_GOOD1;
-        if (calctZaoClass(vecZaoInfo[i], &zaoClass) < 0) {
-            logFile(FileLogger::warn, "calc zao class error!");
-            setDataVariant(getResDataDescFromId(E_Inspect_Result),
-                           QVariant(-1));
-            return -1;
-        }
-
-        vecZaoInfo[i].classId = zaoClass;
-
         int leftOrRight = ZAO_COL_POS_LEFT;
         int regionId = 0;
 
@@ -200,9 +213,9 @@ int QZaoInspectAlgApp::inspect(const QImage &cameraImg, QImage &outImg)
         }
 
         if (leftOrRight == ZAO_COL_POS_LEFT)
-            cur_left_col_result[regionId] = zaoClass;
+            cur_left_col_result[regionId] = vecZaoInfo[i].classId;
         else
-            cur_right_col_result[regionId] = zaoClass;
+            cur_right_col_result[regionId] = vecZaoInfo[i].classId;
     }
 
     //合并结果集
@@ -326,15 +339,15 @@ int QZaoInspectAlgApp::calctZaoClass(ZaoInfo zaoInfo, int *zaoClass)
         int zaoWidth = min(zaoInfo.zaoPos.width,
                            zaoInfo.zaoPos.height);
 
-        if (zaoLength >= zaoInspectAlgParas.getClass_good1_length() ||
+        if (zaoLength >= zaoInspectAlgParas.getClass_good1_length() &&
                 zaoWidth >= zaoInspectAlgParas.getClass_good1_width())
             *zaoClass = ZAO_CLASS_GOOD1;
-        else if (zaoLength >= zaoInspectAlgParas.getClass_good2_length() ||
+        else if (zaoLength >= zaoInspectAlgParas.getClass_good2_length() &&
                  zaoWidth >= zaoInspectAlgParas.getClass_good2_width())
-             *zaoClass = ZAO_CLASS_GOOD2;
-        else if (zaoLength >= zaoInspectAlgParas.getClass_good3_length() ||
+            *zaoClass = ZAO_CLASS_GOOD2;
+        else if (zaoLength >= zaoInspectAlgParas.getClass_good3_length() &&
                  zaoWidth >= zaoInspectAlgParas.getClass_good3_width())
-             *zaoClass = ZAO_CLASS_GOOD3;
+            *zaoClass = ZAO_CLASS_GOOD3;
         else
             *zaoClass = ZAO_CLASS_GOOD4;
 
@@ -437,14 +450,24 @@ int QZaoInspectAlgApp::zaoInspect(cv::Mat imageIn, QVector<ZaoInfo>& vecZaoInfo,
     HQERecognization(recognizeHandle, img_roi_vec, label_vec);
     Q_ASSERT(img_roi_vec.size() == label_vec.size());
 
-    *zaoCount = img_roi_vec.size();
+    *zaoCount = (int)img_roi_vec.size();
 
     vecZaoInfo.clear();
     for (int i = 0; i < *zaoCount; ++i) {
         ZaoInfo zaoInfo = {};
-        //1-好;2-皮皮;3-破皮;4-裂痕;5-黑枣
+        //label_vec[i]: 1-好;2-皮皮;3-破皮;4-裂痕;5-黑枣
         zaoInfo.classId = label_vec[i] + ZAO_CLASS_BAD1 - 2;
         zaoInfo.zaoPos = rect_vec[i];
+
+        if (label_vec[i] == 1) { //好枣
+            int zaoClass = ZAO_CLASS_GOOD1;
+            if (calctZaoClass(zaoInfo, &zaoClass) < 0) {
+                logFile(FileLogger::warn, "calc zao class error!");
+                return -1;
+            }
+
+            zaoInfo.classId = zaoClass;
+        }
 
         vecZaoInfo.append(zaoInfo);
     }

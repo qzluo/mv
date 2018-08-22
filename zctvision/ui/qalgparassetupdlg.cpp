@@ -1,9 +1,19 @@
 #include "qalgparassetupdlg.h"
+#include "Mat2QImage.h"
 
 QAlgParasSetupDlg::QAlgParasSetupDlg(QWidget *parent) : QDialog(parent)
 {
     pInspectAlgParas = NULL;
+    image = QImage();
 
+    zaoInspectAlg.init();
+
+    //select image
+    QPushButton* imgSource = new QPushButton(tr("Select Image"), this);
+    connect(imgSource, &QPushButton::clicked,
+            this, &QAlgParasSetupDlg::onSelImgBtnClicked);
+
+    //Good Jujube Parameters
     //1
     QLabel* class1LengthLbl = new QLabel(tr("Class1 Length: "));
     class1LengthDSB = new QDoubleSpinBox(this);
@@ -64,6 +74,127 @@ QAlgParasSetupDlg::QAlgParasSetupDlg(QWidget *parent) : QDialog(parent)
     class3Layout->addWidget(class3WidthDSB);
     class3Layout->addWidget(class3WidthUnit);
 
+    QGroupBox* goodJujubeParasGB = new QGroupBox(tr("Good Jujube Parameters"), this);
+    QVBoxLayout* goodJujubeParasLayout = new QVBoxLayout;
+    goodJujubeParasLayout->addLayout(class1Layout);
+    goodJujubeParasLayout->addLayout(class2Layout);
+    goodJujubeParasLayout->addLayout(class3Layout);
+    goodJujubeParasGB->setLayout(goodJujubeParasLayout);
+
+    //detect parameter
+    //I
+    QLabel* iMinLbl = new QLabel(tr("Imin: "));
+    iMinSB = new QSpinBox(this);
+    iMinSB->setRange(0, 255);
+
+    QLabel* iMaxLbl = new QLabel(tr("Imax: "));
+    iMaxSB = new QSpinBox(this);
+    iMaxSB->setRange(0, 255);
+
+    QHBoxLayout* iLayout = new QHBoxLayout();
+    iLayout->addWidget(iMinLbl);
+    iLayout->addWidget(iMinSB);
+    iLayout->addSpacing(20);
+    iLayout->addWidget(iMaxLbl);
+    iLayout->addWidget(iMaxSB);
+    iLayout->addStretch();
+
+    //B
+    QLabel* bMinLbl = new QLabel(tr("Bmin: "));
+    bMinSB = new QSpinBox(this);
+    bMinSB->setRange(0, 255);
+
+    QLabel* bMaxLbl = new QLabel(tr("Bmax: "));
+    bMaxSB = new QSpinBox(this);
+    bMaxSB->setRange(0, 255);
+
+    QHBoxLayout* bLayout = new QHBoxLayout();
+    bLayout->addWidget(bMinLbl);
+    bLayout->addWidget(bMinSB);
+    bLayout->addSpacing(20);
+    bLayout->addWidget(bMaxLbl);
+    bLayout->addWidget(bMaxSB);
+    bLayout->addStretch();
+
+    //R
+    QLabel* rMinLbl = new QLabel(tr("Rmin: "));
+    rMinSB = new QSpinBox(this);
+    rMinSB->setRange(0, 255);
+
+    QLabel* rMaxLbl = new QLabel(tr("Rmax: "));
+    rMaxSB = new QSpinBox(this);
+    rMaxSB->setRange(0, 255);
+
+    QHBoxLayout* rLayout = new QHBoxLayout();
+    rLayout->addWidget(rMinLbl);
+    rLayout->addWidget(rMinSB);
+    rLayout->addSpacing(20);
+    rLayout->addWidget(rMaxLbl);
+    rLayout->addWidget(rMaxSB);
+    rLayout->addStretch();
+
+    //w,h
+    QLabel* wMinLbl = new QLabel(tr("Wmin: "));
+    wMinSB = new QSpinBox(this);
+    wMinSB->setRange(0, 1000);
+
+    QLabel* hMinLbl = new QLabel(tr("Hmin: "));
+    hMinSB = new QSpinBox(this);
+    hMinSB->setRange(0, 1000);
+
+    QLabel* ratioMaxLbl = new QLabel(tr("Max Ratio: "));
+    ratioMaxSB = new QDoubleSpinBox(this);
+    ratioMaxSB->setRange(0, 1000);
+
+    QHBoxLayout* whLayout = new QHBoxLayout();
+    whLayout->addWidget(wMinLbl);
+    whLayout->addWidget(wMinSB);
+    whLayout->addSpacing(20);
+    whLayout->addWidget(hMinLbl);
+    whLayout->addWidget(hMinSB);
+    whLayout->addSpacing(20);
+    whLayout->addWidget(ratioMaxLbl);
+    whLayout->addWidget(ratioMaxSB);
+    whLayout->addStretch();
+
+    QGroupBox* detectParasGB = new QGroupBox(tr("Detect Parameters"), this);
+    QVBoxLayout* detectParasLayout = new QVBoxLayout;
+    detectParasLayout->addLayout(iLayout);
+    detectParasLayout->addLayout(bLayout);
+    detectParasLayout->addLayout(rLayout);
+    detectParasLayout->addLayout(whLayout);
+    detectParasGB->setLayout(detectParasLayout);
+
+    //test
+    QPushButton* testBtn = new QPushButton(tr("Test"), this);
+    connect(testBtn, &QPushButton::clicked,
+            this, &QAlgParasSetupDlg::onTestBtnClicked);
+    QHBoxLayout* testBtnLayout = new QHBoxLayout;
+    testBtnLayout->addStretch();
+    testBtnLayout->addWidget(testBtn);
+
+    //param
+    QFrame* paramFrame = new QFrame(this);
+    paramFrame->setFrameShape(QFrame::Box);
+    paramFrame->setFrameShadow(QFrame::Raised);
+
+    QScrollArea* scrollArea = new QScrollArea;
+    scrollArea->setWidget(paramFrame);
+    scrollArea->setWidgetResizable(true);
+    scrollArea->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+
+    QVBoxLayout* parasSetupLayout = new QVBoxLayout(paramFrame);
+    parasSetupLayout->addWidget(imgSource);
+    parasSetupLayout->addWidget(goodJujubeParasGB);
+    parasSetupLayout->addWidget(detectParasGB);
+    parasSetupLayout->addStretch();
+    parasSetupLayout->addLayout(testBtnLayout);
+
+    plot = new GraphicsWidget(this);
+    QGridLayout* mainWindowLayout = new QGridLayout;
+    mainWindowLayout->addWidget(plot, 0, 0, 1, 5);
+    mainWindowLayout->addWidget(scrollArea, 0, 5, 1, 1);
+
     QPushButton* okBtn = new QPushButton(tr("Ok"), this);
     QPushButton* cancelBtn = new QPushButton(tr("Cancel"), this);
     connect(okBtn, &QPushButton::clicked,
@@ -77,13 +208,15 @@ QAlgParasSetupDlg::QAlgParasSetupDlg(QWidget *parent) : QDialog(parent)
     btnLayout->addWidget(cancelBtn);
 
     QVBoxLayout* topLayout = new QVBoxLayout();
-    topLayout->addLayout(class1Layout);
-    topLayout->addLayout(class2Layout);
-    topLayout->addLayout(class3Layout);
+    topLayout->addLayout(mainWindowLayout);
     topLayout->addLayout(btnLayout);
 
     setLayout(topLayout);
     setWindowTitle(tr("Algrithm Parameters Setup"));
+
+    QRect screenRect = QApplication::desktop()->screenGeometry();
+    resize(screenRect.width()-100,screenRect.height()-100);
+    setWindowState(Qt::WindowActive/* Qt::WindowMaximized*/);
 }
 
 void QAlgParasSetupDlg::onOkBtnClicked()
@@ -93,12 +226,7 @@ void QAlgParasSetupDlg::onOkBtnClicked()
         return;
     }
 
-    pInspectAlgParas->setClass_good1_length(class1LengthDSB->value());
-    pInspectAlgParas->setClass_good1_width(class1WidthDSB->value());
-    pInspectAlgParas->setClass_good2_length(class2LengthDSB->value());
-    pInspectAlgParas->setClass_good2_width(class2WidthDSB->value());
-    pInspectAlgParas->setClass_good3_length(class3LengthDSB->value());
-    pInspectAlgParas->setClass_good3_width(class3WidthDSB->value());
+    updateInspectParas(pInspectAlgParas);
 
     pInspectAlgParas->save();
 
@@ -123,4 +251,93 @@ void QAlgParasSetupDlg::setPInspectAlgParas(QZaoInspectAlgParas *value)
     class2WidthDSB->setValue(pInspectAlgParas->getClass_good2_width());
     class3LengthDSB->setValue(pInspectAlgParas->getClass_good3_length());
     class3WidthDSB->setValue(pInspectAlgParas->getClass_good3_width());
+
+    iMinSB->setValue(pInspectAlgParas->getImin());
+    iMaxSB->setValue(pInspectAlgParas->getImax());
+    bMinSB->setValue(pInspectAlgParas->getBmin());
+    bMaxSB->setValue(pInspectAlgParas->getBmax());
+    rMinSB->setValue(pInspectAlgParas->getRmin());
+    rMaxSB->setValue(pInspectAlgParas->getRmax());
+
+    wMinSB->setValue(pInspectAlgParas->getWmin());
+    hMinSB->setValue(pInspectAlgParas->getHmin());
+    ratioMaxSB->setValue(pInspectAlgParas->getRatioMax());
+}
+
+void QAlgParasSetupDlg::updateInspectParas(QZaoInspectAlgParas *pInspectAlgParas)
+{
+    if (!pInspectAlgParas)
+        return;
+
+    pInspectAlgParas->setClass_good1_length(class1LengthDSB->value());
+    pInspectAlgParas->setClass_good1_width(class1WidthDSB->value());
+    pInspectAlgParas->setClass_good2_length(class2LengthDSB->value());
+    pInspectAlgParas->setClass_good2_width(class2WidthDSB->value());
+    pInspectAlgParas->setClass_good3_length(class3LengthDSB->value());
+    pInspectAlgParas->setClass_good3_width(class3WidthDSB->value());
+
+    pInspectAlgParas->setImin(iMinSB->value());
+    pInspectAlgParas->setImax(iMaxSB->value());
+    pInspectAlgParas->setBmin(bMinSB->value());
+    pInspectAlgParas->setBmax(bMaxSB->value());
+    pInspectAlgParas->setRmin(rMinSB->value());
+    pInspectAlgParas->setRmax(rMaxSB->value());
+
+    pInspectAlgParas->setWmin(wMinSB->value());
+    pInspectAlgParas->setHmin(hMinSB->value());
+    pInspectAlgParas->setRatioMax(ratioMaxSB->value());
+}
+
+void QAlgParasSetupDlg::onSelImgBtnClicked()
+{
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"),
+                                                     ".",
+                                                     tr("Images (*.png *.bmp *.jpg)"));
+
+    image = QImage(fileName);
+    if (image.isNull())
+        return;
+
+    plot->setImage(QPixmap::fromImage(image));
+}
+
+void QAlgParasSetupDlg::onTestBtnClicked()
+{
+    if (image.isNull())
+        return;
+
+    zaoInspectAlg.resetImageSize(image.width(), image.height());
+
+    //更新检测参数
+    updateInspectParas(zaoInspectAlg.getPInspectAlgParas());
+    zaoInspectAlg.resetInspectParas();
+
+    //检测
+    cv::Mat mat = ImageTransform::QImageToMat(image);
+
+    //检测图片及识别种类
+    QVector<ZaoInfo> vecZaoInfo;
+    int zaoCount = 0;
+    if (zaoInspectAlg.zaoInspect(mat, vecZaoInfo, &zaoCount) < 0) {
+        return;
+    }
+
+    for (int i = 0; i < zaoCount; i++) {
+        rectangle(mat, Point(vecZaoInfo[i].zaoPos.x, vecZaoInfo[i].zaoPos.y),
+                  Point(vecZaoInfo[i].zaoPos.x + vecZaoInfo[i].zaoPos.width,
+                        vecZaoInfo[i].zaoPos.y + vecZaoInfo[i].zaoPos.height),
+                  Scalar(255, 0, 0), 2, 8);
+    }
+
+//    rectangle(mat, Point(500, 500), Point(900, 900),
+//              Scalar(255, 0, 0), 2, 8);
+
+//    namedWindow("result", WINDOW_AUTOSIZE);//
+    //    imshow("result", mat);
+//    waitKey(0);
+
+    //结果处理
+    QImage newImage = ImageTransform::MatToQImage(mat, true);
+
+    plot->setImage(QPixmap::fromImage(newImage));
 }

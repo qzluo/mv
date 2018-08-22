@@ -2,6 +2,7 @@
 #define QZAOINSPECTALGPARAS_H
 
 #include <QtXml>
+#include "HQEDetector.h"
 
 class QZaoInspectAlgParas
 {
@@ -10,6 +11,8 @@ public:
 
     int load(void);
     int save(void);
+
+    HQEDetectorParams cerateDetectParas(void);
 
     double getClass_good1_length() const;
     void setClass_good1_length(double value);
@@ -29,6 +32,33 @@ public:
     double getClass_good3_width() const;
     void setClass_good3_width(double value);
 
+    uchar getImin() const;
+    void setImin(const uchar &value);
+
+    uchar getBmin() const;
+    void setBmin(const uchar &value);
+
+    uchar getRmin() const;
+    void setRmin(const uchar &value);
+
+    uchar getImax() const;
+    void setImax(const uchar &value);
+
+    uchar getBmax() const;
+    void setBmax(const uchar &value);
+
+    uchar getRmax() const;
+    void setRmax(const uchar &value);
+
+    int getWmin() const;
+    void setWmin(int value);
+
+    int getHmin() const;
+    void setHmin(int value);
+
+    float getRatioMax() const;
+    void setRatioMax(float value);
+
 private:
     void loadElement(QDomElement& element);
 
@@ -40,15 +70,15 @@ private:
     double class_good3_length;
     double class_good3_width;
 
-//    uchar Imin;//����,Y
-//	uchar Bmin;//Cb
-//	uchar Rmin;//Cr
-//	uchar Imax;
-//	uchar Bmax;
-//	uchar Rmax;
-//	int   Wmin;//min width of an object
-//	int   Hmin;//min height of an object;
-//	float RatioMax;//max long_edge/short_edge
+    uchar Imin;
+    uchar Bmin;
+    uchar Rmin;
+    uchar Imax;
+    uchar Bmax;
+    uchar Rmax;
+    int   Wmin;//min width of an object
+    int   Hmin;//min height of an object;
+    float RatioMax;//max long_edge/short_edge
 };
 
 #endif // QZAOINSPECTALGPARAS_H

@@ -61,9 +61,16 @@ public:
         ZAO_COL_POS_RIGHT,
     };
 
-    int init(void);
+    int init(void);   //系统启动时初始化
+
+    //相机启动后，需重置图像尺寸
+    int resetImageSize(int imgWidth, int imgHeight);
+
+    //相机启动后，重置图像综合检测结果，图像尺寸改变、修改检测参数或桢参数改变需调用
     int reset(void);
-    int loadCfgFile(void);
+
+    //修改检测参数后，需调用
+    void resetInspectParas();
 
     int inspect(const QImage &cameraImg, QImage& outImg = QImage());
 
@@ -77,10 +84,11 @@ public:
 
     QFrameCalInfo* getPFrameCalInfo(void);
     QZaoInspectAlgParas* getPInspectAlgParas(void);
-//    QZaoInspectAlgParas
+
 
 //private:
 
+    int loadCfgFile(void);
     void clear(void);
 
     //计算区域数，将图片分割成一条条带状，物料将依次在带中移动

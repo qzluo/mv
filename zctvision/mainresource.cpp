@@ -114,7 +114,7 @@ int MainResource::stopInspect()
     return 0;
 }
 
-void MainResource::initAlg()
+void MainResource::resetAlg()
 {
     algorithmManager.reset();
 }
@@ -134,9 +134,17 @@ int MainResource::initRc()
     }
 
     //reset algorithm manager
+    int imgWidth = 0;
+    int imgHeight = 0;
+    cic->getImageSize(&imgWidth, &imgHeight);
+    if (algorithmManager.resetImageSize(imgWidth, imgHeight) < 0) {
+        logFile(FileLogger::warn, "ResetImageSize failed!");
+        return -3;
+    }
+
     if (algorithmManager.reset() < 0) {
         logFile(FileLogger::warn, "Reset algorithm failed!");
-        return -3;
+        return -4;
     }
 
     return 0;
