@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<AlgParameters>
+    <class_good1_length>10</class_good1_length>
+    <class_good1_width>5</class_good1_width>
+    <class_good2_length>8</class_good2_length>
+    <class_good2_width>4</class_good2_width>
+    <class_good3_length>6</class_good3_length>
+    <class_good3_width>3</class_good3_width>
+    <Imin>50</Imin>
+    <Imax>200</Imax>
+    <Bmin>55</Bmin>
+    <Bmax>130</Bmax>
+    <Rmin>140</Rmin>
+    <Rmax>235</Rmax>
+    <Wmin>100</Wmin>
+    <Hmin>100</Hmin>
+    <RatioMax>3</RatioMax>
+</AlgParameters>

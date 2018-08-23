@@ -4,7 +4,7 @@
 
 ProjectSysInfo::ProjectSysInfo()
 {
-    cameraType = CAMERATYPE_AVT;
+    cameraType = CAMERATYPE_NONE;
     serialPortNo = -1;
     closingDateTime = QDateTime::currentDateTime();
 }

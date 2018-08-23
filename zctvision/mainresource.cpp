@@ -242,6 +242,13 @@ void MainResource::onInspectDone()
 int MainResource::initCamera()
 {
     int cameraType = sysInfo.getCameraType();
+
+    //for temper debug
+    if (cameraType == ProjectSysInfo::CAMERATYPE_NONE)
+        return 0;
+    else
+        return -1;
+
     if (cameraType == ProjectSysInfo::CAMERATYPE_AVT)
         pCamCtl = new QVirtualCameraCtl(this);
     else

@@ -52,7 +52,7 @@ MainWindow::MainWindow(QWidget *parent) :
                                                tr("Frame Calibration Setup"), this);
     QAction* algParasSetupAction = new QAction(QPixmap(":/images/parameter.png"),
                                                tr("Algorithm Parameters Setup"), this);
-    modbusCmdAction = new QAction(QPixmap(":/images/parameter.png"),
+    modbusCmdAction = new QAction(QPixmap(":/images/modbus_cmd.png"),
                                                tr("Modbus Command"), this);
     connect(frameCalSetupAction, &QAction::triggered,
             this, &MainWindow::onFrameCalActionTriggered);
@@ -81,7 +81,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     plot = new GraphicsWidget(this);
 
-    QLabel* resultLabel = new QLabel("Result:", this);
+    QLabel* resultLabel = new QLabel(tr("Inspect Result:"), this);
     resultTB = new QTextBrowser(this);
 
     QVBoxLayout* btnLayout = new QVBoxLayout;

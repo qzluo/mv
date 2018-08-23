@@ -10,7 +10,8 @@ public:
     ProjectSysInfo();
 
     enum ECameraType {
-        CAMERATYPE_AVT = 0,
+        CAMERATYPE_NONE = 0,
+        CAMERATYPE_AVT,
         CAMERATYPE_DAHENG,
     };
 

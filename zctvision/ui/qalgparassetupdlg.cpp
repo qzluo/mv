@@ -1,5 +1,6 @@
 #include "qalgparassetupdlg.h"
 #include "Mat2QImage.h"
+#include "qsysdefine.h"
 
 QAlgParasSetupDlg::QAlgParasSetupDlg(QWidget *parent) : QDialog(parent)
 {
@@ -288,16 +289,61 @@ void QAlgParasSetupDlg::updateInspectParas(QZaoInspectAlgParas *pInspectAlgParas
     pInspectAlgParas->setRatioMax(ratioMaxSB->value());
 }
 
+QString QAlgParasSetupDlg::getIdDesc(int classId)
+{
+    QString strResult = "";
+
+    switch (classId) {
+    case ZAO_CLASS_GOOD1:
+        strResult = QString::fromUtf8("特等");
+        break;
+
+    case ZAO_CLASS_GOOD2:
+        strResult = QString::fromUtf8("一等 ");
+        break;
+
+    case ZAO_CLASS_GOOD3:
+        strResult = QString::fromUtf8("二等");
+        break;
+
+    case ZAO_CLASS_GOOD4:
+        strResult = QString::fromUtf8("三等");
+        break;
+
+    case ZAO_CLASS_BAD1:
+        strResult = QString::fromUtf8("皮皮");
+        break;
+
+    case ZAO_CLASS_BAD2:
+        strResult = QString::fromUtf8("裂口");
+        break;
+
+    case ZAO_CLASS_BAD3:
+        strResult = QString::fromUtf8("鸟啄");
+        break;
+
+    case ZAO_CLASS_BAD4:
+        strResult = QString::fromUtf8("烂枣");
+        break;
+
+    default:
+        break;
+    }
+
+    return strResult;
+}
+
 void QAlgParasSetupDlg::onSelImgBtnClicked()
 {
     QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"),
                                                      ".",
                                                      tr("Images (*.png *.bmp *.jpg)"));
 
-    image = QImage(fileName);
-    if (image.isNull())
+    QImage newImage = QImage(fileName);
+    if (newImage.isNull())
         return;
 
+    image = newImage;
     plot->setImage(QPixmap::fromImage(image));
 }
 
@@ -322,22 +368,19 @@ void QAlgParasSetupDlg::onTestBtnClicked()
         return;
     }
 
+    QImage newImage = image.copy();
+    QPainter painter(&newImage);
+    QPen pen(Qt::green, 3, Qt::DashDotLine, Qt::RoundCap, Qt::RoundJoin);
+    painter.setPen(pen);
+
+    painter.setFont(QFont("Arial", 30));
     for (int i = 0; i < zaoCount; i++) {
-        rectangle(mat, Point(vecZaoInfo[i].zaoPos.x, vecZaoInfo[i].zaoPos.y),
-                  Point(vecZaoInfo[i].zaoPos.x + vecZaoInfo[i].zaoPos.width,
-                        vecZaoInfo[i].zaoPos.y + vecZaoInfo[i].zaoPos.height),
-                  Scalar(255, 0, 0), 2, 8);
+        painter.drawRect(vecZaoInfo[i].zaoPos.x, vecZaoInfo[i].zaoPos.y,
+                  vecZaoInfo[i].zaoPos.width, vecZaoInfo[i].zaoPos.height);
+
+        painter.drawText(QPoint(vecZaoInfo[i].zaoPos.x + 40, vecZaoInfo[i].zaoPos.y + 40),
+                         getIdDesc(vecZaoInfo[i].classId));
     }
-
-//    rectangle(mat, Point(500, 500), Point(900, 900),
-//              Scalar(255, 0, 0), 2, 8);
-
-//    namedWindow("result", WINDOW_AUTOSIZE);//
-    //    imshow("result", mat);
-//    waitKey(0);
-
-    //结果处理
-    QImage newImage = ImageTransform::MatToQImage(mat, true);
 
     plot->setImage(QPixmap::fromImage(newImage));
 }

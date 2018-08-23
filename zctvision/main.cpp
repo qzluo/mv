@@ -8,6 +8,8 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
+    QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8"));
+
     QDir dir;
     initLog(QString(dir.currentPath()+"//zctvision.dat").toLatin1().data(), 1024*1024*5, 3);
     logFile(FileLogger::info, "Init zctvision");

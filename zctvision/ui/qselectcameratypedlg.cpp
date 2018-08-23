@@ -5,12 +5,16 @@ QSelectCameraTypeDlg::QSelectCameraTypeDlg(QWidget *parent) : QDialog(parent)
     pSysInfo = NULL;
 
     QGroupBox* cameraTypeGroup = new QGroupBox(tr("Select Camera Type"), this);
-    cameraType_avt = new QRadioButton(tr("avt"), this);
-    cameraType_daheng = new QRadioButton(tr("daheng"), this);
+    cameraTypeCB = new QComboBox(this);
+    cameraTypeCB->addItem(tr("None"));
+    cameraTypeCB->addItem(tr("Avt"));
+    cameraTypeCB->addItem(tr("Daheng"));
 
-    QVBoxLayout* groupLayout = new QVBoxLayout;
-    groupLayout->addWidget(cameraType_avt);
-    groupLayout->addWidget(cameraType_daheng);
+    cameraTypeCB->setCurrentIndex(0);
+
+    QHBoxLayout* groupLayout = new QHBoxLayout;
+    groupLayout->addWidget(new QLabel(tr("Camera Type: "), this));
+    groupLayout->addWidget(cameraTypeCB);
     cameraTypeGroup->setLayout(groupLayout);
 
     QPushButton* okBtn = new QPushButton(tr("Ok"), this);
@@ -43,15 +47,14 @@ ProjectSysInfo *QSelectCameraTypeDlg::getPSysInfo() const
 void QSelectCameraTypeDlg::setPSysInfo(ProjectSysInfo *value)
 {
     pSysInfo = value;
-    if (pSysInfo->getCameraType() == 0)
-        cameraType_avt->setChecked(true);
-    else
-        cameraType_daheng->setChecked(true);
+    int cameraType = pSysInfo->getCameraType();
+    if (cameraType < 3)
+        cameraTypeCB->setCurrentIndex(cameraType);
 }
 
 void QSelectCameraTypeDlg::onOkBtnClicked()
 {
-    int cameraType = cameraType_avt->isChecked() ? 0 : 1;
+    int cameraType = cameraTypeCB->currentIndex();
     if (pSysInfo->getCameraType() != cameraType) {
         pSysInfo->setCameraType(cameraType);
         pSysInfo->save();

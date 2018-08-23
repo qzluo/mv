@@ -21,8 +21,7 @@ public slots:
     void onOkBtnClicked();
 
 private:
-    QRadioButton* cameraType_avt;
-    QRadioButton* cameraType_daheng;
+    QComboBox* cameraTypeCB;
 
     ProjectSysInfo* pSysInfo;
 };

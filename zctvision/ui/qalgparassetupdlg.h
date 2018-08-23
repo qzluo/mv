@@ -19,6 +19,7 @@ public:
 
 private:
     void updateInspectParas(QZaoInspectAlgParas* pInspectAlgParas);
+    QString getIdDesc(int classId);
 
 signals:
 

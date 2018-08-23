@@ -12,5 +12,6 @@
         <file>images/stop.png</file>
         <file>images/calibration.png</file>
         <file>images/parameter.png</file>
+        <file>images/modbus_cmd.png</file>
     </qresource>
 </RCC>
