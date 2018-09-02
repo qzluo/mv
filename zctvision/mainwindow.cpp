@@ -98,6 +98,8 @@ MainWindow::MainWindow(QWidget *parent) :
     setWindowState(this->windowState() ^ Qt::WindowMaximized);
     setWindowTitle(tr("Jujube Inspect Program"));
 
+//    tester.test();
+
 //    tester.testInit();
 //    tester.testZaoInspect();
 }

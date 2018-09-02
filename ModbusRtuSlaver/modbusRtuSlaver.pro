@@ -11,6 +11,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = serialCommSrv
 TEMPLATE = app
 
+system("echo QTSERIALPORT_BUILD_ROOT = $$OUT_PWD>> $$OUT_PWD/.qmake.cache")
 
 SOURCES += main.cpp\
         widget.cpp \
@@ -23,3 +24,8 @@ HEADERS  += widget.h \
     public.h
 
 FORMS    += widget.ui
+
+#install_it.path = $$OUT_PWD
+#install_it.files += *.exe
+
+#INSTALLS += install_it

@@ -246,11 +246,9 @@ int MainResource::initCamera()
     //for temper debug
     if (cameraType == ProjectSysInfo::CAMERATYPE_NONE)
         return 0;
-    else
-        return -1;
 
     if (cameraType == ProjectSysInfo::CAMERATYPE_AVT)
-        pCamCtl = new QVirtualCameraCtl(this);
+        pCamCtl = new QVmbCameraclt(this);
     else
         pCamCtl = new QOpenCVCaptureCtl(this);
 

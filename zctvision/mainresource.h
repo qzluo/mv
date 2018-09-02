@@ -9,6 +9,7 @@
 #include "qinspectctl.h"
 #include "cameraimagecache.h"
 #include "qvirtualcameractl.h"
+#include "qvmbcameraclt.h"
 
 #include "algorithmmanager.h"
 #include "qrwcommcontroller.h"

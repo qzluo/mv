@@ -1,3 +1,24 @@
 [2018-08-23 19:13:50.725] [file_logger] [info] Init zctvision
 [2018-08-23 19:13:53.524] [file_logger] [info] frameDir = 1, factorMmToPix = 1.000000, distBtFrms = 150.000000
 [2018-08-23 19:13:53.527] [file_logger] [info] class_good1_length = 10.000000, class_good1_width = 5.000000, class_good2_length = 8.000000, class_good2_width = 4.000000, class_good3_length = 6.000000, class_good3_width = 3.000000, 
+[2018-09-03 02:41:03.508] [file_logger] [info] Init zctvision
+[2018-09-03 02:41:05.229] [file_logger] [info] frameDir = 1, factorMmToPix = 1.000000, distBtFrms = 150.000000
+[2018-09-03 02:41:05.243] [file_logger] [info] class_good1_length = 10.000000, class_good1_width = 5.000000, class_good2_length = 8.000000, class_good2_width = 4.000000, class_good3_length = 6.000000, class_good3_width = 3.000000, 
+[2018-09-03 02:41:09.417] [file_logger] [info] getFrameIndex, frameIndex[0x0000 0x0000]
+[2018-09-03 02:41:09.417] [file_logger] [info] resetImageSize
+[2018-09-03 02:41:09.418] [file_logger] [info] imageWidth = 1280, imageHeight = 960
+[2018-09-03 02:41:09.441] [file_logger] [info] Reset QZaoInspectAlgApp!
+[2018-09-03 02:41:09.441] [file_logger] [info] regionCount = 9
+[2018-09-03 02:41:09.441] [file_logger] [info] startSys.
+[2018-09-03 02:41:18.361] [file_logger] [info] Init zctvision
+[2018-09-03 02:41:18.553] [file_logger] [info] frameDir = 1, factorMmToPix = 1.000000, distBtFrms = 150.000000
+[2018-09-03 02:41:18.554] [file_logger] [info] class_good1_length = 10.000000, class_good1_width = 5.000000, class_good2_length = 8.000000, class_good2_width = 4.000000, class_good3_length = 6.000000, class_good3_width = 3.000000, 
+[2018-09-03 02:41:25.924] [file_logger] [warning] Initalize camera failed!
+[2018-09-03 02:41:25.924] [file_logger] [info] Init rc failed!
+[2018-09-03 02:41:32.244] [file_logger] [info] getFrameIndex, frameIndex[0x0000 0x0000]
+[2018-09-03 02:41:32.244] [file_logger] [info] resetImageSize
+[2018-09-03 02:41:32.245] [file_logger] [info] imageWidth = 1292, imageHeight = 964
+[2018-09-03 02:41:32.257] [file_logger] [info] Reset QZaoInspectAlgApp!
+[2018-09-03 02:41:32.257] [file_logger] [info] regionCount = 9
+[2018-09-03 02:41:32.257] [file_logger] [info] startSys.
+[2018-09-03 02:41:42.856] [file_logger] [info] stopSys.

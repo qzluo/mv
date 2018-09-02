@@ -12,7 +12,7 @@
     <Bmax>130</Bmax>
     <Rmin>140</Rmin>
     <Rmax>235</Rmax>
-    <Wmin>100</Wmin>
-    <Hmin>100</Hmin>
+    <Wmin>50</Wmin>
+    <Hmin>50</Hmin>
     <RatioMax>3</RatioMax>
 </AlgParameters>

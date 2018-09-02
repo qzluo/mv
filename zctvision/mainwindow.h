@@ -10,6 +10,8 @@
 
 #include "qzaoinspectalgapptester.h"
 
+#include "vimbatester.h"
+
 namespace Ui {
 class MainWindow;
 }
@@ -55,7 +57,7 @@ private:
 //    MainResource rc;
     GraphicsWidget* plot;
 
-    QZaoInspectAlgAppTester tester;
+    VimbaTester tester;
 };
 
 #endif // MAINWINDOW_H
