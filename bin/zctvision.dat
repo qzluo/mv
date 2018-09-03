@@ -22,3 +22,15 @@
 [2018-09-03 02:41:32.257] [file_logger] [info] regionCount = 9
 [2018-09-03 02:41:32.257] [file_logger] [info] startSys.
 [2018-09-03 02:41:42.856] [file_logger] [info] stopSys.
+[2018-09-03 15:48:15.290] [file_logger] [info] Init zctvision
+[2018-09-03 15:48:15.788] [file_logger] [info] frameDir = 1, factorMmToPix = 1.000000, distBtFrms = 150.000000
+[2018-09-03 15:48:15.814] [file_logger] [info] class_good1_length = 10.000000, class_good1_width = 5.000000, class_good2_length = 8.000000, class_good2_width = 4.000000, class_good3_length = 6.000000, class_good3_width = 3.000000, 
+[2018-09-03 15:58:02.199] [file_logger] [info] Init zctvision
+[2018-09-03 15:58:02.378] [file_logger] [info] frameDir = 1, factorMmToPix = 1.000000, distBtFrms = 150.000000
+[2018-09-03 15:58:02.378] [file_logger] [info] class_good1_length = 10.000000, class_good1_width = 5.000000, class_good2_length = 8.000000, class_good2_width = 4.000000, class_good3_length = 6.000000, class_good3_width = 3.000000, 
+[2018-09-03 15:58:10.969] [file_logger] [warning] Initalize camera failed!
+[2018-09-03 15:58:10.969] [file_logger] [info] Init rc failed!
+[2018-09-03 15:58:16.686] [file_logger] [warning] Initalize camera failed!
+[2018-09-03 15:58:16.686] [file_logger] [info] Init rc failed!
+[2018-09-03 15:58:28.888] [file_logger] [info] frameDir = 1, factorMmToPix = 1.000000, distBtFrms = 150.000000
+[2018-09-03 15:58:28.889] [file_logger] [info] class_good1_length = 10.000000, class_good1_width = 5.000000, class_good2_length = 8.000000, class_good2_width = 4.000000, class_good3_length = 6.000000, class_good3_width = 3.000000, 

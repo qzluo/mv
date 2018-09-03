@@ -1,10 +1,11 @@
+INCLUDEPATH += $$PWD\..\external\OpenCV2.4.13\include\
+INCLUDEPATH += $$PWD\..\external\OpenCV2.4.13\include\opencv\
+INCLUDEPATH += $$PWD\..\external\OpenCV2.4.13\include\opencv2\
+
 contains(DEFINES,X86){
-INCLUDEPATH+=D:\OpenCV2.4.13\opencv\build\include\
-             D:\OpenCV2.4.13\opencv\build\include\opencv\
-             D:\OpenCV2.4.13\opencv\build\include\opencv2\
 
 CONFIG(debug,debug|release){
-LIBS += -LD:\OpenCV2.4.13\opencv\build\x86\vc12\lib\
+LIBS += -L$$PWD\..\external\OpenCV2.4.13\lib\x86\vc12\
     -lopencv_core2413d\
     -lopencv_highgui2413d\
     -lopencv_imgproc2413d\
@@ -14,7 +15,7 @@ LIBS += -LD:\OpenCV2.4.13\opencv\build\x86\vc12\lib\
     -lopencv_video2413d\
     -lopencv_nonfree2413d\
 }else{
-LIBS += -LD:\OpenCV2.4.13\opencv\build\x86\vc12\lib\
+LIBS += -L$$PWD\..\external\OpenCV2.4.13\lib\x86\vc12\
     -lopencv_core2413\
     -lopencv_highgui2413\
     -lopencv_imgproc2413\
@@ -26,12 +27,9 @@ LIBS += -LD:\OpenCV2.4.13\opencv\build\x86\vc12\lib\
 }
 }
 else{
-INCLUDEPATH+=D:\OpenCV2.4.13\opencv\build\include\
-             D:\OpenCV2.4.13\opencv\build\include\opencv\
-             D:\OpenCV2.4.13\opencv\build\include\opencv2\
 
 CONFIG(debug,debug|release){
-LIBS += -LD:\OpenCV2.4.13\opencv\build\x64\vc12\lib\
+LIBS += -L$$PWD\..\external\OpenCV2.4.13\lib\x64\vc12\
     -lopencv_core2413d\
     -lopencv_highgui2413d\
     -lopencv_imgproc2413d\
@@ -41,7 +39,7 @@ LIBS += -LD:\OpenCV2.4.13\opencv\build\x64\vc12\lib\
     -lopencv_video2413d\
     -lopencv_nonfree2413d\
 }else{
-LIBS += -LD:\OpenCV2.4.13\opencv\build\x64\vc12\lib\
+LIBS += -L$$PWD\..\external\OpenCV2.4.13\lib\x64\vc12\
     -lopencv_core2413\
     -lopencv_highgui2413\
     -lopencv_imgproc2413\

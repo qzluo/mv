@@ -6,6 +6,15 @@ QVmbCameraclt::QVmbCameraclt(QObject *parent) : CameraCtl(parent),
 {
     camWidth = 1280;
     camHeight = 960;
+
+    bStarted = false;
+    curImg = QImage();
+}
+
+QVmbCameraclt::~QVmbCameraclt()
+{
+    if (bStarted)
+        StopView();
 }
 
 bool QVmbCameraclt::Initiallize(int DeviceNumber, QString paramPath)
@@ -30,6 +39,8 @@ bool QVmbCameraclt::Initiallize(int DeviceNumber, QString paramPath)
 
 bool QVmbCameraclt::StartView()
 {
+    bStarted = false;
+
     //启动系统
     VmbErrorType err = sys.Startup();               // Initialize the Vimba API
     if ( VmbErrorSuccess != err )
@@ -119,6 +130,8 @@ bool QVmbCameraclt::StartView()
     qDebug() << "camHeight: " << camHeight;
     qDebug() << "m_nPixelFormat: " << m_nPixelFormat;
 
+    bStarted = true;
+
     return true;
 }
 
@@ -137,12 +150,18 @@ bool QVmbCameraclt::StopView()
     //关闭系统
     sys.Shutdown();
 
+    bStarted = false;
+
     return true;
 }
 
 Mat QVmbCameraclt::GrabOneFrame()
 {
-    return Mat();
+    mutex.lock();
+    Mat mat = ImageTransform::QImageToMat(curImg,true);
+    mutex.unlock();
+
+    return mat;
 }
 
 int QVmbCameraclt::GetCamWidth()
@@ -181,7 +200,7 @@ void QVmbCameraclt::OnFrameReady(int status)
         if( VmbErrorSuccess == err ) {
             if (VmbPixelFormatMono8 == m_nPixelFormat) {
                 qDebug() << "mono image";
-                img = QImage(pBuffer, camWidth,camHeight, QImage::Format_RGB888).
+                img = QImage(pBuffer, camWidth,camHeight, QImage::Format_Mono).
                                     rgbSwapped().copy();
             }
             else {
@@ -192,6 +211,10 @@ void QVmbCameraclt::OnFrameReady(int status)
 
             // emit signal
             emit hasImage(img);
+
+            mutex.lock();
+            curImg = img;
+            mutex.unlock();
         }
     }
     else {

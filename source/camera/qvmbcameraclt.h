@@ -3,14 +3,12 @@
 
 #include <QObject>
 #include <QImage>
-
-#include <cv.h>
-#include <highgui.h>
+#include <QMutex>
 
 #include "cameractl.h"
 
 #include "VimbaCPP/Include/VimbaCPP.h"
-#include <VimbaC/Include/VimbaC.h>
+#include "VimbaC/Include/VimbaC.h"
 #include "FrameObserver.h"
 #include "Mat2QImage.h"
 
@@ -21,6 +19,7 @@ class QVmbCameraclt : public CameraCtl
     Q_OBJECT
 public:
     explicit QVmbCameraclt(QObject *parent = 0);
+    ~QVmbCameraclt();
 
     virtual bool Initiallize(int DeviceNumber,QString paramPath = "");//打开相机，并设置相机参数
 
@@ -50,6 +49,10 @@ private:
 
     // Every camera has its own frame observer
     AVT::VmbAPI::IFrameObserverPtr m_pFrameObserver;
+
+    bool bStarted;
+    QImage curImg;
+    QMutex mutex;
 };
 
 
