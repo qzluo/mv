@@ -1,5 +1,9 @@
 #include "qvmbcameraclt.h"
 #include <QDebug>
+#include <QThread>
+
+#include "VimbaImageTransform/Include/VmbTransform.h"
+#include "FileLogger.h"
 
 QVmbCameraclt::QVmbCameraclt(QObject *parent) : CameraCtl(parent),
     sys( AVT::VmbAPI::VimbaSystem::GetInstance() )
@@ -21,20 +25,34 @@ bool QVmbCameraclt::Initiallize(int DeviceNumber, QString paramPath)
 {
     VmbErrorType err = sys.Startup();               // Initialize the Vimba API
 
-    if ( VmbErrorSuccess != err )
+    if ( VmbErrorSuccess != err ) {
+        logFile(FileLogger::warn, "Failed to start camera api system.");
         return false;
+    }
 
     AVT::VmbAPI::CameraPtrVector cameras;
     err = sys.GetCameras( cameras );            // Fetch all cameras known to Vimba
     sys.Shutdown();
 
-    if (err != VmbErrorSuccess)
+    if (err != VmbErrorSuccess) {
+        logFile(FileLogger::warn, "Failed to get cameras.");
         return false;
+    }
 
     int cameraCount = cameras.size();
-    qDebug() << "Cameras found: " << cameras.size() <<"\n\n";
 
-    return (DeviceNumber < cameraCount);
+    char msg[1024] = {};
+    sprintf(msg, "camera count = %d.", cameraCount);
+    logFile(FileLogger::info, msg);
+
+    if (DeviceNumber >= cameraCount) {
+        sprintf(msg, "The input camera id (%d) should less than %d",
+                DeviceNumber, cameraCount);
+        logFile(FileLogger::warn, msg);
+        return false;
+    }
+
+    return true;
 }
 
 bool QVmbCameraclt::StartView()
@@ -111,6 +129,9 @@ bool QVmbCameraclt::StartView()
         return false;
     }
 
+    //init image
+    curImg = QImage(camWidth, camHeight, QImage::Format_RGB888);
+
     // Create a frame observer for this camera
     // (This will be wrapped in a shared_ptr so we don't delete it)
     SP_SET( m_pFrameObserver , new AVT::VmbAPI::FrameObserver( pCamera ) );
@@ -126,9 +147,10 @@ bool QVmbCameraclt::StartView()
         return false;
     }
 
-    qDebug() << "camWidth: " << camWidth;
-    qDebug() << "camHeight: " << camHeight;
-    qDebug() << "m_nPixelFormat: " << m_nPixelFormat;
+    char msg[1024] = {};
+    sprintf(msg, "Start view success.(camera width = %d, camera height = %d)",
+            camWidth, camHeight);
+    logFile(FileLogger::info, msg);
 
     bStarted = true;
 
@@ -144,11 +166,13 @@ bool QVmbCameraclt::StopView()
     pCamera->Close();
 
     // Clears all remaining frames that have not been picked up
-    SP_DYN_CAST( m_pFrameObserver,AVT::VmbAPI::FrameObserver )->
+    SP_DYN_CAST( m_pFrameObserver, AVT::VmbAPI::FrameObserver )->
             ClearFrameQueue();
 
     //关闭系统
     sys.Shutdown();
+
+    curImg = QImage();
 
     bStarted = false;
 
@@ -179,10 +203,74 @@ void QVmbCameraclt::SetPara()
 
 }
 
+VmbErrorType QVmbCameraclt::CopyToImage(VmbUchar_t *pInBuffer, VmbPixelFormat_t ePixelFormat, QImage &pOutImage, const float *Matrix)
+{
+    const int           nHeight = camHeight;
+    const int           nWidth  = camWidth;
+    VmbError_t          Result;
+
+    // Prepare source image
+    VmbImage SourceImage;
+    SourceImage.Size = sizeof( SourceImage );
+    Result = VmbSetImageInfoFromPixelFormat( ePixelFormat, nWidth, nHeight, &SourceImage );
+    if ( VmbErrorSuccess != Result )
+        return static_cast<VmbErrorType>( Result );
+
+    SourceImage.Data = pInBuffer;
+
+    // Prepare destination image
+    VmbImage            DestImage;
+    DestImage.Size      = sizeof( DestImage );
+
+    QString             OutputFormat;
+    const int           bytes_per_line = pOutImage.bytesPerLine();
+    switch( pOutImage.format() ) {
+    case QImage::Format_RGB888:
+        if( nWidth*3 != bytes_per_line )
+            return VmbErrorWrongType;
+
+        OutputFormat = "RGB24";
+        break;
+
+    default:
+        return VmbErrorBadParameter;
+    }
+
+    Result = VmbSetImageInfoFromString( OutputFormat.toStdString().c_str(), OutputFormat.length(),
+                                        nWidth,nHeight, &DestImage );
+    if ( VmbErrorSuccess != Result )
+        return static_cast<VmbErrorType>( Result );
+
+    DestImage.Data      = pOutImage.bits();
+
+    // do color processing?
+    if( NULL != Matrix )
+    {
+        VmbTransformInfo TransformParameter;
+        Result = VmbSetColorCorrectionMatrix3x3( Matrix, &TransformParameter );
+        if( VmbErrorSuccess == Result )
+        {
+            Result = VmbImageTransform( &SourceImage, &DestImage, &TransformParameter,1 );
+        }
+        else
+        {
+            return static_cast<VmbErrorType>( Result );
+        }
+    }
+    else
+    {
+        Result = VmbImageTransform( &SourceImage, &DestImage,NULL,0 );
+    }
+    if( VmbErrorSuccess != Result )
+    {
+        return static_cast<VmbErrorType>( Result );
+    }
+
+    return static_cast<VmbErrorType>( Result );
+}
+
 void QVmbCameraclt::OnFrameReady(int status)
 {
-    qDebug() << "get image";
-
     // Pick up frame
     AVT::VmbAPI::FramePtr pFrame = SP_DYN_CAST( m_pFrameObserver,
                                                 AVT::VmbAPI::FrameObserver )->GetFrame();
@@ -196,30 +284,20 @@ void QVmbCameraclt::OnFrameReady(int status)
     if( VmbFrameStatusComplete == status ) {
         VmbUchar_t *pBuffer;
         VmbErrorType err = SP_ACCESS( pFrame )->GetImage( pBuffer );
-        QImage img = QImage();
+
         if( VmbErrorSuccess == err ) {
-            if (VmbPixelFormatMono8 == m_nPixelFormat) {
-                qDebug() << "mono image";
-                img = QImage(pBuffer, camWidth,camHeight, QImage::Format_Mono).
-                                    rgbSwapped().copy();
-            }
-            else {
-                qDebug() << "rgb image";
-                img = QImage(pBuffer, camWidth,camHeight, QImage::Format_RGB888).
-                                    rgbSwapped().copy();
-            }
+            mutex.lock();
+            CopyToImage( pBuffer, m_nPixelFormat, curImg );
 
             // emit signal
-            emit hasImage(img);
+            emit hasImage(curImg);
 
-            mutex.lock();
-            curImg = img;
             mutex.unlock();
         }
     }
     else {
         // If we receive an incomplete image we do nothing but logging
-        qDebug() <<  "Failure in receiving image";
+        logFile(FileLogger::info, "Failure in receiving image");
     }
 
     // And queue it to continue streaming

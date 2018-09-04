@@ -19,6 +19,12 @@ SOURCES += \
 
 INCLUDEPATH+=$$PWD/external/include/
 
-LIBS += -L$$PWD/external/lib\
+CONFIG(debug,debug|release){
+LIBS += -L$$PWD/external/lib/deb\
     -lHQEDetector\
     -lHQERecognizer\
+}else{
+LIBS += -L$$PWD/external/lib/rel\
+    -lHQEDetector\
+    -lHQERecognizer\
+}

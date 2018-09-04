@@ -50,8 +50,9 @@ typedef struct tagRecognizerParams
 	tagRecognizerParams()
 	{
 		params.svm_type = SVM::C_SVC;
-		params.C = 0.1;
-		params.kernel_type = SVM::LINEAR;
+		params.C = 5;
+		params.kernel_type = SVM::RBF;
+		params.gamma = 10;
 		params.term_crit = TermCriteria(CV_TERMCRIT_ITER, (int)1e7, 1e-6);
 
 	}
@@ -110,10 +111,11 @@ void HQESetFeatureExtractorParams(void *handle,HQEFeatureExtractorParams params)
 //recognizer
 void HQESetRecognizerParams(void *handle,HQERecognizerParams params);
 
-void HQERecognization(void *handle, vector<Mat> &img_vec, vector<int> &results);//1-ºÃ;2-Æ¤Æ¤;3-ÆÆÆ¤;4-ÁÑºÛ;5-ºÚÔæ
+void HQERecognization(void *handle, vector<Mat> &img_vec, vector<int> &results);   //1-ºÃ;2-Æ¤Æ¤;3-ÆÆÆ¤;4-ÁÑºÛ;5-ºÚÔæ
 
 
-void HQERecognizerTrain(void*handle,char*filepath,char*savepath,char* savename);//1-ºÃ;2-Æ¤Æ¤;3-ÆÆÆ¤;4-ÁÑºÛ;5-ºÚÔæ
+void HQERecognizerTrain(void*handle,char*filepath,char*savepath,char* savename);   //1-ºÃ;2-Æ¤Æ¤;3-ÆÆÆ¤;4-ÁÑºÛ;5-ºÚÔæ
+
 
 void HQEPerformanceReport(void*handle, char*filepath); 
 
@@ -121,3 +123,4 @@ void HQEPerformanceReport(void*handle, char*filepath);
 void HQELoadModel(void*handle, char*filepath, char*filename);
 
 
+ 

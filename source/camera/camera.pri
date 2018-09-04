@@ -3,16 +3,13 @@ DEPENDPATH += $$PWD
 
 INCLUDEPATH += $$PWD\..\..\external\Vimba\
 
-#LIBS += -L$$PWD\..\..\external\Vimba\VimbaC\Lib\Win64\
-#    -lVimbaC\
-
-#LIBS += -L$$PWD\..\..\external\Vimba\VimbaCPP\Lib\Win64\
-#    -lVimbaCPP\
 contains(DEFINES,X86){
 LIBS += -L$$PWD\..\..\external\Vimba\VimbaC\Lib\Win32\
     -lVimbaC\
 LIBS += -L$$PWD\..\..\external\Vimba\VimbaCPP\Lib\Win32\
     -lVimbaCPP\
+LIBS += -L$$PWD\..\..\external\Vimba\VimbaImageTransform\Lib\Win32\
+    -lVimbaImageTransform\
 }
 else{
 LIBS += -L$$PWD\..\..\external\Vimba\VimbaC\Lib\Win64\
@@ -20,6 +17,9 @@ LIBS += -L$$PWD\..\..\external\Vimba\VimbaC\Lib\Win64\
 
 LIBS += -L$$PWD\..\..\external\Vimba\VimbaCPP\Lib\Win64\
     -lVimbaCPP\
+
+LIBS += -L$$PWD\..\..\external\Vimba\VimbaImageTransform\Lib\Win64\
+    -lVimbaImageTransform\
 }
 
 HEADERS  += \

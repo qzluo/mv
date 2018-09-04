@@ -1,0 +1,151 @@
+[2018-08-23 19:13:50.725] [file_logger] [info] Init zctvision
+[2018-08-23 19:13:53.524] [file_logger] [info] frameDir = 1, factorMmToPix = 1.000000, distBtFrms = 150.000000
+[2018-08-23 19:13:53.527] [file_logger] [info] class_good1_length = 10.000000, class_good1_width = 5.000000, class_good2_length = 8.000000, class_good2_width = 4.000000, class_good3_length = 6.000000, class_good3_width = 3.000000, 
+[2018-09-03 02:41:03.508] [file_logger] [info] Init zctvision
+[2018-09-03 02:41:05.229] [file_logger] [info] frameDir = 1, factorMmToPix = 1.000000, distBtFrms = 150.000000
+[2018-09-03 02:41:05.243] [file_logger] [info] class_good1_length = 10.000000, class_good1_width = 5.000000, class_good2_length = 8.000000, class_good2_width = 4.000000, class_good3_length = 6.000000, class_good3_width = 3.000000, 
+[2018-09-03 02:41:09.417] [file_logger] [info] getFrameIndex, frameIndex[0x0000 0x0000]
+[2018-09-03 02:41:09.417] [file_logger] [info] resetImageSize
+[2018-09-03 02:41:09.418] [file_logger] [info] imageWidth = 1280, imageHeight = 960
+[2018-09-03 02:41:09.441] [file_logger] [info] Reset QZaoInspectAlgApp!
+[2018-09-03 02:41:09.441] [file_logger] [info] regionCount = 9
+[2018-09-03 02:41:09.441] [file_logger] [info] startSys.
+[2018-09-03 02:41:18.361] [file_logger] [info] Init zctvision
+[2018-09-03 02:41:18.553] [file_logger] [info] frameDir = 1, factorMmToPix = 1.000000, distBtFrms = 150.000000
+[2018-09-03 02:41:18.554] [file_logger] [info] class_good1_length = 10.000000, class_good1_width = 5.000000, class_good2_length = 8.000000, class_good2_width = 4.000000, class_good3_length = 6.000000, class_good3_width = 3.000000, 
+[2018-09-03 02:41:25.924] [file_logger] [warning] Initalize camera failed!
+[2018-09-03 02:41:25.924] [file_logger] [info] Init rc failed!
+[2018-09-03 02:41:32.244] [file_logger] [info] getFrameIndex, frameIndex[0x0000 0x0000]
+[2018-09-03 02:41:32.244] [file_logger] [info] resetImageSize
+[2018-09-03 02:41:32.245] [file_logger] [info] imageWidth = 1292, imageHeight = 964
+[2018-09-03 02:41:32.257] [file_logger] [info] Reset QZaoInspectAlgApp!
+[2018-09-03 02:41:32.257] [file_logger] [info] regionCount = 9
+[2018-09-03 02:41:32.257] [file_logger] [info] startSys.
+[2018-09-03 02:41:42.856] [file_logger] [info] stopSys.
+[2018-09-03 15:48:15.290] [file_logger] [info] Init zctvision
+[2018-09-03 15:48:15.788] [file_logger] [info] frameDir = 1, factorMmToPix = 1.000000, distBtFrms = 150.000000
+[2018-09-03 15:48:15.814] [file_logger] [info] class_good1_length = 10.000000, class_good1_width = 5.000000, class_good2_length = 8.000000, class_good2_width = 4.000000, class_good3_length = 6.000000, class_good3_width = 3.000000, 
+[2018-09-03 15:58:02.199] [file_logger] [info] Init zctvision
+[2018-09-03 15:58:02.378] [file_logger] [info] frameDir = 1, factorMmToPix = 1.000000, distBtFrms = 150.000000
+[2018-09-03 15:58:02.378] [file_logger] [info] class_good1_length = 10.000000, class_good1_width = 5.000000, class_good2_length = 8.000000, class_good2_width = 4.000000, class_good3_length = 6.000000, class_good3_width = 3.000000, 
+[2018-09-03 15:58:10.969] [file_logger] [warning] Initalize camera failed!
+[2018-09-03 15:58:10.969] [file_logger] [info] Init rc failed!
+[2018-09-03 15:58:16.686] [file_logger] [warning] Initalize camera failed!
+[2018-09-03 15:58:16.686] [file_logger] [info] Init rc failed!
+[2018-09-03 15:58:28.888] [file_logger] [info] frameDir = 1, factorMmToPix = 1.000000, distBtFrms = 150.000000
+[2018-09-03 15:58:28.889] [file_logger] [info] class_good1_length = 10.000000, class_good1_width = 5.000000, class_good2_length = 8.000000, class_good2_width = 4.000000, class_good3_length = 6.000000, class_good3_width = 3.000000, 
+[2018-09-04 12:30:28.334] [file_logger] [info] Init zctvision
+[2018-09-04 12:30:28.526] [file_logger] [info] frameDir = 1, factorMmToPix = 1.000000, distBtFrms = 150.000000
+[2018-09-04 12:30:28.527] [file_logger] [info] class_good1_length = 10.000000, class_good1_width = 5.000000, class_good2_length = 8.000000, class_good2_width = 4.000000, class_good3_length = 6.000000, class_good3_width = 3.000000, 
+[2018-09-04 12:30:35.361] [file_logger] [info] getFrameIndex, frameIndex[0x0000 0x0000]
+[2018-09-04 12:30:35.361] [file_logger] [info] resetImageSize
+[2018-09-04 12:30:35.361] [file_logger] [info] imageWidth = 1292, imageHeight = 964
+[2018-09-04 12:30:35.378] [file_logger] [info] Reset QZaoInspectAlgApp!
+[2018-09-04 12:30:35.378] [file_logger] [info] regionCount = 9
+[2018-09-04 12:30:35.378] [file_logger] [info] startSys.
+[2018-09-04 22:30:38.599] [file_logger] [info] Init zctvision
+[2018-09-04 22:30:38.945] [file_logger] [info] frameDir = 1, factorMmToPix = 1.000000, distBtFrms = 150.000000
+[2018-09-04 22:30:38.946] [file_logger] [info] class_good1_length = 10.000000, class_good1_width = 5.000000, class_good2_length = 8.000000, class_good2_width = 4.000000, class_good3_length = 6.000000, class_good3_width = 3.000000, 
+[2018-09-04 22:30:41.978] [file_logger] [info] camera count = 0.
+[2018-09-04 22:30:41.978] [file_logger] [warning] The input camera id (0) should less than 0
+[2018-09-04 22:30:41.979] [file_logger] [warning] Initalize camera failed!
+[2018-09-04 22:30:41.979] [file_logger] [info] Init rc failed!
+[2018-09-04 22:30:46.695] [file_logger] [info] camera count = 1.
+[2018-09-04 22:30:48.120] [file_logger] [info] Start view success.(camera width = 1292, camera height = 964)
+[2018-09-04 22:30:48.155] [file_logger] [info] getFrameIndex, frameIndex[0x0000 0x0000]
+[2018-09-04 22:30:48.155] [file_logger] [info] resetImageSize
+[2018-09-04 22:30:48.156] [file_logger] [info] imageWidth = 1292, imageHeight = 964
+[2018-09-04 22:30:48.170] [file_logger] [info] Reset QZaoInspectAlgApp!
+[2018-09-04 22:30:48.170] [file_logger] [info] regionCount = 9
+[2018-09-04 22:30:48.170] [file_logger] [info] startSys.
+[2018-09-04 22:31:34.530] [file_logger] [info] stopSys.
+[2018-09-04 22:36:39.915] [file_logger] [info] Init zctvision
+[2018-09-04 22:36:40.136] [file_logger] [info] frameDir = 1, factorMmToPix = 1.000000, distBtFrms = 150.000000
+[2018-09-04 22:36:40.137] [file_logger] [info] class_good1_length = 10.000000, class_good1_width = 5.000000, class_good2_length = 8.000000, class_good2_width = 4.000000, class_good3_length = 6.000000, class_good3_width = 3.000000, 
+[2018-09-04 22:36:42.982] [file_logger] [info] camera count = 1.
+[2018-09-04 22:36:44.289] [file_logger] [info] Start view success.(camera width = 1292, camera height = 964)
+[2018-09-04 22:36:44.317] [file_logger] [info] getFrameIndex, frameIndex[0x0000 0x0000]
+[2018-09-04 22:36:44.317] [file_logger] [info] resetImageSize
+[2018-09-04 22:36:44.318] [file_logger] [info] imageWidth = 1292, imageHeight = 964
+[2018-09-04 22:36:44.329] [file_logger] [info] Reset QZaoInspectAlgApp!
+[2018-09-04 22:36:44.329] [file_logger] [info] regionCount = 9
+[2018-09-04 22:36:44.329] [file_logger] [info] startSys.
+[2018-09-04 22:37:13.674] [file_logger] [info] stopSys.
+[2018-09-04 22:37:17.870] [file_logger] [info] camera count = 1.
+[2018-09-04 22:37:19.214] [file_logger] [info] Start view success.(camera width = 1292, camera height = 964)
+[2018-09-04 22:37:19.233] [file_logger] [info] getFrameIndex, frameIndex[0x0000 0x0000]
+[2018-09-04 22:37:19.233] [file_logger] [info] resetImageSize
+[2018-09-04 22:37:19.233] [file_logger] [info] imageWidth = 1292, imageHeight = 964
+[2018-09-04 22:37:19.245] [file_logger] [info] Reset QZaoInspectAlgApp!
+[2018-09-04 22:37:19.245] [file_logger] [info] regionCount = 9
+[2018-09-04 22:37:19.245] [file_logger] [info] startSys.
+[2018-09-04 22:37:26.777] [file_logger] [info] stopSys.
+[2018-09-04 22:55:41.222] [file_logger] [info] Init zctvision
+[2018-09-04 22:55:41.470] [file_logger] [info] frameDir = 1, factorMmToPix = 1.000000, distBtFrms = 150.000000
+[2018-09-04 22:55:41.471] [file_logger] [info] class_good1_length = 10.000000, class_good1_width = 5.000000, class_good2_length = 8.000000, class_good2_width = 4.000000, class_good3_length = 6.000000, class_good3_width = 3.000000, 
+[2018-09-04 22:55:48.449] [file_logger] [info] camera count = 1.
+[2018-09-04 22:55:49.577] [file_logger] [info] getFrameIndex, frameIndex[0x0000 0x0000]
+[2018-09-04 22:55:49.578] [file_logger] [info] resetImageSize
+[2018-09-04 22:55:49.578] [file_logger] [info] imageWidth = 1280, imageHeight = 960
+[2018-09-04 22:55:49.592] [file_logger] [info] Reset QZaoInspectAlgApp!
+[2018-09-04 22:55:49.592] [file_logger] [info] regionCount = 9
+[2018-09-04 22:55:49.592] [file_logger] [info] startSys.
+[2018-09-04 22:56:40.046] [file_logger] [info] Init zctvision
+[2018-09-04 22:56:40.231] [file_logger] [info] frameDir = 1, factorMmToPix = 1.000000, distBtFrms = 150.000000
+[2018-09-04 22:56:40.233] [file_logger] [info] class_good1_length = 10.000000, class_good1_width = 5.000000, class_good2_length = 8.000000, class_good2_width = 4.000000, class_good3_length = 6.000000, class_good3_width = 3.000000, 
+[2018-09-04 22:56:47.266] [file_logger] [info] camera count = 1.
+[2018-09-04 22:56:48.646] [file_logger] [info] Start view success.(camera width = 1292, camera height = 964)
+[2018-09-04 22:56:48.681] [file_logger] [info] getFrameIndex, frameIndex[0x0000 0x0000]
+[2018-09-04 22:56:48.681] [file_logger] [info] resetImageSize
+[2018-09-04 22:56:48.681] [file_logger] [info] imageWidth = 1292, imageHeight = 964
+[2018-09-04 22:56:48.694] [file_logger] [info] Reset QZaoInspectAlgApp!
+[2018-09-04 22:56:48.694] [file_logger] [info] regionCount = 9
+[2018-09-04 22:56:48.694] [file_logger] [info] startSys.
+[2018-09-04 22:56:52.041] [file_logger] [info] stopSys.
+[2018-09-04 22:56:55.079] [file_logger] [info] camera count = 1.
+[2018-09-04 22:56:56.085] [file_logger] [info] getFrameIndex, frameIndex[0x0000 0x0000]
+[2018-09-04 22:56:56.085] [file_logger] [info] resetImageSize
+[2018-09-04 22:56:56.085] [file_logger] [info] imageWidth = 1280, imageHeight = 960
+[2018-09-04 22:56:56.099] [file_logger] [info] Reset QZaoInspectAlgApp!
+[2018-09-04 22:56:56.099] [file_logger] [info] regionCount = 9
+[2018-09-04 22:56:56.099] [file_logger] [info] startSys.
+[2018-09-04 22:58:24.872] [file_logger] [info] Init zctvision
+[2018-09-04 22:58:25.062] [file_logger] [info] frameDir = 1, factorMmToPix = 1.000000, distBtFrms = 150.000000
+[2018-09-04 22:58:25.064] [file_logger] [info] class_good1_length = 10.000000, class_good1_width = 5.000000, class_good2_length = 8.000000, class_good2_width = 4.000000, class_good3_length = 6.000000, class_good3_width = 3.000000, 
+[2018-09-04 22:58:32.495] [file_logger] [info] camera count = 1.
+[2018-09-04 22:58:33.865] [file_logger] [info] Start view success.(camera width = 1292, camera height = 964)
+[2018-09-04 22:58:33.893] [file_logger] [info] getFrameIndex, frameIndex[0x0000 0x0000]
+[2018-09-04 22:58:33.894] [file_logger] [info] resetImageSize
+[2018-09-04 22:58:33.894] [file_logger] [info] imageWidth = 1292, imageHeight = 964
+[2018-09-04 22:58:33.906] [file_logger] [info] Reset QZaoInspectAlgApp!
+[2018-09-04 22:58:33.906] [file_logger] [info] regionCount = 9
+[2018-09-04 22:58:33.907] [file_logger] [info] startSys.
+[2018-09-04 22:58:41.058] [file_logger] [info] stopSys.
+[2018-09-04 22:58:45.679] [file_logger] [info] camera count = 1.
+[2018-09-04 22:58:47.034] [file_logger] [info] Start view success.(camera width = 1292, camera height = 964)
+[2018-09-04 22:58:47.057] [file_logger] [info] getFrameIndex, frameIndex[0x0000 0x0000]
+[2018-09-04 22:58:47.058] [file_logger] [info] resetImageSize
+[2018-09-04 22:58:47.058] [file_logger] [info] imageWidth = 1292, imageHeight = 964
+[2018-09-04 22:58:47.069] [file_logger] [info] Reset QZaoInspectAlgApp!
+[2018-09-04 22:58:47.069] [file_logger] [info] regionCount = 9
+[2018-09-04 22:58:47.069] [file_logger] [info] startSys.
+[2018-09-04 22:58:53.138] [file_logger] [info] stopSys.
+[2018-09-04 22:58:59.770] [file_logger] [info] camera count = 1.
+[2018-09-04 22:59:01.035] [file_logger] [info] Start view success.(camera width = 1292, camera height = 964)
+[2018-09-04 22:59:01.052] [file_logger] [info] getFrameIndex, frameIndex[0x0000 0x0000]
+[2018-09-04 22:59:01.052] [file_logger] [info] resetImageSize
+[2018-09-04 22:59:01.052] [file_logger] [info] imageWidth = 1292, imageHeight = 964
+[2018-09-04 22:59:01.059] [file_logger] [info] Reset QZaoInspectAlgApp!
+[2018-09-04 22:59:01.059] [file_logger] [info] regionCount = 9
+[2018-09-04 22:59:01.059] [file_logger] [info] startSys.
+[2018-09-04 22:59:05.682] [file_logger] [info] stopSys.
+[2018-09-04 22:59:11.324] [file_logger] [info] camera count = 1.
+[2018-09-04 22:59:12.796] [file_logger] [info] Start view success.(camera width = 1292, camera height = 964)
+[2018-09-04 22:59:12.813] [file_logger] [info] getFrameIndex, frameIndex[0x0000 0x0000]
+[2018-09-04 22:59:12.813] [file_logger] [info] resetImageSize
+[2018-09-04 22:59:12.814] [file_logger] [info] imageWidth = 1292, imageHeight = 964
+[2018-09-04 22:59:12.820] [file_logger] [info] Reset QZaoInspectAlgApp!
+[2018-09-04 22:59:12.820] [file_logger] [info] regionCount = 9
+[2018-09-04 22:59:12.820] [file_logger] [info] startSys.
+[2018-09-04 22:59:13.212] [file_logger] [info] Failure in receiving image
+[2018-09-04 22:59:16.677] [file_logger] [info] stopSys.

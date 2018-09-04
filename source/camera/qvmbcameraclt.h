@@ -32,6 +32,18 @@ public:
     virtual int GetCamHeight();//获取当前相机所设高度
     virtual void SetPara();//相机参数控制
 
+private:
+    //
+    // Copies the content of a byte buffer to a Qt image with respect to the image's alignment
+    //
+    // Parameters:
+    //  [in]    pInbuffer       The byte buffer as received from the cam
+    //  [in]    ePixelFormat    The pixel format of the frame
+    //  [out]   OutImage        The filled Qt image
+    //
+    VmbErrorType CopyToImage( VmbUchar_t *pInBuffer, VmbPixelFormat_t ePixelFormat, QImage &pOutImage, const float *Matrix = NULL );
+
+
 signals:
 
 public slots:
