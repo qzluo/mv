@@ -21,15 +21,19 @@ public:
     int getCameraType() const;
     void setCameraType(int value);
 
-    int getSerialPortNo() const;
-    void setSerialPortNo(int value);
+    QString getPortName() const;
+    void setPortName(const QString &value);
+
+    int getPortBaud() const;
+    void setPortBaud(int value);
 
 private:
     void loadElement(QDomElement& element);
 
 private:
     int cameraType;
-    int serialPortNo;
+    QString portName;
+    int portBaud;
     QDateTime closingDateTime;
 };
 

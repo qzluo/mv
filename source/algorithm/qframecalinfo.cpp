@@ -4,7 +4,7 @@
 
 QFrameCalInfo::QFrameCalInfo()
 {
-    frameDir = EFRAMEDIR_DOWN;
+    frameDir = EFRAMEDIR_UP;
     factorMmToPix = 1.0;
     distBtFrms = 100;
 }
@@ -41,7 +41,7 @@ int QFrameCalInfo::load()
         save();
 
     if (frameDir >= EFRAMEDIR_UNDEFINED) {
-        frameDir = EFRAMEDIR_DOWN;
+        frameDir = EFRAMEDIR_UP;
         save();
     }
 

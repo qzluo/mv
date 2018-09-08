@@ -36,6 +36,7 @@ public slots:
     void onHasImage(const QImage& image);
     void onInspectDone(DetectResult result);
     void onSelCamTypeBtnClicked();
+    void onCommSetupBtnClicked();
     void onStartSysBtnClicked();
     void onStartInspectBtnClicked();
     void onFrameCalActionTriggered();
@@ -46,6 +47,7 @@ private:
     Ui::MainWindow *ui;
 
     QToolButton *selCamTypeToolBtn;
+    QToolButton *commSetupToolBtn;
     QToolButton *startSysToolBtn;
     QToolButton *startInspectToolBtn;
 

@@ -22,8 +22,8 @@ public slots:
 
 private:
     QButtonGroup* dirBtnGroup;
-    QDoubleSpinBox* pixelPerMmDSB;
-    QDoubleSpinBox* distBtwFrmsDSB;
+//    QDoubleSpinBox* pixelPerMmDSB;
+//    QDoubleSpinBox* distBtwFrmsDSB;
 
     QFrameCalInfo* pFramCalInfo;
 };

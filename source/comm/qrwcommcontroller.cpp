@@ -137,6 +137,41 @@ void QRWCommWorker::onOpenCom(int &comIndex, int *ret)
     *ret = -1;
 }
 
+void QRWCommWorker::onOpenComWithBaud(QString &portName, int portBaud, int *ret)
+{
+    QMutexLocker locker(&mutex);
+
+    if (commInst) {
+        delete commInst;
+        commInst = NULL;
+    }
+
+    commInst = new SerialComm;
+    rtu.setComm(commInst);
+
+    if (commInst->init(portName, portBaud, 8, 1, 0, waitTime) == 0) {
+        unsigned int frameIndex = 0;
+        if (getFrameIndex(frameIndex) == 0) {
+            *ret = 0;
+            return;
+        }
+    }
+
+    //not open sucess
+    char message[128] = {};
+    sprintf(message, "Failed to open the rtu com."
+                     " The input port name is %s."
+                     " The input baud is %d.",
+            portName.toLatin1().data(), portBaud);
+    logFile(FileLogger::warn, message);
+
+    delete commInst;
+    commInst = NULL;
+    rtu.setComm(commInst);
+
+    *ret = -1;
+}
+
 void QRWCommWorker::onSigGetFrameIndex(unsigned int &frameIndex, int* ret)
 {
     QMutexLocker locker(&mutex);
@@ -184,6 +219,10 @@ QRWCommController::QRWCommController(QObject *parent) : QObject(parent)
             &worker, &QRWCommWorker::onOpenCom,
             Qt::BlockingQueuedConnection);
 
+    connect(this, &QRWCommController::openComWithBaud,
+            &worker, &QRWCommWorker::onOpenComWithBaud,
+            Qt::BlockingQueuedConnection);
+
     connect(this, &QRWCommController::sigGetFrameIndex,
             &worker, &QRWCommWorker::onSigGetFrameIndex,
             Qt::BlockingQueuedConnection);
@@ -199,6 +238,14 @@ QRWCommController::~QRWCommController()
 {
     workerThread.quit();
     workerThread.wait();
+}
+
+int QRWCommController::setComm(QString &portName, int baud)
+{
+    int ret = 0;
+    emit openComWithBaud(portName, baud, &ret);
+
+    return ret;
 }
 
 int QRWCommController::setComm(int &comIndex)

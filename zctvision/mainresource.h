@@ -11,7 +11,7 @@
 #include "qvirtualcameractl.h"
 #include "qvmbcameraclt.h"
 
-#include "algorithmmanager.h"
+#include "qzaoinspectalgapp.h"
 #include "qrwcommcontroller.h"
 #include "projectsysinfo.h"
 
@@ -49,7 +49,8 @@ public:
     int startInspect(void);
     int stopInspect(void);
 
-    void resetAlg(void);
+    void updateFrameDist(void);
+    void resetInspectParas();
 
     ProjectSysInfo* getPSysInfo();
     QFrameCalInfo* getPFrameCalInfo(void);
@@ -90,7 +91,7 @@ private:
 
     CameraCtl* pCamCtl;
     QInspectCtl* inspectObj;
-    AlgorithmManager algorithmManager;
+    QZaoInspectAlgApp algorithmManager;
 
     QRWCommController* rwCommInst;
 

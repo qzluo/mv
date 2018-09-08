@@ -24,21 +24,21 @@ QFrameCalInfoSetupDlg::QFrameCalInfoSetupDlg(QWidget *parent) : QDialog(parent)
 
     frameDirGB->setLayout(frameDirLayout);
 
-    QLabel* pixelPerMm = new QLabel(tr("Pixel per mm: "), this);
-    pixelPerMmDSB = new QDoubleSpinBox(this);
-    pixelPerMmDSB->setRange(0, 10000);
-    QHBoxLayout* pixelUnitLayout = new QHBoxLayout();
-    pixelUnitLayout->addWidget(pixelPerMm);
-    pixelUnitLayout->addWidget(pixelPerMmDSB);
+//    QLabel* pixelPerMm = new QLabel(tr("Pixel per mm: "), this);
+//    pixelPerMmDSB = new QDoubleSpinBox(this);
+//    pixelPerMmDSB->setRange(0, 10000);
+//    QHBoxLayout* pixelUnitLayout = new QHBoxLayout();
+//    pixelUnitLayout->addWidget(pixelPerMm);
+//    pixelUnitLayout->addWidget(pixelPerMmDSB);
 
-    QLabel* distBtwFrms = new QLabel(tr("Distance Between Frames: "), this);
-    distBtwFrmsDSB = new QDoubleSpinBox(this);
-    distBtwFrmsDSB->setRange(0, 10000);
-    QLabel* unitLabel = new QLabel(tr("mm"), this);
-    QHBoxLayout* distBtwFrmsLayout = new QHBoxLayout();
-    distBtwFrmsLayout->addWidget(distBtwFrms);
-    distBtwFrmsLayout->addWidget(distBtwFrmsDSB);
-    distBtwFrmsLayout->addWidget(unitLabel);
+//    QLabel* distBtwFrms = new QLabel(tr("Distance Between Frames: "), this);
+//    distBtwFrmsDSB = new QDoubleSpinBox(this);
+//    distBtwFrmsDSB->setRange(0, 10000);
+//    QLabel* unitLabel = new QLabel(tr("mm"), this);
+//    QHBoxLayout* distBtwFrmsLayout = new QHBoxLayout();
+//    distBtwFrmsLayout->addWidget(distBtwFrms);
+//    distBtwFrmsLayout->addWidget(distBtwFrmsDSB);
+//    distBtwFrmsLayout->addWidget(unitLabel);
 
     QPushButton* okBtn = new QPushButton(tr("Ok"), this);
     QPushButton* cancelBtn = new QPushButton(tr("Cancel"), this);
@@ -55,8 +55,8 @@ QFrameCalInfoSetupDlg::QFrameCalInfoSetupDlg(QWidget *parent) : QDialog(parent)
 
     QVBoxLayout* topLayout = new QVBoxLayout;
     topLayout->addWidget(frameDirGB);
-    topLayout->addLayout(pixelUnitLayout);
-    topLayout->addLayout(distBtwFrmsLayout);
+//    topLayout->addLayout(pixelUnitLayout);
+//    topLayout->addLayout(distBtwFrmsLayout);
     topLayout->addLayout(btnLayout);
 
     setLayout(topLayout);
@@ -76,8 +76,8 @@ void QFrameCalInfoSetupDlg::setPFramCalInfo(QFrameCalInfo *value)
     pFramCalInfo = value;
 
     dirBtnGroup->button(pFramCalInfo->getFrameDir() + 1)->setChecked(true);
-    pixelPerMmDSB->setValue(pFramCalInfo->getFactorMmToPix());
-    distBtwFrmsDSB->setValue(pFramCalInfo->getDistBtFrms());
+//    pixelPerMmDSB->setValue(pFramCalInfo->getFactorMmToPix());
+//    distBtwFrmsDSB->setValue(pFramCalInfo->getDistBtFrms());
 }
 
 void QFrameCalInfoSetupDlg::onOkBtnClicked()
@@ -89,8 +89,8 @@ void QFrameCalInfoSetupDlg::onOkBtnClicked()
 
     int frameDir = dirBtnGroup->checkedId() - 1;
     pFramCalInfo->setFrameDir(frameDir);
-    pFramCalInfo->setFactorMmToPix(pixelPerMmDSB->value());
-    pFramCalInfo->setDistBtFrms(distBtwFrmsDSB->value());
+//    pFramCalInfo->setFactorMmToPix(pixelPerMmDSB->value());
+//    pFramCalInfo->setDistBtFrms(distBtwFrmsDSB->value());
 
     pFramCalInfo->save();
 

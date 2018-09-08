@@ -2,7 +2,6 @@ INCLUDEPATH += $$PWD\
 DEPENDPATH += $$PWD\
 
 HEADERS += \
-    $$PWD/algorithmmanager.h \
     $$PWD/qzaoinspectalgapp.h \
     $$PWD/qzaoinspectalgapptester.h \
     $$PWD/qframecalinfo.h \
@@ -11,7 +10,6 @@ HEADERS += \
     $$PWD/external/include/HQERecognizer.h
 
 SOURCES += \
-    $$PWD/algorithmmanager.cpp \
     $$PWD/qzaoinspectalgapp.cpp \
     $$PWD/qzaoinspectalgapptester.cpp \
     $$PWD/qframecalinfo.cpp \

@@ -6,7 +6,6 @@
 
 #include <QDebug>
 
-
 QZaoInspectAlgApp::QZaoInspectAlgApp()
 {
     imageWidth = 1280;
@@ -57,6 +56,15 @@ int QZaoInspectAlgApp::init()
     HQEDetectorParams detectParas = zaoInspectAlgParas.cerateDetectParas();
     HQESetParams(detectHandle, detectParas);
 
+    //init 枣结果
+    last_frame_id = 0;
+    left_col_result.clear();
+    right_col_result.clear();
+    for (int i = 0; i < ZAO_REGION_COUNT; ++i) {
+        left_col_result << ZAO_CLASS_NONE;
+        right_col_result << ZAO_CLASS_NONE;
+    }
+
     return 0;
 }
 
@@ -85,34 +93,29 @@ int QZaoInspectAlgApp::resetImageSize(int imgWidth, int imgHeight)
     HQEDetectorParams detectParas = zaoInspectAlgParas.cerateDetectParas();
     HQESetParams(detectHandle, detectParas);
 
+    //修改帧间距离
+    updateFrameDist();
+
     return 0;
 }
 
-int QZaoInspectAlgApp::reset()
+void QZaoInspectAlgApp::updateFrameDist()
 {
-    logFile(FileLogger::info, "Reset QZaoInspectAlgApp!");
-    char msg[1024] = {};
+    //修改帧间距离
+    int totalLength = 0;
+    int frameDir = frameCalInfo.getFrameDir();
+    if (frameDir == QFrameCalInfo::EFRAMEDIR_RIGHT ||
+            frameDir == QFrameCalInfo::EFRAMEDIR_LEFT)
+        totalLength = imageWidth;
+    else if (frameDir == QFrameCalInfo::EFRAMEDIR_DOWN ||
+             frameDir == QFrameCalInfo::EFRAMEDIR_UP)
+        totalLength = imageHeight;
 
-    //init 枣结果
-    last_frame_id = 0;
-    left_col_result.clear();
-    right_col_result.clear();
-
-    int regionCount = calcRegionCount();
-    if (regionCount <= 0)
-        return -1;
-
-    sprintf(msg, "regionCount = %d", regionCount);
-    logFile(FileLogger::info, msg);
-
-    for (int i = 0; i < regionCount; ++i) {
-        left_col_result << ZAO_CLASS_NONE;
-        right_col_result << ZAO_CLASS_NONE;
+    double distBtFrms = double(totalLength) / ZAO_REGION_COUNT;
+    if (distBtFrms != frameCalInfo.getDistBtFrms()) {
+        frameCalInfo.setDistBtFrms(distBtFrms);
+        frameCalInfo.save();
     }
-
-    resetInspectParas();
-
-    return 0;
 }
 
 void QZaoInspectAlgApp::resetInspectParas()
@@ -307,8 +310,11 @@ void QZaoInspectAlgApp::clear()
     dataResultMap.clear();
 }
 
+//预定义枣区域数为4
 int QZaoInspectAlgApp::calcRegionCount()
 {
+    return ZAO_REGION_COUNT;
+
     double distBtFrms = frameCalInfo.getDistBtFrms();
     if (distBtFrms <= 0)
         return -1;
@@ -435,41 +441,65 @@ int QZaoInspectAlgApp::mergeZaoClasses(int class1, int class2, int *retClass)
 
 int QZaoInspectAlgApp::zaoInspect(cv::Mat imageIn, QVector<ZaoInfo>& vecZaoInfo, int *zaoCount)
 {
-    if (!detectHandle || !recognizeHandle)
-        return -1;
+    try {
+        if (!detectHandle || !recognizeHandle)
+            return -1;
 
-    //detection
-    cv::Mat mask;
-    std::vector<Rect> rect_vec;
-    std::vector<cv::Mat>  img_roi_vec;
-    HQEDetection(detectHandle, imageIn, mask, img_roi_vec, rect_vec);
-    Q_ASSERT(img_roi_vec.size() == rect_vec.size());
+        char msg[1024] = {};
 
-    //recognition
-    std::vector<int> label_vec;
-    HQERecognization(recognizeHandle, img_roi_vec, label_vec);
-    Q_ASSERT(img_roi_vec.size() == label_vec.size());
+        //detection
+        cv::Mat mask;
+        std::vector<Rect> rect_vec;
+        std::vector<cv::Mat>  img_roi_vec;
+        HQEDetection(detectHandle, imageIn, mask, img_roi_vec, rect_vec);
+        if (img_roi_vec.size() != rect_vec.size()) {
+            sprintf(msg, "The count of img_roi_vec[%d] is"
+                         " not equal to the count of rect_vec[%d].",
+                    img_roi_vec.size(), rect_vec.size());
+            logFile(FileLogger::warn, msg);
 
-    *zaoCount = (int)img_roi_vec.size();
+            return -1;
+        }
+        Q_ASSERT(img_roi_vec.size() == rect_vec.size());
 
-    vecZaoInfo.clear();
-    for (int i = 0; i < *zaoCount; ++i) {
-        ZaoInfo zaoInfo = {};
-        //label_vec[i]: 1-好;2-皮皮;3-破皮;4-裂痕;5-黑枣
-        zaoInfo.classId = label_vec[i] + ZAO_CLASS_BAD1 - 2;
-        zaoInfo.zaoPos = rect_vec[i];
+        //recognition
+        std::vector<int> label_vec;
+        HQERecognization(recognizeHandle, img_roi_vec, label_vec);
+        if (img_roi_vec.size() != label_vec.size()) {
+            sprintf(msg, "The count of img_roi_vec[%d] is"
+                         " not equal to the count of label_vec[%d].",
+                    img_roi_vec.size(), label_vec.size());
+            logFile(FileLogger::warn, msg);
 
-        if (label_vec[i] == 1) { //好枣
-            int zaoClass = ZAO_CLASS_GOOD1;
-            if (calctZaoClass(zaoInfo, &zaoClass) < 0) {
-                logFile(FileLogger::warn, "calc zao class error!");
-                return -1;
+            return -1;
+        }
+        Q_ASSERT(img_roi_vec.size() == label_vec.size());
+
+        *zaoCount = (int)img_roi_vec.size();
+
+        vecZaoInfo.clear();
+        for (int i = 0; i < *zaoCount; ++i) {
+            ZaoInfo zaoInfo = {};
+            //label_vec[i]: 1-好;2-皮皮;3-破皮;4-裂痕;5-黑枣
+            zaoInfo.classId = label_vec[i] + ZAO_CLASS_BAD1 - 2;
+            zaoInfo.zaoPos = rect_vec[i];
+
+            if (label_vec[i] == 1) { //好枣
+                int zaoClass = ZAO_CLASS_GOOD1;
+                if (calctZaoClass(zaoInfo, &zaoClass) < 0) {
+                    logFile(FileLogger::warn, "calc zao class error!");
+                    return -1;
+                }
+
+                zaoInfo.classId = zaoClass;
             }
 
-            zaoInfo.classId = zaoClass;
+            vecZaoInfo.append(zaoInfo);
         }
-
-        vecZaoInfo.append(zaoInfo);
+    }
+    catch (...) {
+        logFile(FileLogger::warn, "Error in jujube inspect.");
+        return -1;
     }
 
     return 0;

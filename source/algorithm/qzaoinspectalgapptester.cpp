@@ -12,7 +12,6 @@ void QZaoInspectAlgAppTester::testInit()
 {
     qDebug() << "QZaoInspectAlgAppTester::testInit()";
 
-    inst.reset();
 
     qDebug() << "region count: " << inst.calcRegionCount();
 }

@@ -50,6 +50,7 @@ public:
 public slots:
     void deinit();
     void onOpenCom(int &comIndex, int *ret);
+    void onOpenComWithBaud(QString& portName, int portBaud, int* ret);
     void onSigGetFrameIndex(unsigned int& frameIndex, int* ret);
     void onSigSetInspectResult(int leftResult, int rightResult,
                                unsigned int frameIndex, int* ret);
@@ -79,6 +80,12 @@ public:
 
     /**
      * @brief setComm: 设置通信设备
+     * @return: 0 -- 成功， <0 -- 失败
+     */
+    int setComm(QString& portName, int baud);
+
+    /**
+     * @brief setComm: 设置通信设备
      * @param comIndex[in | out]: 设备索引，当为-1时，将遍历系统找到跟从机通信的串口
      * @return: 0 -- 成功， <0 -- 失败
      */
@@ -97,6 +104,7 @@ public:
 
 signals:
     void openCom(int& comIndex, int *ret);
+    void openComWithBaud(QString& portName, int baud, int* ret);
     void sigGetFrameIndex(unsigned int& frameIndex, int* ret);
     void sigSetInspectResult(int leftResult, int rightResult,
                              unsigned int frameIndex, int* ret);

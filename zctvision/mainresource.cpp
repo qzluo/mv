@@ -114,9 +114,14 @@ int MainResource::stopInspect()
     return 0;
 }
 
-void MainResource::resetAlg()
+void MainResource::updateFrameDist()
 {
-    algorithmManager.reset();
+    algorithmManager.updateFrameDist();
+}
+
+void MainResource::resetInspectParas()
+{
+    algorithmManager.resetInspectParas();
 }
 
 int MainResource::initRc()
@@ -140,11 +145,6 @@ int MainResource::initRc()
     if (algorithmManager.resetImageSize(imgWidth, imgHeight) < 0) {
         logFile(FileLogger::warn, "ResetImageSize failed!");
         return -3;
-    }
-
-    if (algorithmManager.reset() < 0) {
-        logFile(FileLogger::warn, "Reset algorithm failed!");
-        return -4;
     }
 
     return 0;
@@ -250,7 +250,7 @@ int MainResource::initCamera()
     if (cameraType == ProjectSysInfo::CAMERATYPE_AVT)
         pCamCtl = new QVmbCameraclt(this);
     else
-        pCamCtl = new QOpenCVCaptureCtl(this);
+        pCamCtl = new QVirtualCameraCtl(this);
 
     if (!pCamCtl->Initiallize(0)) {
         delete pCamCtl;
@@ -283,14 +283,10 @@ int MainResource::initRwComm()
     }
 
     rwCommInst = new QRWCommController(this);
-    int comIndex = sysInfo.getSerialPortNo();
-    if (rwCommInst->setComm(comIndex) < 0)
+    QString portName = sysInfo.getPortName();
+    int baud = sysInfo.getPortBaud();
+    if (rwCommInst->setComm(portName, baud) < 0)
         return -1;
-
-    if (comIndex != sysInfo.getSerialPortNo()) {
-        sysInfo.setSerialPortNo(comIndex);
-        sysInfo.save();
-    }
 
     return 0;
 }

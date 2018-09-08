@@ -17,6 +17,8 @@
 #include "HQEDetector.h"
 #include "HQERecognizer.h"
 
+#define ZAO_REGION_COUNT 4  //一帧图片包含的最多枣的排数
+
 typedef struct tagDetectResult {
     int result;
     int frameId;
@@ -40,6 +42,7 @@ Q_DECLARE_METATYPE(ZaoInfo)
 /// 2. 处理当前帧的枣信息，包括将好枣根据设置的阈值分类及将枣归入实现划分的区域里
 /// 3. 那些区域是为了综合多次枣信息，只传出下一帧将要移出视野的枣信息
 /// 4. 综合枣信息需要考虑之前处理的帧号，及当前检测的帧号，枣在两个连续帧间移动一个划分区域
+/// 5. 根据设定，每帧图片最多有4排枣
 class QZaoInspectAlgApp
 {
 public:
@@ -66,8 +69,8 @@ public:
     //相机启动后，需重置图像尺寸
     int resetImageSize(int imgWidth, int imgHeight);
 
-    //相机启动后，重置图像综合检测结果，图像尺寸改变、修改检测参数或桢参数改变需调用
-    int reset(void);
+    //帧校正信息改变
+    void updateFrameDist(void);
 
     //修改检测参数后，需调用
     void resetInspectParas();

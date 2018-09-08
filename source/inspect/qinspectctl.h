@@ -5,7 +5,7 @@
 #include <QImage>
 #include <QThread>
 
-#include "algorithmmanager.h"
+#include "qzaoinspectalgapp.h"
 
 
 class QInspectWorker : public QObject
@@ -15,8 +15,8 @@ class QInspectWorker : public QObject
 public:
     explicit QInspectWorker(QObject *parent = 0);
 
-    AlgorithmManager *getAlgorithmManager() const;
-    void setAlgorithmManager(AlgorithmManager *value);
+    QZaoInspectAlgApp *getAlgorithmManager() const;
+    void setAlgorithmManager(QZaoInspectAlgApp *value);
 
 public slots:
     void onHasImage(QImage image);
@@ -27,7 +27,7 @@ signals:
 //    void InspectMessage(EMessageType msgType);
 
 private:
-    AlgorithmManager* pAlgorithmManager;
+    QZaoInspectAlgApp* pAlgorithmManager;
 };
 
 class QInspectCtl : public QObject
@@ -38,7 +38,7 @@ public:
     ~QInspectCtl();
 
     int initThread();
-    void setAlgorithmManager(AlgorithmManager *value);
+    void setAlgorithmManager(QZaoInspectAlgApp *value);
 
 signals:
     void hasImage(QImage image);

@@ -5,7 +5,8 @@
 ProjectSysInfo::ProjectSysInfo()
 {
     cameraType = CAMERATYPE_NONE;
-    serialPortNo = -1;
+    portName = "Com2";
+    portBaud = 9600;
     closingDateTime = QDateTime::currentDateTime();
 }
 
@@ -53,8 +54,10 @@ int ProjectSysInfo::save()
 
     root.appendChild(QDomDocumentRW::createDomElement(doc, "camType",
                                       QString("%1").arg(cameraType)));
-    root.appendChild(QDomDocumentRW::createDomElement(doc, "serioalPort",
-                                      QString("%1").arg(serialPortNo)));
+    root.appendChild(QDomDocumentRW::createDomElement(doc, "portName",
+                                      QString("%1").arg(portName)));
+    root.appendChild(QDomDocumentRW::createDomElement(doc, "portBaud",
+                                      QString("%1").arg(portBaud)));
     if (closingDateTime.isValid())
         root.appendChild(QDomDocumentRW::createDomElement(doc, "ClosingDate",
             closingDateTime.toString("yyyy-MM-dd HH:mm:ss")));
@@ -68,21 +71,33 @@ void ProjectSysInfo::loadElement(QDomElement &element)
 
     if ("camType" == tagName)
         cameraType = element.text().toInt();
-    else if("serioalPort" == tagName)
-        serialPortNo = element.text().toInt();
+    else if("portName" == tagName)
+        portName = element.text();
+    else if("portBaud" == tagName)
+        portBaud = element.text().toInt();
     else if("ClosingDate" == tagName)
         closingDateTime = QDateTime::fromString(element.text(),
                                                 "yyyy-MM-dd HH:mm:ss");
 }
 
-int ProjectSysInfo::getSerialPortNo() const
+int ProjectSysInfo::getPortBaud() const
 {
-    return serialPortNo;
+    return portBaud;
 }
 
-void ProjectSysInfo::setSerialPortNo(int value)
+void ProjectSysInfo::setPortBaud(int value)
 {
-    serialPortNo = value;
+    portBaud = value;
+}
+
+QString ProjectSysInfo::getPortName() const
+{
+    return portName;
+}
+
+void ProjectSysInfo::setPortName(const QString &value)
+{
+    portName = value;
 }
 
 int ProjectSysInfo::getCameraType() const

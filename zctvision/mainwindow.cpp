@@ -5,6 +5,7 @@
 
 #include "FileLogger.h"
 #include "qselectcameratypedlg.h"
+#include "qcommsetupdlg.h"
 #include "qframecalinfosetupdlg.h"
 #include "qalgparassetupdlg.h"
 #include "qrtuoperatordlg.h"
@@ -23,6 +24,14 @@ MainWindow::MainWindow(QWidget *parent) :
     selCamTypeToolBtn->setText(tr("Select Camera Type"));
     connect(selCamTypeToolBtn, &QToolButton::clicked,
             this, &MainWindow::onSelCamTypeBtnClicked);
+
+    //comm setup
+    commSetupToolBtn = new QToolButton(this);
+    commSetupToolBtn->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+    commSetupToolBtn->setIcon(QPixmap(":/images/serialcomm.png"));
+    commSetupToolBtn->setText(tr("Serial Setup"));
+    connect(commSetupToolBtn, &QToolButton::clicked,
+            this, &MainWindow::onCommSetupBtnClicked);
 
     //start system
     startSysToolBtn = new QToolButton(this);
@@ -69,6 +78,7 @@ MainWindow::MainWindow(QWidget *parent) :
     setupToolBtn->setPopupMode(QToolButton::MenuButtonPopup);
 
     ui->mainToolBar->addWidget(selCamTypeToolBtn);
+    ui->mainToolBar->addWidget(commSetupToolBtn);
     ui->mainToolBar->addWidget(startSysToolBtn);
     ui->mainToolBar->addSeparator();
     ui->mainToolBar->addWidget(startInspectToolBtn);
@@ -124,6 +134,8 @@ void MainWindow::init()
 void MainWindow::onSystemStateStarted()
 {
     selCamTypeToolBtn->setEnabled(false);
+    commSetupToolBtn->setEnabled(false);
+
     startSysToolBtn->setIcon(QPixmap(":/images/stop_sys.png"));
     startSysToolBtn->setText(tr("Stop System"));
 
@@ -134,6 +146,7 @@ void MainWindow::onSystemStateStarted()
 void MainWindow::onSystemStateStopped()
 {
     selCamTypeToolBtn->setEnabled(true);
+    commSetupToolBtn->setEnabled(true);
     startSysToolBtn->setIcon(QPixmap(":/images/start_sys.png"));
     startSysToolBtn->setText(tr("Start System"));
 
@@ -201,6 +214,13 @@ void MainWindow::onSelCamTypeBtnClicked()
     dlg.exec();
 }
 
+void MainWindow::onCommSetupBtnClicked()
+{
+    QCommSetupDlg dlg;
+    dlg.setPSysInfo(mic->getPSysInfo());
+    dlg.exec();
+}
+
 void MainWindow::onStartSysBtnClicked()
 {
     if (mic->getSysState() == SYS_STATE_IDLE) {
@@ -240,7 +260,7 @@ void MainWindow::onFrameCalActionTriggered()
     QFrameCalInfoSetupDlg dlg;
     dlg.setPFramCalInfo(mic->getPFrameCalInfo());
     if (dlg.exec() == QDialog::Accepted)
-        mic->resetAlg();
+        mic->updateFrameDist();
 }
 
 void MainWindow::onAlgParasActionTriggered()
@@ -248,7 +268,7 @@ void MainWindow::onAlgParasActionTriggered()
     QAlgParasSetupDlg dlg;
     dlg.setPInspectAlgParas(mic->getPInspectAlgParas());
     if (dlg.exec() == QDialog::Accepted)
-        mic->resetAlg();
+        mic->resetInspectParas();
 }
 
 void MainWindow::onModbusCmdActionTriggered()

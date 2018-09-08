@@ -24,12 +24,12 @@ void QInspectWorker::onImageCacheFull()
     onHasImage(image);
 }
 
-AlgorithmManager *QInspectWorker::getAlgorithmManager() const
+QZaoInspectAlgApp *QInspectWorker::getAlgorithmManager() const
 {
     return pAlgorithmManager;
 }
 
-void QInspectWorker::setAlgorithmManager(AlgorithmManager *value)
+void QInspectWorker::setAlgorithmManager(QZaoInspectAlgApp *value)
 {
     pAlgorithmManager = value;
 }
@@ -63,7 +63,7 @@ int QInspectCtl::initThread()
     return 0;
 }
 
-void QInspectCtl::setAlgorithmManager(AlgorithmManager *value)
+void QInspectCtl::setAlgorithmManager(QZaoInspectAlgApp *value)
 {
     if (inspectWorker)
         inspectWorker->setAlgorithmManager(value);
