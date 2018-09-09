@@ -17,6 +17,7 @@ public:
     int testCalcZaoRegionId(void);
     int testZaoInspect(void);
     int testInspect(void);
+    int testInspectSigleImage(void);
 
 signals:
 

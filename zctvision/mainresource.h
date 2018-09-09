@@ -52,6 +52,15 @@ public:
     void updateFrameDist(void);
     void resetInspectParas();
 
+    //加载、保存配置文件
+    int loadCfgFile(QString& fileName);
+    int saveCfgFile(QString& fileName);
+
+    //加载、保存检测参数文件
+    int reloadAlgParasFile(QString& fileName);
+    int saveAlgParas(void);
+    int saveAlgParasToFile(QString& fileName);
+
     ProjectSysInfo* getPSysInfo();
     QFrameCalInfo* getPFrameCalInfo(void);
     QZaoInspectAlgParas* getPInspectAlgParas(void);

@@ -15,8 +15,11 @@ public:
         CAMERATYPE_DAHENG,
     };
 
-    int load(void);
-    int save(void);
+    void load(void);    //load default cfg file
+    int save(void);     //save to default cfg file
+
+    int loadFromFile(QString& fileName);
+    int saveToFile(QString& fileName);
 
     int getCameraType() const;
     void setCameraType(int value);

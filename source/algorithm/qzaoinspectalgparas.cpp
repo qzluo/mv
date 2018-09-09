@@ -25,41 +25,53 @@ QZaoInspectAlgParas::QZaoInspectAlgParas()
     RatioMax=3.0f;
 }
 
-int QZaoInspectAlgParas::load()
+void QZaoInspectAlgParas::load()
 {
-    QString fileName = QSysDefine::GetInspectAlgParasFileName();
+    if (loadFromFile(QSysDefine::GetInspectAlgParasFileName()) < 0)
+        save();
+}
+
+int QZaoInspectAlgParas::save()
+{
+    return saveToFile(QSysDefine::GetInspectAlgParasFileName());
+}
+
+int QZaoInspectAlgParas::loadFromFile(QString &fileName)
+{
     QDomDocument doc;
     QFile file(fileName);
 
-    if (file.exists()) {
-        if (!file.open(QIODevice::ReadOnly))
-            return -1;
+    if (!file.exists())
+        return -1;
 
-        if (!doc.setContent(&file)) {
-            file.close();
-            return -1;
-        }
+    if (!file.open(QIODevice::ReadOnly))
+        return -1;
 
+    if (!doc.setContent(&file)) {
         file.close();
-
-        QDomElement docElem = doc.documentElement();
-        QDomNode n = docElem.firstChild();
-        while (!n.isNull()) {
-            if (n.isElement()) {
-                QDomElement element = n.toElement();
-                loadElement(element);
-            }
-
-            n = n.nextSibling();
-        }
+        return -1;
     }
-    else
-        save();
+
+    file.close();
+
+    QDomElement docElem = doc.documentElement();
+    if (docElem.tagName() != "AlgParameters")
+        return -1;
+
+    QDomNode n = docElem.firstChild();
+    while (!n.isNull()) {
+        if (n.isElement()) {
+            QDomElement element = n.toElement();
+            loadElement(element);
+        }
+
+        n = n.nextSibling();
+    }
 
     return 0;
 }
 
-int QZaoInspectAlgParas::save()
+int QZaoInspectAlgParas::saveToFile(QString &fileName)
 {
     QDomDocument doc;
     doc.appendChild(doc.createProcessingInstruction("xml", "version=\"1.0\" encoding=\"UTF-8\""));
@@ -99,7 +111,7 @@ int QZaoInspectAlgParas::save()
     root.appendChild(QDomDocumentRW::createDomElement(doc, "RatioMax",
                                       QString("%1").arg(RatioMax)));
 
-    return QDomDocumentRW::saveToFile(doc, QSysDefine::GetInspectAlgParasFileName());
+    return QDomDocumentRW::saveToFile(doc, fileName);
 }
 
 HQEDetectorParams QZaoInspectAlgParas::cerateDetectParas()

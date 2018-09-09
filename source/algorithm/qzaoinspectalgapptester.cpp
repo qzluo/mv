@@ -258,3 +258,43 @@ int QZaoInspectAlgAppTester::testInspect()
 
     return 0;
 }
+
+int QZaoInspectAlgAppTester::testInspectSigleImage()
+{
+    qDebug() << "QZaoInspectAlgAppTester::testInspectSigleImage()";
+
+    inst.init();
+
+    char* imageName = "F:\\VirCam\\TmpImage3\\Camera GED130C#C0A800EE-Snapshot-20180407103104-12346905765.BMP";
+    Mat img;
+    img = imread(imageName, 1);
+
+    qDebug() << "width: " << img.cols;
+    qDebug() << "height: " << img.rows;
+    inst.resetImageSize(img.cols, img.rows);
+
+    QList<ZaoInfo> cur_left_col_result;
+    QList<ZaoInfo> cur_right_col_result;
+    if (inst.inspectSigleImage(img, cur_left_col_result, cur_right_col_result) < 0)
+        return -1;
+
+    for (int i = 0; i < cur_left_col_result.size(); ++i) {
+        qDebug() << cur_left_col_result[i].classId;
+        rectangle(img, Point(cur_left_col_result[i].zaoPos.x, cur_left_col_result[i].zaoPos.y),
+                  Point(cur_left_col_result[i].zaoPos.x + cur_left_col_result[i].zaoPos.width,
+                        cur_left_col_result[i].zaoPos.y + cur_left_col_result[i].zaoPos.height),
+                  Scalar(0, 255, 0), 2, 8);
+
+        qDebug() << cur_right_col_result[i].classId;
+        rectangle(img, Point(cur_right_col_result[i].zaoPos.x, cur_right_col_result[i].zaoPos.y),
+                  Point(cur_right_col_result[i].zaoPos.x + cur_right_col_result[i].zaoPos.width,
+                        cur_right_col_result[i].zaoPos.y + cur_right_col_result[i].zaoPos.height),
+                  Scalar(0, 255, 0), 2, 8);
+    }
+
+    namedWindow("result", WINDOW_AUTOSIZE);
+    imshow("result", img);
+    waitKey(0);
+
+    return 0;
+}

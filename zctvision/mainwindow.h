@@ -35,6 +35,11 @@ private:
 public slots:
     void onHasImage(const QImage& image);
     void onInspectDone(DetectResult result);
+    void onOpenCfgFileBtnClicked();
+    void onSaveCfgFileBtnClicked();
+    void onLoadAlgParasFileBtnClicked();
+    void onSaveAlgParasBtnClicked();
+    void onSaveAlgParasToFileBtnClicked();
     void onSelCamTypeBtnClicked();
     void onCommSetupBtnClicked();
     void onStartSysBtnClicked();
@@ -45,6 +50,12 @@ public slots:
 
 private:
     Ui::MainWindow *ui;
+
+    QToolButton *openCfgFileToolBtn;
+    QToolButton *saveCfgFileToolBtn;
+    QToolButton *loadAlgParasFileToolBtn;
+    QToolButton *saveAlgParasToolBtn;
+    QToolButton *saveAlgParasToFileToolBtn;
 
     QToolButton *selCamTypeToolBtn;
     QToolButton *commSetupToolBtn;
@@ -59,7 +70,7 @@ private:
 //    MainResource rc;
     GraphicsWidget* plot;
 
-    VimbaTester tester;
+    QZaoInspectAlgAppTester tester;
 };
 
 #endif // MAINWINDOW_H

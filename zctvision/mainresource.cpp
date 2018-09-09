@@ -26,10 +26,6 @@ int MainResource::init()
 {
     //read cfg
     sysInfo.load();
-    if (sysInfo.load() < 0) {
-        logFile(FileLogger::warn, "Load sysinfo file failed!");
-        return -1;
-    }
 
     inspectObj = new QInspectCtl(this);
     inspectObj->initThread();
@@ -122,6 +118,31 @@ void MainResource::updateFrameDist()
 void MainResource::resetInspectParas()
 {
     algorithmManager.resetInspectParas();
+}
+
+int MainResource::loadCfgFile(QString &fileName)
+{
+    return sysInfo.loadFromFile(fileName);
+}
+
+int MainResource::saveCfgFile(QString &fileName)
+{
+    return sysInfo.saveToFile(fileName);
+}
+
+int MainResource::reloadAlgParasFile(QString &fileName)
+{
+    return algorithmManager.reloadAlgParasFile(fileName);
+}
+
+int MainResource::saveAlgParas()
+{
+    return algorithmManager.saveAlgParas();
+}
+
+int MainResource::saveAlgParasToFile(QString& fileName)
+{
+    return algorithmManager.saveAlgParasToFile(fileName);
 }
 
 int MainResource::initRc()

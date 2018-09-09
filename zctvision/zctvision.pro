@@ -33,7 +33,8 @@ SOURCES += main.cpp\
     ui/qframecalinfosetupdlg.cpp \
     ui/qalgparassetupdlg.cpp \
     ui/qrtuoperatordlg.cpp \
-    ui/qcommsetupdlg.cpp
+    ui/qcommsetupdlg.cpp \
+    ui/qrealtimeresultwidget.cpp
 
 HEADERS  += mainwindow.h \
     graphicswidget.h \
@@ -44,7 +45,8 @@ HEADERS  += mainwindow.h \
     ui/qframecalinfosetupdlg.h \
     ui/qalgparassetupdlg.h \
     ui/qrtuoperatordlg.h \
-    ui/qcommsetupdlg.h
+    ui/qcommsetupdlg.h \
+    ui/qrealtimeresultwidget.h
 
 FORMS    += mainwindow.ui
 

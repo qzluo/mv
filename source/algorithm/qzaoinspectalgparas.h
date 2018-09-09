@@ -9,8 +9,11 @@ class QZaoInspectAlgParas
 public:
     QZaoInspectAlgParas();
 
-    int load(void);
+    void load(void);
     int save(void);
+
+    int loadFromFile(QString& fileName);
+    int saveToFile(QString& fileName);
 
     HQEDetectorParams cerateDetectParas(void);
 

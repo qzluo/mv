@@ -10,41 +10,53 @@ ProjectSysInfo::ProjectSysInfo()
     closingDateTime = QDateTime::currentDateTime();
 }
 
-int ProjectSysInfo::load()
+void ProjectSysInfo::load()
 {
-    QString fileName = QSysDefine::GetSettingSysFileName();
+    if (loadFromFile(QSysDefine::GetSettingSysFileName()) < 0)
+        save();
+}
+
+int ProjectSysInfo::save()
+{
+    return saveToFile(QSysDefine::GetSettingSysFileName());
+}
+
+int ProjectSysInfo::loadFromFile(QString &fileName)
+{
     QDomDocument doc;
     QFile file(fileName);
 
-    if (file.exists()) {
-        if (!file.open(QIODevice::ReadOnly))
-            return -1;
+    if (!file.exists())
+        return -1;
 
-        if (!doc.setContent(&file)) {
-            file.close();
-            return -1;
-        }
+    if (!file.open(QIODevice::ReadOnly))
+        return -1;
 
+    if (!doc.setContent(&file)) {
         file.close();
-
-        QDomElement docElem = doc.documentElement();
-        QDomNode n = docElem.firstChild();
-        while (!n.isNull()) {
-            if (n.isElement()) {
-                QDomElement element = n.toElement();
-                loadElement(element);
-            }
-
-            n = n.nextSibling();
-        }
+        return -1;
     }
-    else
-        save();
+
+    file.close();
+
+    QDomElement docElem = doc.documentElement();
+    if (docElem.tagName() != "SysInfo")
+        return -1;
+
+    QDomNode n = docElem.firstChild();
+    while (!n.isNull()) {
+        if (n.isElement()) {
+            QDomElement element = n.toElement();
+            loadElement(element);
+        }
+
+        n = n.nextSibling();
+    }
 
     return 0;
 }
 
-int ProjectSysInfo::save()
+int ProjectSysInfo::saveToFile(QString &fileName)
 {
     QDomDocument doc;
     doc.appendChild(doc.createProcessingInstruction("xml","version=\"1.0\" encoding=\"UTF-8\""));
@@ -62,7 +74,7 @@ int ProjectSysInfo::save()
         root.appendChild(QDomDocumentRW::createDomElement(doc, "ClosingDate",
             closingDateTime.toString("yyyy-MM-dd HH:mm:ss")));
 
-    return QDomDocumentRW::saveToFile(doc, QSysDefine::GetSettingSysFileName());
+    return QDomDocumentRW::saveToFile(doc, fileName);
 }
 
 void ProjectSysInfo::loadElement(QDomElement &element)

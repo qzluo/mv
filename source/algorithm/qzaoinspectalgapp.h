@@ -72,11 +72,31 @@ public:
     //帧校正信息改变
     void updateFrameDist(void);
 
+    //加载算法参数配置文件,如加载成功，需重置检测参数
+    int reloadAlgParasFile(QString& fileName);
+
+    //保存算法参数到默认的文件
+    int saveAlgParas();
+
+    //保存算法参数到指定的文件
+    int saveAlgParasToFile(QString& fileName);
+
     //修改检测参数后，需调用
     void resetInspectParas();
 
+    //检测，需综合多张图片的结果
     int inspect(const QImage &cameraImg, QImage& outImg = QImage());
 
+    ///
+    /// \brief inspectSigleImage 检测单张图片
+    /// \param mat: 输入图片
+    /// \param left_col_result: 左列结果
+    /// \param right_col_result: 右列结果
+    /// \return
+    ///
+    int inspectSigleImage(const cv::Mat& mat,
+                          QList<ZaoInfo>& cur_left_col_result,
+                          QList<ZaoInfo>& cur_right_col_result);
     //获取指定的检测结果
     int getDataVariant(const QString& dataName, QVariant& var);
 

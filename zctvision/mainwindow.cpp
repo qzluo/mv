@@ -9,6 +9,7 @@
 #include "qframecalinfosetupdlg.h"
 #include "qalgparassetupdlg.h"
 #include "qrtuoperatordlg.h"
+#include "qrealtimeresultwidget.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -17,6 +18,46 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     //init UI
+    //open cfg file
+    openCfgFileToolBtn = new QToolButton(this);
+    openCfgFileToolBtn->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+    openCfgFileToolBtn->setIcon(QPixmap(":/images/camera.png"));
+    openCfgFileToolBtn->setText(tr("Open Config File"));
+    connect(openCfgFileToolBtn, &QToolButton::clicked,
+            this, &MainWindow::onOpenCfgFileBtnClicked);
+
+    //save cfg file
+    saveCfgFileToolBtn = new QToolButton(this);
+    saveCfgFileToolBtn->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+    saveCfgFileToolBtn->setIcon(QPixmap(":/images/camera.png"));
+    saveCfgFileToolBtn->setText(tr("Save Config File"));
+    connect(saveCfgFileToolBtn, &QToolButton::clicked,
+            this, &MainWindow::onSaveCfgFileBtnClicked);
+
+    //load algorithm parameters file
+    loadAlgParasFileToolBtn = new QToolButton(this);
+    loadAlgParasFileToolBtn->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+    loadAlgParasFileToolBtn->setIcon(QPixmap(":/images/camera.png"));
+    loadAlgParasFileToolBtn->setText(tr("Load Algorithm Parameters File"));
+    connect(loadAlgParasFileToolBtn, &QToolButton::clicked,
+            this, &MainWindow::onLoadAlgParasFileBtnClicked);
+
+    //save algorithm parameters
+    saveAlgParasToolBtn = new QToolButton(this);
+    saveAlgParasToolBtn->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+    saveAlgParasToolBtn->setIcon(QPixmap(":/images/camera.png"));
+    saveAlgParasToolBtn->setText(tr("Save Algorithm Parameters"));
+    connect(saveAlgParasToolBtn, &QToolButton::clicked,
+            this, &MainWindow::onSaveAlgParasBtnClicked);
+
+    //save algorithm parameters to file
+    saveAlgParasToFileToolBtn = new QToolButton(this);
+    saveAlgParasToFileToolBtn->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+    saveAlgParasToFileToolBtn->setIcon(QPixmap(":/images/camera.png"));
+    saveAlgParasToFileToolBtn->setText(tr("Save Algorithm Parameters To File"));
+    connect(saveAlgParasToFileToolBtn, &QToolButton::clicked,
+            this, &MainWindow::onSaveAlgParasToFileBtnClicked);
+
     //select camera type
     selCamTypeToolBtn = new QToolButton(this);
     selCamTypeToolBtn->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
@@ -77,6 +118,13 @@ MainWindow::MainWindow(QWidget *parent) :
     setupToolBtn->setMenu(setupMenu);
     setupToolBtn->setPopupMode(QToolButton::MenuButtonPopup);
 
+    ui->mainToolBar->addWidget(openCfgFileToolBtn);
+    ui->mainToolBar->addWidget(saveCfgFileToolBtn);
+    ui->mainToolBar->addWidget(loadAlgParasFileToolBtn);
+    ui->mainToolBar->addWidget(saveAlgParasToolBtn);
+    ui->mainToolBar->addWidget(saveAlgParasToFileToolBtn);
+    ui->mainToolBar->addSeparator();
+
     ui->mainToolBar->addWidget(selCamTypeToolBtn);
     ui->mainToolBar->addWidget(commSetupToolBtn);
     ui->mainToolBar->addWidget(startSysToolBtn);
@@ -91,27 +139,73 @@ MainWindow::MainWindow(QWidget *parent) :
 
     plot = new GraphicsWidget(this);
 
+    //operate btn
+    QPushButton* startBtn = new QPushButton(tr("Start"), this);
+    QPushButton* runOnceBtn = new QPushButton(tr("Run Once"), this);
+
+    QGroupBox* setupGB = new QGroupBox(tr("Setup"), this);
+    QVBoxLayout* setupLayout = new QVBoxLayout(setupGB);
+    QPushButton* recognizeParasBtn = new QPushButton(tr("Recognize Parameters"), this);
+    QPushButton* gradeParasBtn = new QPushButton(tr("Grade Parameters"), this);
+    setupLayout->addWidget(recognizeParasBtn);
+    setupLayout->addWidget(gradeParasBtn);
+
+    QVBoxLayout* opLayout = new QVBoxLayout;
+    opLayout->addWidget(startBtn);
+    opLayout->addWidget(runOnceBtn);
+    opLayout->addWidget(setupGB);
+
+    //result
     QLabel* resultLabel = new QLabel(tr("Inspect Result:"), this);
     resultTB = new QTextBrowser(this);
 
+    QGroupBox* realResultGB = new QGroupBox(tr("Real Time Result"), this);
+    QHBoxLayout* realResultLayout = new QHBoxLayout(realResultGB);
+
+
+//    QVBoxLayout* leftResLayout = new QVBoxLayout;
+//    QVBoxLayout* rightResLayout = new QVBoxLayout;
+
+//    for (int i = 1; i <= 4; ++i) {
+//        leftResLayout->addWidget(new QLabel(QString::number(i)));
+//        rightResLayout->addWidget(new QLabel(QString::number(i+4)));
+//    }
+//    realResultLayout->addLayout(leftResLayout);
+//    realResultLayout->addLayout(rightResLayout);
+
+    realResultLayout->addWidget(new QRealTimeResultWidget());
+//    QSizePolicy realResultSizePolicy = realResultGB->sizePolicy();
+//    realResultSizePolicy.setHorizontalPolicy(QSizePolicy::Maximum);
+
+//    realResultGB->setSizePolicy(QSizePolicy::Preferred);
+
     QVBoxLayout* btnLayout = new QVBoxLayout;
+    btnLayout->addWidget(realResultGB);
     btnLayout->addWidget(resultLabel);
     btnLayout->addWidget(resultTB);
 
+    btnLayout->addStretch();
+
     QWidget* mainWidget = new QWidget();
     QHBoxLayout* topLayout = new QHBoxLayout(mainWidget);
-    topLayout->addWidget(plot, 1);
-    topLayout->addLayout(btnLayout);
+    topLayout->addWidget(plot, 10);
+    topLayout->addLayout(opLayout,1);
+    topLayout->addLayout(btnLayout,1);
 
     setCentralWidget(mainWidget);
 
     setWindowState(this->windowState() ^ Qt::WindowMaximized);
+//    setWindowState(Qt::WindowMaximized);
+
+    showMaximized();
+    QWidget::setWindowFlags(Qt::WindowMaximizeButtonHint | Qt::WindowCloseButtonHint | Qt::WindowMinimizeButtonHint);
+
     setWindowTitle(tr("Jujube Inspect Program"));
 
 //    tester.test();
 
 //    tester.testInit();
-//    tester.testZaoInspect();
+//    tester.testInspectSigleImage();
 }
 
 MainWindow::~MainWindow()
@@ -205,6 +299,75 @@ void MainWindow::onInspectDone(DetectResult result)
 
     if (mic->getInspectState() == INSPECT_STATE_INSPECTED)
         cic->startNewCache(1);
+}
+
+void MainWindow::onOpenCfgFileBtnClicked()
+{
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"),
+                                                     ".",
+                                                     tr("Files (*.xml)"));
+
+    if (fileName.isEmpty())
+        return;
+
+    if (mic->loadCfgFile(fileName) < 0) {
+        QMessageBox::information(this, QString(tr("Load Config File Failed")),
+                                 QString(tr("Load config file failed."
+                                            " Please check whether the"
+                                            " file is a valid config file.")));
+    }
+}
+
+void MainWindow::onSaveCfgFileBtnClicked()
+{
+    QString fileName = QFileDialog::getSaveFileName(this, tr("Save File"),
+                                                     ".",
+                                                     tr("Files (*.xml)"));
+
+    if (fileName.isEmpty())
+        return;
+
+    if (mic->saveCfgFile(fileName) < 0) {
+        QMessageBox::information(this, QString(tr("Save Config File Failed")),
+                                 QString(tr("Failed to save file.")));
+    }
+}
+
+void MainWindow::onLoadAlgParasFileBtnClicked()
+{
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"),
+                                                     ".",
+                                                     tr("Files (*.xml)"));
+
+    if (fileName.isEmpty())
+        return;
+
+    if (mic->reloadAlgParasFile(fileName) < 0) {
+        QMessageBox::information(this, QString(tr("Load File Failed")),
+                                 QString(tr("Load algorithm parameters file failed."
+                                            " Please check whether the"
+                                            " file is a valid algorithm parameters file.")));
+    }
+}
+
+void MainWindow::onSaveAlgParasBtnClicked()
+{
+    mic->saveAlgParas();
+}
+
+void MainWindow::onSaveAlgParasToFileBtnClicked()
+{
+    QString fileName = QFileDialog::getSaveFileName(this, tr("Save File"),
+                                                     ".",
+                                                     tr("Files (*.xml)"));
+
+    if (fileName.isEmpty())
+        return;
+
+    if (mic->saveAlgParasToFile(fileName) < 0) {
+        QMessageBox::information(this, QString(tr("Save Parameters File Failed")),
+                                 QString(tr("Failed to save file.")));
+    }
 }
 
 void MainWindow::onSelCamTypeBtnClicked()

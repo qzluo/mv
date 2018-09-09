@@ -118,6 +118,25 @@ void QZaoInspectAlgApp::updateFrameDist()
     }
 }
 
+int QZaoInspectAlgApp::reloadAlgParasFile(QString &fileName)
+{
+    if (zaoInspectAlgParas.loadFromFile(fileName) < 0)
+        return -1;
+
+    resetInspectParas();
+    return 0;
+}
+
+int QZaoInspectAlgApp::saveAlgParas()
+{
+    return zaoInspectAlgParas.save();
+}
+
+int QZaoInspectAlgApp::saveAlgParasToFile(QString &fileName)
+{
+    return zaoInspectAlgParas.saveToFile(fileName);
+}
+
 void QZaoInspectAlgApp::resetInspectParas()
 {
     if (!detectHandle)
@@ -146,10 +165,7 @@ int QZaoInspectAlgApp::loadCfgFile()
     logFile(FileLogger::info, msg);
 
     //init GoodZaoClassThreshold
-    if (zaoInspectAlgParas.load() < 0) {
-        logFile(FileLogger::warn, "Init zaoInspectAlgParas failed!");
-        return -1;
-    }
+    zaoInspectAlgParas.load();
 
     sprintf(msg, "class_good1_length = %f, class_good1_width = %f, "
             "class_good2_length = %f, class_good2_width = %f, "
@@ -255,6 +271,52 @@ int QZaoInspectAlgApp::inspect(const QImage &cameraImg, QImage &outImg)
     QVariant variant = QVariant::fromValue(vecZaoInfo);
     setDataVariant(getResDataDescFromId(E_Cur_Frame_Product_Info),
                    variant);
+
+    return 0;
+}
+
+int QZaoInspectAlgApp::inspectSigleImage(const Mat &mat,
+                                         QList<ZaoInfo> &cur_left_col_result,
+                                         QList<ZaoInfo> &cur_right_col_result)
+{
+    //检测图片及识别种类
+    QVector<ZaoInfo> vecZaoInfo;
+    int zaoCount = 0;
+    if (zaoInspect(mat, vecZaoInfo, &zaoCount) < 0) {
+        logFile(FileLogger::warn, "inspect error!");
+        return -1;
+    }
+
+    if (zaoCount > ZAO_REGION_COUNT * 2) {
+        logFile(FileLogger::warn, "The count of found product is larger than expected!");
+        return -1;
+    }
+
+    //生成当前检测结果，并分别放入左右队列中
+    cur_left_col_result.clear();
+    cur_right_col_result.clear();
+
+    for (int i = 0; i < ZAO_REGION_COUNT; ++i) {
+        ZaoInfo tmpZaoInfo = {};
+        tmpZaoInfo.classId = ZAO_CLASS_NONE;
+        cur_left_col_result << tmpZaoInfo;
+        cur_right_col_result << tmpZaoInfo;
+    }
+
+    for (int i = 0; i < zaoCount; ++i) {
+        int leftOrRight = ZAO_COL_POS_LEFT;
+        int regionId = 0;
+
+        if (calcZaoRegionId(vecZaoInfo[i], &leftOrRight, &regionId) < 0) {
+            logFile(FileLogger::warn, "calc zao calcZaoRegionId error!");
+            return -1;
+        }
+
+        if (leftOrRight == ZAO_COL_POS_LEFT)
+            cur_left_col_result[regionId] = vecZaoInfo[i];
+        else
+            cur_right_col_result[regionId] = vecZaoInfo[i];
+    }
 
     return 0;
 }

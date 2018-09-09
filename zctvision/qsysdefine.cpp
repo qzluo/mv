@@ -10,7 +10,7 @@ QSysDefine::QSysDefine()
 QString QSysDefine::GetSettingSysFileName()
 {
     QDir dir;
-    return dir.currentPath() + "//zaoInspectPrjSysInfo.xml";
+    return dir.currentPath() + "//jujubeInspectPrjSysInfo.xml";
 }
 
 QString QSysDefine::GetFrameCalInfoFileName()
