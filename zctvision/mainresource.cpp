@@ -87,6 +87,15 @@ int MainResource::startInspect()
     if (getInspectState() != INSPECT_STATE_WAIT)
         return -1;
 
+    //reset algorithm image size
+    int imgWidth = 0;
+    int imgHeight = 0;
+    cic->getImageSize(&imgWidth, &imgHeight);
+    if (algorithmManager.resetImageSize(imgWidth, imgHeight) < 0) {
+        logFile(FileLogger::warn, "ResetImageSize failed!");
+        return -1;
+    }
+
     cic->startNewCache(1);
 
     //读当前帧序号并保存
@@ -145,6 +154,14 @@ int MainResource::saveAlgParasToFile(QString& fileName)
     return algorithmManager.saveAlgParasToFile(fileName);
 }
 
+int MainResource::inspectSingleImage(const QImage &image, QList<ZaoInfo> &cur_left_col_result, QList<ZaoInfo> &cur_right_col_result)
+{
+    algorithmManager.resetImageSize(image.width(), image.height());
+
+    return algorithmManager.inspectSingleImage(image, cur_left_col_result,
+                                               cur_right_col_result);
+}
+
 int MainResource::initRc()
 {
     //initial camera
@@ -157,15 +174,6 @@ int MainResource::initRc()
     if (initRwComm() < 0) {
         logFile(FileLogger::warn, "Initalize com failed!");
         return -2;
-    }
-
-    //reset algorithm manager
-    int imgWidth = 0;
-    int imgHeight = 0;
-    cic->getImageSize(&imgWidth, &imgHeight);
-    if (algorithmManager.resetImageSize(imgWidth, imgHeight) < 0) {
-        logFile(FileLogger::warn, "ResetImageSize failed!");
-        return -3;
     }
 
     return 0;

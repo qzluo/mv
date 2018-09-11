@@ -15,6 +15,8 @@
 
 #define ZAO_CLASS_NONE         15  //无枣
 
+QString getJujubeDescFromClass(int classId);
+
 class QSysDefine
 {
 public:

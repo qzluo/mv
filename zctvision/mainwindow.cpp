@@ -9,12 +9,16 @@
 #include "qframecalinfosetupdlg.h"
 #include "qalgparassetupdlg.h"
 #include "qrtuoperatordlg.h"
-#include "qrealtimeresultwidget.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
+    curImage = QImage();    //当前待检测的图片
+    curImageFileName = "";
+    hasNext = false;
+    hasPrev = false;
+
     ui->setupUi(this);
 
     //init UI
@@ -22,7 +26,7 @@ MainWindow::MainWindow(QWidget *parent) :
     openCfgFileToolBtn = new QToolButton(this);
     openCfgFileToolBtn->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
     openCfgFileToolBtn->setIcon(QPixmap(":/images/camera.png"));
-    openCfgFileToolBtn->setText(tr("Open Config File"));
+    openCfgFileToolBtn->setToolTip(tr("Open Config File"));
     connect(openCfgFileToolBtn, &QToolButton::clicked,
             this, &MainWindow::onOpenCfgFileBtnClicked);
 
@@ -30,7 +34,7 @@ MainWindow::MainWindow(QWidget *parent) :
     saveCfgFileToolBtn = new QToolButton(this);
     saveCfgFileToolBtn->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
     saveCfgFileToolBtn->setIcon(QPixmap(":/images/camera.png"));
-    saveCfgFileToolBtn->setText(tr("Save Config File"));
+    saveCfgFileToolBtn->setToolTip(tr("Save Config File"));
     connect(saveCfgFileToolBtn, &QToolButton::clicked,
             this, &MainWindow::onSaveCfgFileBtnClicked);
 
@@ -38,7 +42,7 @@ MainWindow::MainWindow(QWidget *parent) :
     loadAlgParasFileToolBtn = new QToolButton(this);
     loadAlgParasFileToolBtn->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
     loadAlgParasFileToolBtn->setIcon(QPixmap(":/images/camera.png"));
-    loadAlgParasFileToolBtn->setText(tr("Load Algorithm Parameters File"));
+    loadAlgParasFileToolBtn->setToolTip(tr("Load Algorithm Parameters File"));
     connect(loadAlgParasFileToolBtn, &QToolButton::clicked,
             this, &MainWindow::onLoadAlgParasFileBtnClicked);
 
@@ -46,7 +50,7 @@ MainWindow::MainWindow(QWidget *parent) :
     saveAlgParasToolBtn = new QToolButton(this);
     saveAlgParasToolBtn->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
     saveAlgParasToolBtn->setIcon(QPixmap(":/images/camera.png"));
-    saveAlgParasToolBtn->setText(tr("Save Algorithm Parameters"));
+    saveAlgParasToolBtn->setToolTip(tr("Save Algorithm Parameters"));
     connect(saveAlgParasToolBtn, &QToolButton::clicked,
             this, &MainWindow::onSaveAlgParasBtnClicked);
 
@@ -54,7 +58,7 @@ MainWindow::MainWindow(QWidget *parent) :
     saveAlgParasToFileToolBtn = new QToolButton(this);
     saveAlgParasToFileToolBtn->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
     saveAlgParasToFileToolBtn->setIcon(QPixmap(":/images/camera.png"));
-    saveAlgParasToFileToolBtn->setText(tr("Save Algorithm Parameters To File"));
+    saveAlgParasToFileToolBtn->setToolTip(tr("Save Algorithm Parameters To File"));
     connect(saveAlgParasToFileToolBtn, &QToolButton::clicked,
             this, &MainWindow::onSaveAlgParasToFileBtnClicked);
 
@@ -62,7 +66,7 @@ MainWindow::MainWindow(QWidget *parent) :
     selCamTypeToolBtn = new QToolButton(this);
     selCamTypeToolBtn->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
     selCamTypeToolBtn->setIcon(QPixmap(":/images/camera.png"));
-    selCamTypeToolBtn->setText(tr("Select Camera Type"));
+    selCamTypeToolBtn->setToolTip(tr("Select Camera Type"));
     connect(selCamTypeToolBtn, &QToolButton::clicked,
             this, &MainWindow::onSelCamTypeBtnClicked);
 
@@ -70,7 +74,7 @@ MainWindow::MainWindow(QWidget *parent) :
     commSetupToolBtn = new QToolButton(this);
     commSetupToolBtn->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
     commSetupToolBtn->setIcon(QPixmap(":/images/serialcomm.png"));
-    commSetupToolBtn->setText(tr("Serial Setup"));
+    commSetupToolBtn->setToolTip(tr("Serial Setup"));
     connect(commSetupToolBtn, &QToolButton::clicked,
             this, &MainWindow::onCommSetupBtnClicked);
 
@@ -78,24 +82,39 @@ MainWindow::MainWindow(QWidget *parent) :
     startSysToolBtn = new QToolButton(this);
     startSysToolBtn->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
     startSysToolBtn->setIcon(QPixmap(":/images/start_sys.png"));
-    startSysToolBtn->setText(tr("Start System"));
+    startSysToolBtn->setToolTip(tr("Start System"));
     connect(startSysToolBtn, &QToolButton::clicked,
             this, &MainWindow::onStartSysBtnClicked);
 
-    //start inspect
-    startInspectToolBtn = new QToolButton(this);
-    startInspectToolBtn->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
-    startInspectToolBtn->setIcon(QPixmap(":/images/start.png"));
-    startInspectToolBtn->setText(tr("Start Inspect"));
-    startInspectToolBtn->setEnabled(false);
-    connect(startInspectToolBtn, &QToolButton::clicked,
-            this, &MainWindow::onStartInspectBtnClicked);
+    //open image inspect
+    openImageToolBtn = new QToolButton(this);
+    openImageToolBtn->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+    openImageToolBtn->setIcon(QPixmap(":/images/start.png"));
+    openImageToolBtn->setToolTip(tr("Open Image"));
+    connect(openImageToolBtn, &QToolButton::clicked,
+            this, &MainWindow::onOpenImageBtnClicked);
+
+    //next image inspect
+    nextImageToolBtn = new QToolButton(this);
+    nextImageToolBtn->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+    nextImageToolBtn->setIcon(QPixmap(":/images/start.png"));
+    nextImageToolBtn->setToolTip(tr("Next Image"));
+    connect(nextImageToolBtn, &QToolButton::clicked,
+            this, &MainWindow::onNextImageBtnClicked);
+
+    //last image inspect
+    lastImageToolBtn = new QToolButton(this);
+    lastImageToolBtn->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+    lastImageToolBtn->setIcon(QPixmap(":/images/start.png"));
+    lastImageToolBtn->setToolTip(tr("Last Image"));
+    connect(lastImageToolBtn, &QToolButton::clicked,
+            this, &MainWindow::onLastImageBtnClicked);
 
     //setup
     setupToolBtn = new QToolButton(this);
     setupToolBtn->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
     setupToolBtn->setIcon(QPixmap(":/images/tool_icon.png"));
-    setupToolBtn->setText(tr("Setup"));
+    setupToolBtn->setToolTip(tr("Setup"));
 
     QMenu* setupMenu = new QMenu(this);
     QAction* frameCalSetupAction = new QAction(QPixmap(":/images/calibration.png"),
@@ -129,19 +148,30 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->mainToolBar->addWidget(commSetupToolBtn);
     ui->mainToolBar->addWidget(startSysToolBtn);
     ui->mainToolBar->addSeparator();
-    ui->mainToolBar->addWidget(startInspectToolBtn);
+    ui->mainToolBar->addWidget(openImageToolBtn);
+    ui->mainToolBar->addWidget(nextImageToolBtn);
+    ui->mainToolBar->addWidget(lastImageToolBtn);
     ui->mainToolBar->addSeparator();
     ui->mainToolBar->addWidget(setupToolBtn);
 
-    onSystemStateStopped();
 
-    qDebug() << "Current currentThreadId" << QThread::currentThreadId();
 
     plot = new GraphicsWidget(this);
 
     //operate btn
-    QPushButton* startBtn = new QPushButton(tr("Start"), this);
+    //start inspect
+    startInspectToolBtn = new QToolButton(this);
+    startInspectToolBtn->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+    startInspectToolBtn->setIcon(QPixmap(":/images/start.png"));
+    startInspectToolBtn->setToolTip(tr("Start Inspect"));
+    startInspectToolBtn->setEnabled(false);
+    connect(startInspectToolBtn, &QToolButton::clicked,
+            this, &MainWindow::onStartInspectBtnClicked);
+
+    //run once btn
     QPushButton* runOnceBtn = new QPushButton(tr("Run Once"), this);
+    connect(runOnceBtn, &QPushButton::clicked,
+            this, &MainWindow::onRunOnceBtnClicked);
 
     QGroupBox* setupGB = new QGroupBox(tr("Setup"), this);
     QVBoxLayout* setupLayout = new QVBoxLayout(setupGB);
@@ -149,9 +179,10 @@ MainWindow::MainWindow(QWidget *parent) :
     QPushButton* gradeParasBtn = new QPushButton(tr("Grade Parameters"), this);
     setupLayout->addWidget(recognizeParasBtn);
     setupLayout->addWidget(gradeParasBtn);
+    setupLayout->addStretch();
 
     QVBoxLayout* opLayout = new QVBoxLayout;
-    opLayout->addWidget(startBtn);
+    opLayout->addWidget(startInspectToolBtn);
     opLayout->addWidget(runOnceBtn);
     opLayout->addWidget(setupGB);
 
@@ -162,22 +193,8 @@ MainWindow::MainWindow(QWidget *parent) :
     QGroupBox* realResultGB = new QGroupBox(tr("Real Time Result"), this);
     QHBoxLayout* realResultLayout = new QHBoxLayout(realResultGB);
 
-
-//    QVBoxLayout* leftResLayout = new QVBoxLayout;
-//    QVBoxLayout* rightResLayout = new QVBoxLayout;
-
-//    for (int i = 1; i <= 4; ++i) {
-//        leftResLayout->addWidget(new QLabel(QString::number(i)));
-//        rightResLayout->addWidget(new QLabel(QString::number(i+4)));
-//    }
-//    realResultLayout->addLayout(leftResLayout);
-//    realResultLayout->addLayout(rightResLayout);
-
-    realResultLayout->addWidget(new QRealTimeResultWidget());
-//    QSizePolicy realResultSizePolicy = realResultGB->sizePolicy();
-//    realResultSizePolicy.setHorizontalPolicy(QSizePolicy::Maximum);
-
-//    realResultGB->setSizePolicy(QSizePolicy::Preferred);
+    rtResultWidget = new QRealTimeResultWidget(this);
+    realResultLayout->addWidget(rtResultWidget);
 
     QVBoxLayout* btnLayout = new QVBoxLayout;
     btnLayout->addWidget(realResultGB);
@@ -194,18 +211,22 @@ MainWindow::MainWindow(QWidget *parent) :
 
     setCentralWidget(mainWidget);
 
+    QRect screenRect = QApplication::desktop()->screenGeometry();
+    resize(screenRect.width()-100,screenRect.height()-100);
     setWindowState(this->windowState() ^ Qt::WindowMaximized);
-//    setWindowState(Qt::WindowMaximized);
-
-    showMaximized();
-    QWidget::setWindowFlags(Qt::WindowMaximizeButtonHint | Qt::WindowCloseButtonHint | Qt::WindowMinimizeButtonHint);
 
     setWindowTitle(tr("Jujube Inspect Program"));
+
+    onSystemStateStopped();
+
+    qDebug() << "Current currentThreadId" << QThread::currentThreadId();
 
 //    tester.test();
 
 //    tester.testInit();
 //    tester.testInspectSigleImage();
+
+//    testHasNextAndLastFile();
 }
 
 MainWindow::~MainWindow()
@@ -216,13 +237,6 @@ MainWindow::~MainWindow()
 void MainWindow::init()
 {
     mic->init();
-
-    //connect
-    connect(mic, &MainResource::hasImage,
-            this, &MainWindow::onHasImage);
-
-    connect(mic, &MainResource::inspectDone,
-            this, &MainWindow::onInspectDone);
 }
 
 void MainWindow::onSystemStateStarted()
@@ -257,6 +271,19 @@ void MainWindow::onInspectStateStarted()
     startInspectToolBtn->setIcon(QPixmap(":/images/stop.png"));
     startInspectToolBtn->setText(tr("Stop Inspect"));
 
+    //connect
+    connect(mic, &MainResource::hasImage,
+            this, &MainWindow::onHasImage);
+
+    connect(mic, &MainResource::inspectDone,
+            this, &MainWindow::onInspectDone);
+
+    curImageFileName = "";
+    hasNext = false;
+    hasPrev = false;
+    nextImageToolBtn->setEnabled(false);
+    lastImageToolBtn->setEnabled(false);
+
     setupToolBtn->setEnabled(false);
 }
 
@@ -265,11 +292,193 @@ void MainWindow::onInspectStateStopped()
     startInspectToolBtn->setIcon(QPixmap(":/images/start.png"));
     startInspectToolBtn->setText(tr("Start Inspect"));
 
+    //disconnect
+    disconnect(mic, &MainResource::hasImage,
+               this, &MainWindow::onHasImage);
+
+    disconnect(mic, &MainResource::inspectDone,
+               this, &MainWindow::onInspectDone);
+
     setupToolBtn->setEnabled(true);
+}
+
+void MainWindow::hasNextAndLastFile(QString &fullFileName, bool *pHasNext, bool *bHasLast)
+{
+    if (fullFileName.isEmpty()) {
+        *pHasNext = false;
+        *bHasLast = false;
+        return;
+    }
+
+    int nameIndex = fullFileName.lastIndexOf("\\");
+    if (nameIndex < 0)
+        nameIndex = fullFileName.lastIndexOf("/");
+
+    if (nameIndex < 0) {
+        *pHasNext = false;
+        *bHasLast = false;
+        return;
+    }
+
+    //get file name
+    QString fileName = fullFileName.right(fullFileName.length() - nameIndex - 1);
+    QStringList fileNameSplits = fileName.split(".");
+    if (fileNameSplits.length() <= 0) {
+        *pHasNext = false;
+        *bHasLast = false;
+        return;
+    }
+
+    bool bOk = false;
+
+    //file name to number
+    int fileNameNum = fileNameSplits[0].toInt(&bOk);
+    if (!bOk) {
+        *pHasNext = false;
+        *bHasLast = false;
+        return;
+    }
+
+    QString nextFileFullName = fullFileName.left(nameIndex + 1) +
+            fileName.replace(QString::number(fileNameNum),
+                             QString::number(fileNameNum+1));
+
+    *pHasNext = QFile::exists(nextFileFullName);
+
+    QString lastFileFullName = fullFileName.left(nameIndex + 1) +
+            fileName.replace(QString::number(fileNameNum+1),
+                             QString::number(fileNameNum-1));
+
+    *bHasLast = QFile::exists(lastFileFullName);
+}
+
+bool MainWindow::hasNextFile(QString &fullFileName)
+{
+    if (fullFileName.isEmpty())
+        return false;
+
+    int nameIndex = fullFileName.lastIndexOf("\\");
+    if (nameIndex < 0)
+        nameIndex = fullFileName.lastIndexOf("/");
+
+    if (nameIndex < 0)
+        return false;
+
+    //get file name
+    QString fileName = fullFileName.right(fullFileName.length() - nameIndex - 1);
+    QStringList fileNameSplits = fileName.split(".");
+    if (fileNameSplits.length() <= 0)
+        return false;
+
+    bool bOk = false;
+
+    //file name to number
+    int fileNameNum = fileNameSplits[0].toInt(&bOk);
+    if (!bOk)
+        return false;
+
+    QString nextFileFullName = fullFileName.left(nameIndex + 1) +
+            fileName.replace(fileNameSplits[0], QString::number(fileNameNum+1));
+
+    QFile file(nextFileFullName);
+    return file.exists();
+}
+
+QString MainWindow::getNextOrLastFileName(QString& fullFileName, bool bNext)
+{
+    if (fullFileName.isEmpty())
+        return "";
+
+    int nameIndex = fullFileName.lastIndexOf("\\");
+    if (nameIndex < 0)
+        nameIndex = fullFileName.lastIndexOf("/");
+
+    if (nameIndex < 0)
+        return "";
+
+    //get file name
+    QString fileName = fullFileName.right(fullFileName.length() - nameIndex - 1);
+    QStringList fileNameSplits = fileName.split(".");
+    if (fileNameSplits.length() <= 0)
+        return "";
+
+    bool bOk = false;
+
+    //file name to number
+    int fileNameNum = fileNameSplits[0].toInt(&bOk);
+    if (!bOk)
+        return "";
+
+    int newFileNameNum = bNext ? (fileNameNum + 1) : (fileNameNum - 1);
+    QString retFileFullName = fullFileName.left(nameIndex + 1) +
+            fileName.replace(QString::number(fileNameNum),
+                             QString::number(newFileNameNum));
+
+    return QFile::exists(retFileFullName) ? retFileFullName : "";
+}
+
+void MainWindow::onNextOrLastImageBtnClicked(bool bNext)
+{
+    if (curImageFileName.isEmpty())
+        return;
+
+    if (mic->getInspectState() == INSPECT_STATE_INSPECTED)
+        return;
+
+    QString fileName = getNextOrLastFileName(curImageFileName, bNext);
+
+    if (fileName.isEmpty())
+        return;
+
+    QImage newImage = QImage(fileName);
+    if (newImage.isNull())
+        return;
+
+    //update curImage
+    curImage = newImage;
+    curImageFileName = fileName;
+    hasNextAndLastFile(curImageFileName, &hasNext, &hasPrev);
+    nextImageToolBtn->setEnabled(hasNext);
+    lastImageToolBtn->setEnabled(hasPrev);
+
+    plot->setImage(QPixmap::fromImage(curImage));
+
+    onRunOnceBtnClicked();
+}
+
+void MainWindow::testHasNextFile()
+{
+    qDebug() << hasNextFile(QString(""));
+    qDebug() << hasNextFile(QString("abc"));
+    qDebug() << hasNextFile(QString("F:\\VirCam\\TmpImage1\\8058.bmp"));
+}
+
+void MainWindow::testHasNextAndLastFile()
+{
+    bool tmpHasNext = false;
+    bool tmpHasLast = false;
+
+    hasNextAndLastFile(QString(""), &tmpHasNext, &tmpHasLast);
+    qDebug() << tmpHasNext << tmpHasLast;
+
+    hasNextAndLastFile(QString("abc"), &tmpHasNext, &tmpHasLast);
+    qDebug() << tmpHasNext << tmpHasLast;
+
+    hasNextAndLastFile(QString("F:\\VirCam\\TmpImage1\\8058.bmp"), &tmpHasNext, &tmpHasLast);
+    qDebug() << tmpHasNext << tmpHasLast;
+
+    hasNextAndLastFile(QString("F:\\VirCam\\TmpImage1\\8059.bmp"), &tmpHasNext, &tmpHasLast);
+    qDebug() << tmpHasNext << tmpHasLast;
+
+    hasNextAndLastFile(QString("F:\\VirCam\\TmpImage1\\8287.bmp"), &tmpHasNext, &tmpHasLast);
+    qDebug() << tmpHasNext << tmpHasLast;
+
+
 }
 
 void MainWindow::onHasImage(const QImage& image)
 {
+    curImage = image.copy();
     plot->setImage((QPixmap::fromImage(image)));
 }
 
@@ -415,6 +624,77 @@ void MainWindow::onStartInspectBtnClicked()
         if (mic->stopInspect() == 0) {
             onInspectStateStopped();
         }
+    }
+}
+
+void MainWindow::onOpenImageBtnClicked()
+{
+    if (mic->getInspectState() == INSPECT_STATE_INSPECTED)
+        return;
+
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"),
+                                                     "",
+                                                     tr("Images (*.png *.bmp *.jpg)"));
+
+    if (fileName.isEmpty())
+        return;
+
+    QImage newImage = QImage(fileName);
+    if (newImage.isNull())
+        return;
+
+    //update curImage
+    curImage = newImage;
+    curImageFileName = fileName;
+    hasNextAndLastFile(curImageFileName, &hasNext, &hasPrev);
+    nextImageToolBtn->setEnabled(hasNext);
+    lastImageToolBtn->setEnabled(hasPrev);
+
+    plot->setImage(QPixmap::fromImage(curImage));
+
+    onRunOnceBtnClicked();
+}
+
+void MainWindow::onNextImageBtnClicked()
+{
+    onNextOrLastImageBtnClicked(true);
+}
+
+void MainWindow::onLastImageBtnClicked()
+{
+    onNextOrLastImageBtnClicked(false);
+}
+
+void MainWindow::onRunOnceBtnClicked()
+{
+    if (curImage.isNull())
+        return ;
+
+    QList<ZaoInfo> cur_left_col_result;
+    QList<ZaoInfo> cur_right_col_result;
+    if (mic->inspectSingleImage(curImage, cur_left_col_result, cur_right_col_result) < 0)
+        return ;
+
+    //show result
+    Q_ASSERT(cur_left_col_result.size() == ZAO_REGION_COUNT);
+    Q_ASSERT(cur_right_col_result.size() == ZAO_REGION_COUNT);
+
+    for (int i = 0; i < ZAO_REGION_COUNT; ++i) {
+        if (cur_left_col_result.at(i).classId == ZAO_CLASS_NONE) {
+            rtResultWidget->setItemResult(i, tr("NULL"), QString(""), QString(""));
+        }
+        else
+            rtResultWidget->setItemResult(i, getJujubeDescFromClass(cur_left_col_result.at(i).classId),
+                                          QString::number(cur_left_col_result.at(i).zaoPos.width),
+                                          QString::number(cur_left_col_result.at(i).zaoPos.height));
+
+        if (cur_right_col_result.at(i).classId == ZAO_CLASS_NONE) {
+            rtResultWidget->setItemResult(i+4, tr("NULL"), QString(""), QString(""));
+        }
+        else
+            rtResultWidget->setItemResult(i+4, getJujubeDescFromClass(cur_right_col_result.at(i).classId),
+                                          QString::number(cur_right_col_result.at(i).zaoPos.width),
+                                          QString::number(cur_right_col_result.at(i).zaoPos.height));
     }
 }
 

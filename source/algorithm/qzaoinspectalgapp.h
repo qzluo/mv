@@ -94,9 +94,14 @@ public:
     /// \param right_col_result: 右列结果
     /// \return
     ///
-    int inspectSigleImage(const cv::Mat& mat,
+    int inspectSingleImage(const cv::Mat& mat,
                           QList<ZaoInfo>& cur_left_col_result,
                           QList<ZaoInfo>& cur_right_col_result);
+
+    int inspectSingleImage(const QImage& image,
+                          QList<ZaoInfo>& cur_left_col_result,
+                          QList<ZaoInfo>& cur_right_col_result);
+
     //获取指定的检测结果
     int getDataVariant(const QString& dataName, QVariant& var);
 

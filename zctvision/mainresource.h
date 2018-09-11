@@ -61,6 +61,11 @@ public:
     int saveAlgParas(void);
     int saveAlgParasToFile(QString& fileName);
 
+    //检测单张图片
+    int inspectSingleImage(const QImage& image,
+                          QList<ZaoInfo>& cur_left_col_result,
+                          QList<ZaoInfo>& cur_right_col_result);
+
     ProjectSysInfo* getPSysInfo();
     QFrameCalInfo* getPFrameCalInfo(void);
     QZaoInspectAlgParas* getPInspectAlgParas(void);

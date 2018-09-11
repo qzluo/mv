@@ -11,6 +11,7 @@
 #include "qzaoinspectalgapptester.h"
 
 #include "vimbatester.h"
+#include "qrealtimeresultwidget.h"
 
 namespace Ui {
 class MainWindow;
@@ -32,6 +33,15 @@ private:
     void onInspectStateStarted();
     void onInspectStateStopped();
 
+    void hasNextAndLastFile(QString& fullFileName, bool* pHasNext, bool* bHasLast);
+    bool hasNextFile(QString& fullFileName);
+
+    QString getNextOrLastFileName(QString& fullFileName, bool bNext);
+    void onNextOrLastImageBtnClicked(bool bNext);
+
+    void testHasNextFile();
+    void testHasNextAndLastFile(void);
+
 public slots:
     void onHasImage(const QImage& image);
     void onInspectDone(DetectResult result);
@@ -44,6 +54,10 @@ public slots:
     void onCommSetupBtnClicked();
     void onStartSysBtnClicked();
     void onStartInspectBtnClicked();
+    void onOpenImageBtnClicked();
+    void onNextImageBtnClicked();
+    void onLastImageBtnClicked();
+    void onRunOnceBtnClicked();
     void onFrameCalActionTriggered();
     void onAlgParasActionTriggered();
     void onModbusCmdActionTriggered();
@@ -62,13 +76,24 @@ private:
     QToolButton *startSysToolBtn;
     QToolButton *startInspectToolBtn;
 
+    QToolButton *openImageToolBtn;
+    QToolButton *nextImageToolBtn;
+    QToolButton *lastImageToolBtn;
+
     QToolButton *setupToolBtn;
     QAction* modbusCmdAction;
+
+    QRealTimeResultWidget* rtResultWidget;
 
     QTextBrowser* resultTB;
 
 //    MainResource rc;
     GraphicsWidget* plot;
+
+    QImage curImage;    //当前待检测的图片
+    QString curImageFileName;
+    bool hasNext;
+    bool hasPrev;
 
     QZaoInspectAlgAppTester tester;
 };

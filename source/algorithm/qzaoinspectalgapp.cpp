@@ -275,7 +275,7 @@ int QZaoInspectAlgApp::inspect(const QImage &cameraImg, QImage &outImg)
     return 0;
 }
 
-int QZaoInspectAlgApp::inspectSigleImage(const Mat &mat,
+int QZaoInspectAlgApp::inspectSingleImage(const Mat &mat,
                                          QList<ZaoInfo> &cur_left_col_result,
                                          QList<ZaoInfo> &cur_right_col_result)
 {
@@ -319,6 +319,13 @@ int QZaoInspectAlgApp::inspectSigleImage(const Mat &mat,
     }
 
     return 0;
+}
+
+int QZaoInspectAlgApp::inspectSingleImage(const QImage &image, QList<ZaoInfo> &cur_left_col_result, QList<ZaoInfo> &cur_right_col_result)
+{
+    cv::Mat mat = ImageTransform::QImageToMat(image);
+
+    return inspectSingleImage(mat, cur_left_col_result, cur_right_col_result);
 }
 
 int QZaoInspectAlgApp::getDataVariant(const QString &dataName, QVariant &var)

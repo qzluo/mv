@@ -275,7 +275,7 @@ int QZaoInspectAlgAppTester::testInspectSigleImage()
 
     QList<ZaoInfo> cur_left_col_result;
     QList<ZaoInfo> cur_right_col_result;
-    if (inst.inspectSigleImage(img, cur_left_col_result, cur_right_col_result) < 0)
+    if (inst.inspectSingleImage(img, cur_left_col_result, cur_right_col_result) < 0)
         return -1;
 
     for (int i = 0; i < cur_left_col_result.size(); ++i) {
