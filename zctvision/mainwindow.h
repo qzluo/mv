@@ -58,6 +58,8 @@ public slots:
     void onNextImageBtnClicked();
     void onLastImageBtnClicked();
     void onRunOnceBtnClicked();
+    void onRecognizeParasBtnClicked();
+    void onGradeParasBtnClicked();
     void onFrameCalActionTriggered();
     void onAlgParasActionTriggered();
     void onModbusCmdActionTriggered();
@@ -79,6 +81,10 @@ private:
     QToolButton *openImageToolBtn;
     QToolButton *nextImageToolBtn;
     QToolButton *lastImageToolBtn;
+
+    QToolButton* runOnceBtn;
+    QPushButton* recognizeParasBtn;
+    QPushButton* gradeParasBtn;
 
     QToolButton *setupToolBtn;
     QAction* modbusCmdAction;

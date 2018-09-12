@@ -14,5 +14,13 @@
         <file>images/parameter.png</file>
         <file>images/modbus_cmd.png</file>
         <file>images/serialcomm.png</file>
+        <file>images/open_cfg.png</file>
+        <file>images/open_paras.png</file>
+        <file>images/save_cfg.png</file>
+        <file>images/save_paras.png</file>
+        <file>images/save_paras_as.png</file>
+        <file>images/next_image.png</file>
+        <file>images/open_image.png</file>
+        <file>images/prev_image.png</file>
     </qresource>
 </RCC>

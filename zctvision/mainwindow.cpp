@@ -9,6 +9,9 @@
 #include "qframecalinfosetupdlg.h"
 #include "qalgparassetupdlg.h"
 #include "qrtuoperatordlg.h"
+#include "qinspectparassetupdlg.h"
+#include "qgradeparassetupdlg.h"
+
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -21,50 +24,52 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->setupUi(this);
 
+    setIconSize(QSize(50,50));
+
     //init UI
     //open cfg file
     openCfgFileToolBtn = new QToolButton(this);
-    openCfgFileToolBtn->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
-    openCfgFileToolBtn->setIcon(QPixmap(":/images/camera.png"));
+    openCfgFileToolBtn->setToolButtonStyle(Qt::ToolButtonIconOnly);
+    openCfgFileToolBtn->setIcon(QPixmap(":/images/open_cfg.png"));
     openCfgFileToolBtn->setToolTip(tr("Open Config File"));
     connect(openCfgFileToolBtn, &QToolButton::clicked,
             this, &MainWindow::onOpenCfgFileBtnClicked);
 
     //save cfg file
     saveCfgFileToolBtn = new QToolButton(this);
-    saveCfgFileToolBtn->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
-    saveCfgFileToolBtn->setIcon(QPixmap(":/images/camera.png"));
+    saveCfgFileToolBtn->setToolButtonStyle(Qt::ToolButtonIconOnly);
+    saveCfgFileToolBtn->setIcon(QPixmap(":/images/save_cfg.png"));
     saveCfgFileToolBtn->setToolTip(tr("Save Config File"));
     connect(saveCfgFileToolBtn, &QToolButton::clicked,
             this, &MainWindow::onSaveCfgFileBtnClicked);
 
     //load algorithm parameters file
     loadAlgParasFileToolBtn = new QToolButton(this);
-    loadAlgParasFileToolBtn->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
-    loadAlgParasFileToolBtn->setIcon(QPixmap(":/images/camera.png"));
+    loadAlgParasFileToolBtn->setToolButtonStyle(Qt::ToolButtonIconOnly);
+    loadAlgParasFileToolBtn->setIcon(QPixmap(":/images/open_paras.png"));
     loadAlgParasFileToolBtn->setToolTip(tr("Load Algorithm Parameters File"));
     connect(loadAlgParasFileToolBtn, &QToolButton::clicked,
             this, &MainWindow::onLoadAlgParasFileBtnClicked);
 
     //save algorithm parameters
     saveAlgParasToolBtn = new QToolButton(this);
-    saveAlgParasToolBtn->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
-    saveAlgParasToolBtn->setIcon(QPixmap(":/images/camera.png"));
+    saveAlgParasToolBtn->setToolButtonStyle(Qt::ToolButtonIconOnly);
+    saveAlgParasToolBtn->setIcon(QPixmap(":/images/save_paras.png"));
     saveAlgParasToolBtn->setToolTip(tr("Save Algorithm Parameters"));
     connect(saveAlgParasToolBtn, &QToolButton::clicked,
             this, &MainWindow::onSaveAlgParasBtnClicked);
 
     //save algorithm parameters to file
     saveAlgParasToFileToolBtn = new QToolButton(this);
-    saveAlgParasToFileToolBtn->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
-    saveAlgParasToFileToolBtn->setIcon(QPixmap(":/images/camera.png"));
+    saveAlgParasToFileToolBtn->setToolButtonStyle(Qt::ToolButtonIconOnly);
+    saveAlgParasToFileToolBtn->setIcon(QPixmap(":/images/save_paras_as.png"));
     saveAlgParasToFileToolBtn->setToolTip(tr("Save Algorithm Parameters To File"));
     connect(saveAlgParasToFileToolBtn, &QToolButton::clicked,
             this, &MainWindow::onSaveAlgParasToFileBtnClicked);
 
     //select camera type
     selCamTypeToolBtn = new QToolButton(this);
-    selCamTypeToolBtn->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+    selCamTypeToolBtn->setToolButtonStyle(Qt::ToolButtonIconOnly);
     selCamTypeToolBtn->setIcon(QPixmap(":/images/camera.png"));
     selCamTypeToolBtn->setToolTip(tr("Select Camera Type"));
     connect(selCamTypeToolBtn, &QToolButton::clicked,
@@ -72,7 +77,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     //comm setup
     commSetupToolBtn = new QToolButton(this);
-    commSetupToolBtn->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+    commSetupToolBtn->setToolButtonStyle(Qt::ToolButtonIconOnly);
     commSetupToolBtn->setIcon(QPixmap(":/images/serialcomm.png"));
     commSetupToolBtn->setToolTip(tr("Serial Setup"));
     connect(commSetupToolBtn, &QToolButton::clicked,
@@ -80,7 +85,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     //start system
     startSysToolBtn = new QToolButton(this);
-    startSysToolBtn->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+    startSysToolBtn->setToolButtonStyle(Qt::ToolButtonIconOnly);
     startSysToolBtn->setIcon(QPixmap(":/images/start_sys.png"));
     startSysToolBtn->setToolTip(tr("Start System"));
     connect(startSysToolBtn, &QToolButton::clicked,
@@ -88,31 +93,31 @@ MainWindow::MainWindow(QWidget *parent) :
 
     //open image inspect
     openImageToolBtn = new QToolButton(this);
-    openImageToolBtn->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
-    openImageToolBtn->setIcon(QPixmap(":/images/start.png"));
+    openImageToolBtn->setToolButtonStyle(Qt::ToolButtonIconOnly);
+    openImageToolBtn->setIcon(QPixmap(":/images/open_image.png"));
     openImageToolBtn->setToolTip(tr("Open Image"));
     connect(openImageToolBtn, &QToolButton::clicked,
             this, &MainWindow::onOpenImageBtnClicked);
 
     //next image inspect
     nextImageToolBtn = new QToolButton(this);
-    nextImageToolBtn->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
-    nextImageToolBtn->setIcon(QPixmap(":/images/start.png"));
+    nextImageToolBtn->setToolButtonStyle(Qt::ToolButtonIconOnly);
+    nextImageToolBtn->setIcon(QPixmap(":/images/next_image.png"));
     nextImageToolBtn->setToolTip(tr("Next Image"));
     connect(nextImageToolBtn, &QToolButton::clicked,
             this, &MainWindow::onNextImageBtnClicked);
 
     //last image inspect
     lastImageToolBtn = new QToolButton(this);
-    lastImageToolBtn->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
-    lastImageToolBtn->setIcon(QPixmap(":/images/start.png"));
+    lastImageToolBtn->setToolButtonStyle(Qt::ToolButtonIconOnly);
+    lastImageToolBtn->setIcon(QPixmap(":/images/prev_image.png"));
     lastImageToolBtn->setToolTip(tr("Last Image"));
     connect(lastImageToolBtn, &QToolButton::clicked,
             this, &MainWindow::onLastImageBtnClicked);
 
     //setup
     setupToolBtn = new QToolButton(this);
-    setupToolBtn->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+    setupToolBtn->setToolButtonStyle(Qt::ToolButtonIconOnly);
     setupToolBtn->setIcon(QPixmap(":/images/tool_icon.png"));
     setupToolBtn->setToolTip(tr("Setup"));
 
@@ -139,21 +144,24 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->mainToolBar->addWidget(openCfgFileToolBtn);
     ui->mainToolBar->addWidget(saveCfgFileToolBtn);
-    ui->mainToolBar->addWidget(loadAlgParasFileToolBtn);
-    ui->mainToolBar->addWidget(saveAlgParasToolBtn);
-    ui->mainToolBar->addWidget(saveAlgParasToFileToolBtn);
-    ui->mainToolBar->addSeparator();
-
     ui->mainToolBar->addWidget(selCamTypeToolBtn);
     ui->mainToolBar->addWidget(commSetupToolBtn);
     ui->mainToolBar->addWidget(startSysToolBtn);
     ui->mainToolBar->addSeparator();
+    ui->mainToolBar->addSeparator();
+
+    ui->mainToolBar->addWidget(loadAlgParasFileToolBtn);
+    ui->mainToolBar->addWidget(saveAlgParasToolBtn);
+    ui->mainToolBar->addWidget(saveAlgParasToFileToolBtn);
+    ui->mainToolBar->addSeparator();
+    ui->mainToolBar->addSeparator();
+
     ui->mainToolBar->addWidget(openImageToolBtn);
-    ui->mainToolBar->addWidget(nextImageToolBtn);
     ui->mainToolBar->addWidget(lastImageToolBtn);
+    ui->mainToolBar->addWidget(nextImageToolBtn);
+    ui->mainToolBar->addSeparator();
     ui->mainToolBar->addSeparator();
     ui->mainToolBar->addWidget(setupToolBtn);
-
 
 
     plot = new GraphicsWidget(this);
@@ -161,30 +169,26 @@ MainWindow::MainWindow(QWidget *parent) :
     //operate btn
     //start inspect
     startInspectToolBtn = new QToolButton(this);
-    startInspectToolBtn->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+    startInspectToolBtn->setToolButtonStyle(Qt::ToolButtonIconOnly);
     startInspectToolBtn->setIcon(QPixmap(":/images/start.png"));
+    startInspectToolBtn->setFixedSize(150, 50);
+    startInspectToolBtn->setIconSize(QSize(120, 40));
     startInspectToolBtn->setToolTip(tr("Start Inspect"));
     startInspectToolBtn->setEnabled(false);
     connect(startInspectToolBtn, &QToolButton::clicked,
             this, &MainWindow::onStartInspectBtnClicked);
 
     //run once btn
-    QPushButton* runOnceBtn = new QPushButton(tr("Run Once"), this);
-    connect(runOnceBtn, &QPushButton::clicked,
+    runOnceBtn = new QToolButton(this);
+    runOnceBtn->setText(tr("Run Once"));
+    runOnceBtn->setFixedSize(150, 50);
+    connect(runOnceBtn, &QToolButton::clicked,
             this, &MainWindow::onRunOnceBtnClicked);
 
-    QGroupBox* setupGB = new QGroupBox(tr("Setup"), this);
-    QVBoxLayout* setupLayout = new QVBoxLayout(setupGB);
-    QPushButton* recognizeParasBtn = new QPushButton(tr("Recognize Parameters"), this);
-    QPushButton* gradeParasBtn = new QPushButton(tr("Grade Parameters"), this);
-    setupLayout->addWidget(recognizeParasBtn);
-    setupLayout->addWidget(gradeParasBtn);
-    setupLayout->addStretch();
-
-    QVBoxLayout* opLayout = new QVBoxLayout;
+    QHBoxLayout* opLayout = new QHBoxLayout;
     opLayout->addWidget(startInspectToolBtn);
+//    opLayout->addStretch();
     opLayout->addWidget(runOnceBtn);
-    opLayout->addWidget(setupGB);
 
     //result
     QLabel* resultLabel = new QLabel(tr("Inspect Result:"), this);
@@ -196,18 +200,34 @@ MainWindow::MainWindow(QWidget *parent) :
     rtResultWidget = new QRealTimeResultWidget(this);
     realResultLayout->addWidget(rtResultWidget);
 
-    QVBoxLayout* btnLayout = new QVBoxLayout;
-    btnLayout->addWidget(realResultGB);
-    btnLayout->addWidget(resultLabel);
-    btnLayout->addWidget(resultTB);
+    //setup paras
+    QGroupBox* setupGB = new QGroupBox(tr("Inspect Parameter Setup"), this);
+    QVBoxLayout* setupLayout = new QVBoxLayout(setupGB);
+    recognizeParasBtn = new QPushButton(tr("Recognize Parameters"), this);
+    gradeParasBtn = new QPushButton(tr("Grade Parameters"), this);
 
-    btnLayout->addStretch();
+    connect(recognizeParasBtn, &QPushButton::clicked,
+            this, &MainWindow::onRecognizeParasBtnClicked);
+    connect(gradeParasBtn, &QPushButton::clicked,
+            this, &MainWindow::onGradeParasBtnClicked);
+
+    setupLayout->addWidget(recognizeParasBtn);
+    setupLayout->addWidget(gradeParasBtn);
+    setupLayout->addStretch();
+
+    QVBoxLayout* resultLayout = new QVBoxLayout;
+    resultLayout->addLayout(opLayout);
+    resultLayout->addWidget(realResultGB);
+    resultLayout->addWidget(resultLabel);
+    resultLayout->addWidget(resultTB);
+    resultLayout->addWidget(setupGB);
+
+    resultLayout->addStretch();
 
     QWidget* mainWidget = new QWidget();
     QHBoxLayout* topLayout = new QHBoxLayout(mainWidget);
     topLayout->addWidget(plot, 10);
-    topLayout->addLayout(opLayout,1);
-    topLayout->addLayout(btnLayout,1);
+    topLayout->addLayout(resultLayout,1);
 
     setCentralWidget(mainWidget);
 
@@ -217,7 +237,26 @@ MainWindow::MainWindow(QWidget *parent) :
 
     setWindowTitle(tr("Jujube Inspect Program"));
 
-    onSystemStateStopped();
+    //init btn state
+    startInspectToolBtn->setEnabled(false);
+
+    openCfgFileToolBtn->setEnabled(true);
+    saveCfgFileToolBtn->setEnabled(true);
+
+    loadAlgParasFileToolBtn->setEnabled(true);
+    saveAlgParasToolBtn->setEnabled(true);
+    saveAlgParasToFileToolBtn->setEnabled(true);
+
+    selCamTypeToolBtn->setEnabled(true);
+    commSetupToolBtn->setEnabled(true);
+
+    openImageToolBtn->setEnabled(true);
+    nextImageToolBtn->setEnabled(false);
+    lastImageToolBtn->setEnabled(false);
+
+    recognizeParasBtn->setEnabled(true);
+    gradeParasBtn->setEnabled(true);
+    runOnceBtn->setEnabled(false);
 
     qDebug() << "Current currentThreadId" << QThread::currentThreadId();
 
@@ -245,9 +284,15 @@ void MainWindow::onSystemStateStarted()
     commSetupToolBtn->setEnabled(false);
 
     startSysToolBtn->setIcon(QPixmap(":/images/stop_sys.png"));
-    startSysToolBtn->setText(tr("Stop System"));
+//    startSysToolBtn->setText(tr("Stop System"));
 
     startInspectToolBtn->setEnabled(true);
+
+    //相机及串口资源已初始化，不能更改
+    openCfgFileToolBtn->setEnabled(false);
+    selCamTypeToolBtn->setEnabled(false);
+    commSetupToolBtn->setEnabled(false);
+
     modbusCmdAction->setEnabled(true);
 }
 
@@ -256,11 +301,26 @@ void MainWindow::onSystemStateStopped()
     selCamTypeToolBtn->setEnabled(true);
     commSetupToolBtn->setEnabled(true);
     startSysToolBtn->setIcon(QPixmap(":/images/start_sys.png"));
-    startSysToolBtn->setText(tr("Start System"));
+//    startSysToolBtn->setText(tr("Start System"));
 
     startInspectToolBtn->setIcon(QPixmap(":/images/start.png"));
-    startInspectToolBtn->setText(tr("Start Inspect"));
+//    startInspectToolBtn->setText(tr("Start Inspect"));
     startInspectToolBtn->setEnabled(false);
+
+    openCfgFileToolBtn->setEnabled(true);
+    saveCfgFileToolBtn->setEnabled(true);
+
+    loadAlgParasFileToolBtn->setEnabled(true);
+    saveAlgParasToolBtn->setEnabled(true);
+    saveAlgParasToFileToolBtn->setEnabled(true);
+
+    selCamTypeToolBtn->setEnabled(true);
+    commSetupToolBtn->setEnabled(true);
+
+    openImageToolBtn->setEnabled(true);
+
+    recognizeParasBtn->setEnabled(true);
+    gradeParasBtn->setEnabled(true);
 
     modbusCmdAction->setEnabled(false);
     setupToolBtn->setEnabled(true);
@@ -269,7 +329,7 @@ void MainWindow::onSystemStateStopped()
 void MainWindow::onInspectStateStarted()
 {
     startInspectToolBtn->setIcon(QPixmap(":/images/stop.png"));
-    startInspectToolBtn->setText(tr("Stop Inspect"));
+//    startInspectToolBtn->setText(tr("Stop Inspect"));
 
     //connect
     connect(mic, &MainResource::hasImage,
@@ -284,13 +344,24 @@ void MainWindow::onInspectStateStarted()
     nextImageToolBtn->setEnabled(false);
     lastImageToolBtn->setEnabled(false);
 
+    saveCfgFileToolBtn->setEnabled(false);
+
+    loadAlgParasFileToolBtn->setEnabled(false);
+    saveAlgParasToolBtn->setEnabled(false);
+    saveAlgParasToFileToolBtn->setEnabled(false);
+    openImageToolBtn->setEnabled(false);
+
+    runOnceBtn->setEnabled(false);
+    recognizeParasBtn->setEnabled(false);
+    gradeParasBtn->setEnabled(false);
+
     setupToolBtn->setEnabled(false);
 }
 
 void MainWindow::onInspectStateStopped()
 {
     startInspectToolBtn->setIcon(QPixmap(":/images/start.png"));
-    startInspectToolBtn->setText(tr("Start Inspect"));
+//    startInspectToolBtn->setText(tr("Start Inspect"));
 
     //disconnect
     disconnect(mic, &MainResource::hasImage,
@@ -298,6 +369,16 @@ void MainWindow::onInspectStateStopped()
 
     disconnect(mic, &MainResource::inspectDone,
                this, &MainWindow::onInspectDone);
+
+    saveCfgFileToolBtn->setEnabled(true);
+
+    loadAlgParasFileToolBtn->setEnabled(true);
+    saveAlgParasToolBtn->setEnabled(true);
+    saveAlgParasToFileToolBtn->setEnabled(true);
+    openImageToolBtn->setEnabled(true);
+
+    recognizeParasBtn->setEnabled(true);
+    gradeParasBtn->setEnabled(true);
 
     setupToolBtn->setEnabled(true);
 }
@@ -649,6 +730,7 @@ void MainWindow::onOpenImageBtnClicked()
     hasNextAndLastFile(curImageFileName, &hasNext, &hasPrev);
     nextImageToolBtn->setEnabled(hasNext);
     lastImageToolBtn->setEnabled(hasPrev);
+    runOnceBtn->setEnabled(true);
 
     plot->setImage(QPixmap::fromImage(curImage));
 
@@ -696,6 +778,21 @@ void MainWindow::onRunOnceBtnClicked()
                                           QString::number(cur_right_col_result.at(i).zaoPos.width),
                                           QString::number(cur_right_col_result.at(i).zaoPos.height));
     }
+}
+
+void MainWindow::onRecognizeParasBtnClicked()
+{
+    QInspectParasSetupDlg dlg(this);
+    dlg.setPInspectAlgParas(mic->getPInspectAlgParas());
+    if (dlg.exec() == QDialog::Accepted)
+        mic->resetInspectParas();
+}
+
+void MainWindow::onGradeParasBtnClicked()
+{
+    QGradeParasSetupDlg dlg(this);
+    dlg.setPInspectAlgParas(mic->getPInspectAlgParas());
+    dlg.exec();
 }
 
 void MainWindow::onFrameCalActionTriggered()
