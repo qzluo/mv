@@ -194,48 +194,20 @@ int QZaoInspectAlgApp::inspect(const QImage &cameraImg, QImage &outImg)
     cv::Mat mat = ImageTransform::QImageToMat(cameraImg);
 
     //检测图片及识别种类
-    QVector<ZaoInfo> vecZaoInfo;
-    int zaoCount = 0;
-    if (zaoInspect(mat, vecZaoInfo, &zaoCount) < 0) {
+    QList<ZaoInfo> cur_left_col_result;
+    QList<ZaoInfo> cur_right_col_result;
+
+    if (inspectSingleImage(mat, cur_left_col_result, cur_right_col_result) < 0) {
         logFile(FileLogger::warn, "inspect error!");
         setDataVariant(getResDataDescFromId(E_Inspect_Result),
                        QVariant(-1));
         return -1;
     }
 
-    //生成当前检测结果，并分别放入左右队列中
+    Q_ASSERT(cur_left_col_result.size() == ZAO_REGION_COUNT);
+    Q_ASSERT(cur_right_col_result.size() == ZAO_REGION_COUNT);
+
     int regionCount = left_col_result.size();
-    if (regionCount <= 0) {
-        logFile(FileLogger::warn, "regionCount error!");
-        setDataVariant(getResDataDescFromId(E_Inspect_Result),
-                       QVariant(-1));
-        return -1;
-    }
-
-    QList<int> cur_left_col_result;
-    QList<int> cur_right_col_result;
-
-    for (int i = 0; i < regionCount; ++i) {
-        cur_left_col_result << ZAO_CLASS_NONE;
-        cur_right_col_result << ZAO_CLASS_NONE;
-    }
-
-    for (int i = 0; i < zaoCount; ++i) {
-        int leftOrRight = ZAO_COL_POS_LEFT;
-        int regionId = 0;
-
-        if (calcZaoRegionId(vecZaoInfo[i], &leftOrRight, &regionId) < 0) {
-            logFile(FileLogger::warn, "calc zao calcZaoRegionId error!");
-            setDataVariant(getResDataDescFromId(E_Inspect_Result),
-                           QVariant(-1));
-            return -1;
-        }
-
-        if (leftOrRight == ZAO_COL_POS_LEFT)
-            cur_left_col_result[regionId] = vecZaoInfo[i].classId;
-        else
-            cur_right_col_result[regionId] = vecZaoInfo[i].classId;
-    }
 
     //合并结果集
     int distBtFrameId = cur_frame_id - last_frame_id;
@@ -243,18 +215,18 @@ int QZaoInspectAlgApp::inspect(const QImage &cameraImg, QImage &outImg)
         int new_class = 0;
         if (i + distBtFrameId < regionCount) {
             mergeZaoClasses(left_col_result.at(i + distBtFrameId),
-                            cur_left_col_result.at(i), &new_class);
+                            cur_left_col_result.at(i).classId, &new_class);
 
             left_col_result[i] = new_class;
 
             mergeZaoClasses(right_col_result.at(i + distBtFrameId),
-                            cur_right_col_result.at(i), &new_class);
+                            cur_right_col_result.at(i).classId, &new_class);
 
             right_col_result[i] = new_class;
         }
         else {
-            left_col_result[i] = cur_left_col_result.at(i);
-            right_col_result[i] = cur_right_col_result.at(i);
+            left_col_result[i] = cur_left_col_result.at(i).classId;
+            right_col_result[i] = cur_right_col_result.at(i).classId;
         }
     }
 
@@ -264,12 +236,15 @@ int QZaoInspectAlgApp::inspect(const QImage &cameraImg, QImage &outImg)
     //保存结果
     setDataVariant(getResDataDescFromId(E_Inspect_Result),
                    QVariant(0));
-    setDataVariant(getResDataDescFromId(E_Left_Col_Result),
+    setDataVariant(getResDataDescFromId(E_Left_Grade_Result_ToSend),
                    QVariant(left_col_result[0]));
-    setDataVariant(getResDataDescFromId(E_Right_Col_Result),
+    setDataVariant(getResDataDescFromId(E_Right_Grade_Result_ToSend),
                    QVariant(right_col_result[0]));
-    QVariant variant = QVariant::fromValue(vecZaoInfo);
-    setDataVariant(getResDataDescFromId(E_Cur_Frame_Product_Info),
+
+    //合并左右列结果输出
+    cur_left_col_result.append(cur_right_col_result);
+    QVariant variant = QVariant::fromValue(cur_left_col_result);
+    setDataVariant(getResDataDescFromId(E_Cur_Frame_Result_info),
                    variant);
 
     return 0;
@@ -348,14 +323,14 @@ QString QZaoInspectAlgApp::getResDataDescFromId(QZaoInspectAlgApp::EResDataId eR
     case E_Cur_FrameId:
         return QString("Current FrameId");
 
-    case E_Left_Col_Result:
-        return QString("Left Column Result");
+    case E_Cur_Frame_Result_info:
+        return QString("Current Frame Result Info");
 
-    case E_Right_Col_Result:
-        return QString("Right Column Result");
+    case E_Left_Grade_Result_ToSend:
+        return QString("Left Column Grade Result To Send");
 
-    case E_Cur_Frame_Product_Info:
-        return QString("Current Frame Product Infomation");
+    case E_Right_Grade_Result_ToSend:
+        return QString("Right Column Grade Result To Send");
 
     default:
         break;

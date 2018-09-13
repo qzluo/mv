@@ -24,7 +24,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->setupUi(this);
 
-    setIconSize(QSize(50,50));
+    setIconSize(QSize(40,40));
 
     //init UI
     //open cfg file
@@ -187,11 +187,10 @@ MainWindow::MainWindow(QWidget *parent) :
 
     QHBoxLayout* opLayout = new QHBoxLayout;
     opLayout->addWidget(startInspectToolBtn);
-//    opLayout->addStretch();
     opLayout->addWidget(runOnceBtn);
 
     //result
-    QLabel* resultLabel = new QLabel(tr("Inspect Result:"), this);
+    QLabel* resultLabel = new QLabel(tr("Inspect Output Result:"), this);
     resultTB = new QTextBrowser(this);
 
     QGroupBox* realResultGB = new QGroupBox(tr("Real Time Result"), this);
@@ -570,18 +569,30 @@ void MainWindow::onInspectDone(DetectResult result)
         strText += QString(tr("Current Inspect result: Faile\n"));
     else {
         strText += QString(tr("Current Inspect result: Succeed\n"));
-        strText += QString(tr("Left Colume Result: %1\n")).arg(result.left_col_result);
-        strText += QString(tr("Right Colume Result: %1\n")).arg(result.right_col_result);
+        strText += QString(tr("Left Colume Grade Result: %1\n")).arg(result.left_col_grade_result);
+        strText += QString(tr("Right Colume Grade Result: %1\n")).arg(result.right_col_grade_result);
 
-        QVector<ZaoInfo> vecZaoInfo = result.curFrameZaoInfo.value<QVector<ZaoInfo> >();
-        strText += QString(tr("Product Count: %1\n")).arg(vecZaoInfo.size());
-        strText += QString(tr("Product Info:\n"));
+        QList<ZaoInfo> vecZaoInfo = result.curFrameZaoInfo.value<QList<ZaoInfo> >();
+        //show in the interface
+//        strText += QString(tr("Product Count: %1\n")).arg(vecZaoInfo.size());
+//        strText += QString(tr("Product Info:\n"));
+//        for (int i = 0; i < vecZaoInfo.size(); ++i) {
+//            strText += QString(tr("  %1. Product Class: %2,"
+//                                  " Product Positon: (%3, %4, %5, %6)\n")).
+//                    arg(i + 1).arg(vecZaoInfo[i].classId).
+//                    arg(vecZaoInfo[i].zaoPos.x).arg(vecZaoInfo[i].zaoPos.y).
+//                    arg(vecZaoInfo[i].zaoPos.width).arg(vecZaoInfo[i].zaoPos.height);
+//        }
+
+        Q_ASSERT(vecZaoInfo.size() == ZAO_REGION_COUNT * 2);
+
         for (int i = 0; i < vecZaoInfo.size(); ++i) {
-            strText += QString(tr("  %1. Product Class: %2,"
-                                  " Product Positon: (%3, %4, %5, %6)\n")).
-                    arg(i + 1).arg(vecZaoInfo[i].classId).
-                    arg(vecZaoInfo[i].zaoPos.x).arg(vecZaoInfo[i].zaoPos.y).
-                    arg(vecZaoInfo[i].zaoPos.width).arg(vecZaoInfo[i].zaoPos.height);
+            if (vecZaoInfo.at(i).classId == ZAO_CLASS_NONE)
+                rtResultWidget->setItemResult(i, tr("NULL"), QString(""), QString(""));
+            else
+                rtResultWidget->setItemResult(i, getJujubeDescFromClass(vecZaoInfo.at(i).classId),
+                                              QString::number(vecZaoInfo.at(i).zaoPos.width),
+                                              QString::number(vecZaoInfo.at(i).zaoPos.height));
         }
     }
 
@@ -594,8 +605,8 @@ void MainWindow::onInspectDone(DetectResult result)
 void MainWindow::onOpenCfgFileBtnClicked()
 {
     QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"),
-                                                     ".",
-                                                     tr("Files (*.xml)"));
+                                                     "",
+                                                     tr("Files (*.cfg)"));
 
     if (fileName.isEmpty())
         return;
@@ -611,8 +622,8 @@ void MainWindow::onOpenCfgFileBtnClicked()
 void MainWindow::onSaveCfgFileBtnClicked()
 {
     QString fileName = QFileDialog::getSaveFileName(this, tr("Save File"),
-                                                     ".",
-                                                     tr("Files (*.xml)"));
+                                                     "",
+                                                     tr("Files (*.cfg)"));
 
     if (fileName.isEmpty())
         return;
@@ -626,7 +637,7 @@ void MainWindow::onSaveCfgFileBtnClicked()
 void MainWindow::onLoadAlgParasFileBtnClicked()
 {
     QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"),
-                                                     ".",
+                                                     "",
                                                      tr("Files (*.xml)"));
 
     if (fileName.isEmpty())
@@ -648,7 +659,7 @@ void MainWindow::onSaveAlgParasBtnClicked()
 void MainWindow::onSaveAlgParasToFileBtnClicked()
 {
     QString fileName = QFileDialog::getSaveFileName(this, tr("Save File"),
-                                                     ".",
+                                                     "",
                                                      tr("Files (*.xml)"));
 
     if (fileName.isEmpty())

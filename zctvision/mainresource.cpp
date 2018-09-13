@@ -214,50 +214,42 @@ int MainResource::updateFrameId()
 
 void MainResource::onInspectDone()
 {
+    //inspect done
     DetectResult detectResult = {};
     QVariant var;
     algorithmManager.getDataVariant(QZaoInspectAlgApp::getResDataDescFromId(
-                            QZaoInspectAlgApp::E_Inspect_Result),
-                        var);
-    qDebug() << "inspect return: " << var.toInt();
+                            QZaoInspectAlgApp::E_Inspect_Result), var);
     detectResult.result = var.toInt();
 
     algorithmManager.getDataVariant(QZaoInspectAlgApp::getResDataDescFromId(
-                            QZaoInspectAlgApp::E_Cur_FrameId),
-                        var);
-    qDebug() << "current FrameId: " << var.toUInt();
+                            QZaoInspectAlgApp::E_Cur_FrameId), var);
     detectResult.frameId = var.toUInt();
 
     algorithmManager.getDataVariant(QZaoInspectAlgApp::getResDataDescFromId(
-                            QZaoInspectAlgApp::E_Left_Col_Result),
-                        var);
-    qDebug() << "E_Left_Col_Result: " << var.toInt();
-    detectResult.left_col_result = var.toInt();
+                            QZaoInspectAlgApp::E_Left_Grade_Result_ToSend), var);
+    detectResult.left_col_grade_result = var.toInt();
 
     algorithmManager.getDataVariant(QZaoInspectAlgApp::getResDataDescFromId(
-                            QZaoInspectAlgApp::E_Right_Col_Result),
-                        var);
-    qDebug() << "E_Right_Col_Result: " << var.toInt();
-    detectResult.right_col_result = var.toInt();
+                            QZaoInspectAlgApp::E_Right_Grade_Result_ToSend), var);
+    detectResult.right_col_grade_result = var.toInt();
 
     algorithmManager.getDataVariant(QZaoInspectAlgApp::getResDataDescFromId(
-                                          QZaoInspectAlgApp::E_Cur_Frame_Product_Info),
-                                      var);
+                                        QZaoInspectAlgApp::E_Cur_Frame_Result_info), var);
     detectResult.curFrameZaoInfo = var;
 
     char msg[1024] = {};
     if (detectResult.result == 0) {
         //发送结果给串口
-        if (rwCommInst->setInspectResult(detectResult.left_col_result,
-                                         detectResult.right_col_result,
+        if (rwCommInst->setInspectResult(detectResult.left_col_grade_result,
+                                         detectResult.right_col_grade_result,
                                          detectResult.frameId & 0xFFFF) < 0)
             logFile(FileLogger::warn, "Set inspect result to controller failed!");
 
         sprintf(msg, "Inspect finish. Frame id = %d, Return = %d, "
-                "left_col_result = %d, right_col_result = %d.",
+                "left_col_grade_result = %d, right_col_grade_result = %d.",
                 detectResult.frameId, detectResult.result,
-                detectResult.left_col_result,
-                detectResult.right_col_result);
+                detectResult.left_col_grade_result,
+                detectResult.right_col_grade_result);
     }
     else
         sprintf(msg, "Inspect finish. Frame id = %d, Return = %d.",

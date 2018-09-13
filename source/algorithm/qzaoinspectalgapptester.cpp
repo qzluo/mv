@@ -219,41 +219,41 @@ int QZaoInspectAlgAppTester::testInspect()
     inst.inspect(QImage());
 
     QVariant var;
-    inst.getDataVariant(QZaoInspectAlgApp::getResDataDescFromId(
-                            QZaoInspectAlgApp::E_Cur_Frame_Product_Info),
-                        var);
+//    inst.getDataVariant(QZaoInspectAlgApp::getResDataDescFromId(
+//                            QZaoInspectAlgApp::E_Cur_Frame_Product_Info),
+//                        var);
 
-    QList<ZaoInfo> cur_zao_infos = var.value<QList<ZaoInfo>>();
+//    QList<ZaoInfo> cur_zao_infos = var.value<QList<ZaoInfo>>();
 
-    qDebug() << "zao count: " << cur_zao_infos.size();
+//    qDebug() << "zao count: " << cur_zao_infos.size();
 
-    for (int i = 0; i < cur_zao_infos.size(); ++i) {
-        ZaoInfo zao_info = cur_zao_infos[i];
-        qDebug() << QString("zao class id = %1").arg(zao_info.classId);
-        qDebug() << QString("zao rect: [%1, %2, %3, %4]").
-                    arg(zao_info.zaoPos.x).arg(zao_info.zaoPos.y).
-                    arg(zao_info.zaoPos.width).arg(zao_info.zaoPos.height);
+//    for (int i = 0; i < cur_zao_infos.size(); ++i) {
+//        ZaoInfo zao_info = cur_zao_infos[i];
+//        qDebug() << QString("zao class id = %1").arg(zao_info.classId);
+//        qDebug() << QString("zao rect: [%1, %2, %3, %4]").
+//                    arg(zao_info.zaoPos.x).arg(zao_info.zaoPos.y).
+//                    arg(zao_info.zaoPos.width).arg(zao_info.zaoPos.height);
 
-    }
+//    }
 
-    inst.getDataVariant(QZaoInspectAlgApp::getResDataDescFromId(
-                            QZaoInspectAlgApp::E_Cur_FrameId),
-                        var);
-    qDebug() << "current FrameId: " << var.toUInt();
+//    inst.getDataVariant(QZaoInspectAlgApp::getResDataDescFromId(
+//                            QZaoInspectAlgApp::E_Cur_FrameId),
+//                        var);
+//    qDebug() << "current FrameId: " << var.toUInt();
 
-    inst.getDataVariant(QZaoInspectAlgApp::getResDataDescFromId(
-                            QZaoInspectAlgApp::E_Inspect_Result),
-                        var);
-    qDebug() << "inspect return: " << var.toInt();
+//    inst.getDataVariant(QZaoInspectAlgApp::getResDataDescFromId(
+//                            QZaoInspectAlgApp::E_Inspect_Result),
+//                        var);
+//    qDebug() << "inspect return: " << var.toInt();
 
-    inst.getDataVariant(QZaoInspectAlgApp::getResDataDescFromId(
-                            QZaoInspectAlgApp::E_Left_Col_Result),
-                        var);
-    qDebug() << "E_Left_Col_Result: " << var.toInt();
+//    inst.getDataVariant(QZaoInspectAlgApp::getResDataDescFromId(
+//                            QZaoInspectAlgApp::E_Left_Col_Result),
+//                        var);
+//    qDebug() << "E_Left_Col_Result: " << var.toInt();
 
-    inst.getDataVariant(QZaoInspectAlgApp::getResDataDescFromId(
-                            QZaoInspectAlgApp::E_Right_Col_Result),
-                        var);
+//    inst.getDataVariant(QZaoInspectAlgApp::getResDataDescFromId(
+//                            QZaoInspectAlgApp::E_Right_Col_Result),
+//                        var);
     qDebug() << "E_Right_Col_Result: " << var.toInt();
 
     return 0;

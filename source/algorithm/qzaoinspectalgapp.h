@@ -22,8 +22,8 @@
 typedef struct tagDetectResult {
     int result;
     int frameId;
-    int left_col_result;
-    int right_col_result;
+    int left_col_grade_result;
+    int right_col_grade_result;
     QVariant curFrameZaoInfo;
 } DetectResult, *PDetectResult;
 
@@ -53,9 +53,9 @@ public:
     enum EResDataId {
         E_Inspect_Result = 0,
         E_Cur_FrameId,
-        E_Left_Col_Result,
-        E_Right_Col_Result,
-        E_Cur_Frame_Product_Info,
+        E_Cur_Frame_Result_info,
+        E_Left_Grade_Result_ToSend,
+        E_Right_Grade_Result_ToSend,
     };
 
     //枣所属列
@@ -147,6 +147,14 @@ private:
     QList<int> left_col_result;     //左列枣结果
     QList<int> right_col_result;    //右列枣结果
 
+    ///
+    /// \brief dataResultMap
+    /// 检测输出的结果，包含如下信息
+    /// 1. 检测是否有错
+    /// 2. 当前图片帧号
+    /// 3. 当前图片中各单元格的检测信息，前面4格放左列信息，后面4格放右列信息
+    /// 4. 本次检测后，综合需要输出的左列结果
+    /// 5. 本次检测后，综合需要输出的右列结果
     QMap<QString, QVariant> dataResultMap;  //检测输出结果
 
     QFrameCalInfo frameCalInfo;
