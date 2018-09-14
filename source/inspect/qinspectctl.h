@@ -20,7 +20,7 @@ public:
 
 public slots:
     void onHasImage(QImage image);
-    void onImageCacheFull();
+    void onImageCacheHasNewImage();
 
 signals:
     void inspectDone();

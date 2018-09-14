@@ -27,6 +27,9 @@ public:
 
     void init(void);
 
+    //显示系统状态
+    void showStatus();
+
 private:
     void onSystemStateStarted();
     void onSystemStateStopped();
@@ -52,6 +55,7 @@ public slots:
     void onSaveAlgParasToFileBtnClicked();
     void onSelCamTypeBtnClicked();
     void onCommSetupBtnClicked();
+    void onSysParasSetupBtnClicked();
     void onStartSysBtnClicked();
     void onStartInspectBtnClicked();
     void onOpenImageBtnClicked();
@@ -75,6 +79,7 @@ private:
 
     QToolButton *selCamTypeToolBtn;
     QToolButton *commSetupToolBtn;
+    QToolButton *sysParasToolBtn;
     QToolButton *startSysToolBtn;
     QToolButton *startInspectToolBtn;
 
@@ -82,19 +87,24 @@ private:
     QToolButton *nextImageToolBtn;
     QToolButton *lastImageToolBtn;
 
+    QToolButton *ctlboardParasToolBtn;
+    QToolButton *staticsInfosToolBtn;
+
     QToolButton* runOnceBtn;
     QPushButton* recognizeParasBtn;
     QPushButton* gradeParasBtn;
 
-    QToolButton *setupToolBtn;
-    QAction* modbusCmdAction;
+//    QToolButton *setupToolBtn;
+//    QAction* modbusCmdAction;
 
     QRealTimeResultWidget* rtResultWidget;
 
     QTextBrowser* resultTB;
 
-//    MainResource rc;
     GraphicsWidget* plot;
+
+    //状态栏
+    QLabel* statusInfo;
 
     QImage curImage;    //当前待检测的图片
     QString curImageFileName;

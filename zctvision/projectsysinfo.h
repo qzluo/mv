@@ -30,6 +30,18 @@ public:
     int getPortBaud() const;
     void setPortBaud(int value);
 
+    bool getOutputIsOpened() const;
+    void setOutputIsOpened(bool value);
+
+    bool getSaveImageIsOpened() const;
+    void setSaveImageIsOpened(bool value);
+
+    bool getLogOutputIsOpened() const;
+    void setLogOutputIsOpened(bool value);
+
+    QString getTmpFilePath() const;
+    void setTmpFilePath(const QString &value);
+
 private:
     void loadElement(QDomElement& element);
 
@@ -37,6 +49,10 @@ private:
     int cameraType;
     QString portName;
     int portBaud;
+    bool outputIsOpened;
+    bool saveImageIsOpened;
+    bool logOutputIsOpened;
+    QString tmpFilePath;
     QDateTime closingDateTime;
 };
 

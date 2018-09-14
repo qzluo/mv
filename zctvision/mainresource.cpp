@@ -96,7 +96,7 @@ int MainResource::startInspect()
         return -1;
     }
 
-    cic->startNewCache(1);
+    cic->startNewInspect();
 
     //读当前帧序号并保存
     updateFrameId();
@@ -238,24 +238,58 @@ void MainResource::onInspectDone()
     detectResult.curFrameZaoInfo = var;
 
     char msg[1024] = {};
-    if (detectResult.result == 0) {
-        //发送结果给串口
-        if (rwCommInst->setInspectResult(detectResult.left_col_grade_result,
-                                         detectResult.right_col_grade_result,
-                                         detectResult.frameId & 0xFFFF) < 0)
-            logFile(FileLogger::warn, "Set inspect result to controller failed!");
+    if (detectResult.result < 0) {
+        sprintf(msg, "Inspect finish. Frame id = %d, Return = %d.",
+                detectResult.frameId, detectResult.result);
 
+        logFile(FileLogger::info, msg);
+    }
+    else {
         sprintf(msg, "Inspect finish. Frame id = %d, Return = %d, "
                 "left_col_grade_result = %d, right_col_grade_result = %d.",
                 detectResult.frameId, detectResult.result,
                 detectResult.left_col_grade_result,
                 detectResult.right_col_grade_result);
-    }
-    else
-        sprintf(msg, "Inspect finish. Frame id = %d, Return = %d.",
-                detectResult.frameId, detectResult.result);
 
-    logFile(FileLogger::info, msg);
+        logFile(FileLogger::info, msg);
+
+        if (sysInfo.getOutputIsOpened()) {
+            //发送结果给串口
+            if (rwCommInst->setInspectResult(detectResult.left_col_grade_result,
+                                             detectResult.right_col_grade_result,
+                                             detectResult.frameId & 0xFFFF) < 0)
+                logFile(FileLogger::warn, "Set inspect result to controller failed!");
+        }
+
+        if (sysInfo.getLogOutputIsOpened()) {
+            //将结果保存到指定文件
+            QString curDate = QDate::currentDate().toString("yyMMdd");
+            QString filePath = QString("%1\\outputResult\\").
+                    arg(sysInfo.getTmpFilePath());
+
+            QDir dir;
+            if (!dir.exists(filePath)) {
+                if (!dir.mkpath(filePath)) {
+                    qDebug() << "failed to create dir";
+                    return;
+                }
+            }
+
+            QString fileName = filePath + QString("%1.dat").arg(curDate);
+
+            QFile f(fileName);
+            if(!f.open(QIODevice::Append | QIODevice::Text)) {
+                qDebug() << "open file failed";
+            }
+
+            QString strMsg = QString("%1%2").
+                    arg(QDateTime::currentDateTime().toString("[HH:mm::ss]")).arg(msg);
+
+            QTextStream txtOutput(&f);
+            txtOutput << strMsg << endl;
+            f.close();
+        }
+    }
 
     emit inspectDone(detectResult);
 }
@@ -271,7 +305,8 @@ int MainResource::initCamera()
     if (cameraType == ProjectSysInfo::CAMERATYPE_AVT)
         pCamCtl = new QVmbCameraclt(this);
     else
-        pCamCtl = new QVirtualCameraCtl(this);
+        return -1;
+//        pCamCtl = new QVirtualCameraCtl(this);
 
     if (!pCamCtl->Initiallize(0)) {
         delete pCamCtl;

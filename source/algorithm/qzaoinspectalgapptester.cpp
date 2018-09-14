@@ -265,7 +265,7 @@ int QZaoInspectAlgAppTester::testInspectSigleImage()
 
     inst.init();
 
-    char* imageName = "F:\\VirCam\\TmpImage3\\Camera GED130C#C0A800EE-Snapshot-20180407103104-12346905765.BMP";
+    const char* imageName = "F:\\VirCam\\TmpImage3\\Camera GED130C#C0A800EE-Snapshot-20180407103104-12346905765.BMP";
     Mat img;
     img = imread(imageName, 1);
 

@@ -18,7 +18,7 @@ void QInspectWorker::onHasImage(QImage image)
     emit inspectDone();
 }
 
-void QInspectWorker::onImageCacheFull()
+void QInspectWorker::onImageCacheHasNewImage()
 {
     QImage image = cic->getLastImage();
     onHasImage(image);
@@ -55,8 +55,8 @@ int QInspectCtl::initThread()
             this, &QInspectCtl::inspectDone);
 
     //相机
-    connect(cic, &CameraImageCache::cacheFull,
-            inspectWorker, &QInspectWorker::onImageCacheFull);
+    connect(cic, &CameraImageCache::hasNewImage,
+            inspectWorker, &QInspectWorker::onImageCacheHasNewImage);
 
     inspectThread.start();
 

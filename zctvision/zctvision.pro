@@ -36,7 +36,8 @@ SOURCES += main.cpp\
     ui/qcommsetupdlg.cpp \
     ui/qrealtimeresultwidget.cpp \
     ui/qinspectparassetupdlg.cpp \
-    ui/qgradeparassetupdlg.cpp
+    ui/qgradeparassetupdlg.cpp \
+    ui/qsysparassetupdlg.cpp
 
 HEADERS  += mainwindow.h \
     graphicswidget.h \
@@ -50,7 +51,8 @@ HEADERS  += mainwindow.h \
     ui/qcommsetupdlg.h \
     ui/qrealtimeresultwidget.h \
     ui/qinspectparassetupdlg.h \
-    ui/qgradeparassetupdlg.h
+    ui/qgradeparassetupdlg.h \
+    ui/qsysparassetupdlg.h
 
 FORMS    += mainwindow.ui
 

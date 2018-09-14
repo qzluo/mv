@@ -11,7 +11,6 @@
         <file>images/start.png</file>
         <file>images/stop.png</file>
         <file>images/calibration.png</file>
-        <file>images/parameter.png</file>
         <file>images/modbus_cmd.png</file>
         <file>images/serialcomm.png</file>
         <file>images/open_cfg.png</file>
@@ -22,5 +21,8 @@
         <file>images/next_image.png</file>
         <file>images/open_image.png</file>
         <file>images/prev_image.png</file>
+        <file>images/stastics.png</file>
+        <file>images/sys_paras.png</file>
+        <file>images/select_camera.png</file>
     </qresource>
 </RCC>

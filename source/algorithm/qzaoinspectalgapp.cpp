@@ -213,7 +213,7 @@ int QZaoInspectAlgApp::inspect(const QImage &cameraImg, QImage &outImg)
     int distBtFrameId = cur_frame_id - last_frame_id;
     for (int i = 0; i < regionCount; ++i) {
         int new_class = 0;
-        if (i + distBtFrameId < regionCount) {
+        if (i + distBtFrameId < regionCount && i + distBtFrameId > 0) {
             mergeZaoClasses(left_col_result.at(i + distBtFrameId),
                             cur_left_col_result.at(i).classId, &new_class);
 

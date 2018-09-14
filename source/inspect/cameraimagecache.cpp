@@ -10,21 +10,20 @@ CameraImageCache *CameraImageCache::getInstance()
 
 CameraImageCache::CameraImageCache(QObject *parent) : QObject(parent)
 {
-    cacheMaxNum = 0;
-    imageList.clear();
     lastImage = QImage();
     frameId = 0;
     inspectFrameId = 0;
+
+    needInspect = false;
 
     imageWidth = 1280;
     imageHeight = 960;
 }
 
-void CameraImageCache::startNewCache(int cacheNum)
+void CameraImageCache::startNewInspect()
 {
     QMutexLocker locker(&mutex);
-    cacheMaxNum = cacheNum;
-    imageList.clear();
+    needInspect = true;
 }
 
 QImage CameraImageCache::getLastImage()
@@ -42,7 +41,7 @@ unsigned int CameraImageCache::getCurFrameId()
 void CameraImageCache::updateFrameId(unsigned int frameId)
 {
     QMutexLocker locker(&mutex);
-    frameId = frameId;
+    this->frameId = frameId;
 }
 
 void CameraImageCache::setImageSize(int width, int height)
@@ -64,14 +63,12 @@ void CameraImageCache::onHasImage(const QImage &image)
     QMutexLocker locker(&mutex);
     lastImage = image.copy();
     frameId++;
-    if(imageList.size() >= cacheMaxNum)
+    if(!needInspect)
         return;
 
-    imageList.push_back(image.copy());
-    locker.unlock();
+    //改变检测状态，当检测完成后，需重新修改该状态
+    needInspect = false;
 
-    if(imageList.size() == cacheMaxNum) {
-        inspectFrameId = frameId;
-        emit cacheFull();
-    }
+    inspectFrameId = frameId;
+    emit hasNewImage();
 }
