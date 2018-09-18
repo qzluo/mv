@@ -27,7 +27,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->setupUi(this);
 
-    setIconSize(QSize(40,40));
+    setIconSize(QSize(35,35));
 
     //init UI
     //open cfg file
@@ -126,6 +126,15 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(lastImageToolBtn, &QToolButton::clicked,
             this, &MainWindow::onLastImageBtnClicked);
 
+    //camera paras
+    cameraParasToolBtn = new QToolButton(this);
+    cameraParasToolBtn->setToolButtonStyle(Qt::ToolButtonIconOnly);
+    cameraParasToolBtn->setIcon(QPixmap(":/images/camera.png"));
+    cameraParasToolBtn->setToolTip(tr("Camera Parameters Setup"));
+//    connect(cameraParasToolBtn, &QToolButton::clicked,
+//            this, &MainWindow::onModbusCmdActionTriggered);
+
+
     //control board paras
     ctlboardParasToolBtn = new QToolButton(this);
     ctlboardParasToolBtn->setToolButtonStyle(Qt::ToolButtonIconOnly);
@@ -190,6 +199,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->mainToolBar->addSeparator();
     ui->mainToolBar->addSeparator();
 
+    ui->mainToolBar->addWidget(cameraParasToolBtn);
     ui->mainToolBar->addWidget(ctlboardParasToolBtn);
     ui->mainToolBar->addWidget(staticsInfosToolBtn);
 //    ui->mainToolBar->addSeparator();
@@ -296,6 +306,7 @@ MainWindow::MainWindow(QWidget *parent) :
     lastImageToolBtn->setEnabled(false);
 
     ctlboardParasToolBtn->setEnabled(false);
+    cameraParasToolBtn->setEnabled(false);
 
     recognizeParasBtn->setEnabled(true);
     gradeParasBtn->setEnabled(true);
@@ -351,6 +362,7 @@ void MainWindow::onSystemStateStarted()
     selCamTypeToolBtn->setEnabled(false);
     commSetupToolBtn->setEnabled(false);
 
+    cameraParasToolBtn->setEnabled(true);
     ctlboardParasToolBtn->setEnabled(true);
 }
 
@@ -381,6 +393,7 @@ void MainWindow::onSystemStateStopped()
     recognizeParasBtn->setEnabled(true);
     gradeParasBtn->setEnabled(true);
 
+    cameraParasToolBtn->setEnabled(false);
     ctlboardParasToolBtn->setEnabled(false);
 //    setupToolBtn->setEnabled(true);
 }
@@ -406,6 +419,7 @@ void MainWindow::onInspectStateStarted()
     saveCfgFileToolBtn->setEnabled(false);
 
     sysParasToolBtn->setEnabled(false);
+    cameraParasToolBtn->setEnabled(false);
     ctlboardParasToolBtn->setEnabled(false);
 
     loadAlgParasFileToolBtn->setEnabled(false);
@@ -440,6 +454,7 @@ void MainWindow::onInspectStateStopped()
     sysParasToolBtn->setEnabled(true);
     openImageToolBtn->setEnabled(true);
 
+    cameraParasToolBtn->setEnabled(true);
     ctlboardParasToolBtn->setEnabled(true);
 
     recognizeParasBtn->setEnabled(true);
@@ -695,7 +710,7 @@ void MainWindow::onInspectDone(DetectResult result)
 void MainWindow::onOpenCfgFileBtnClicked()
 {
     QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"),
-                                                     "",
+                                                     ".",
                                                      tr("Files (*.cfg)"));
 
     if (fileName.isEmpty())
@@ -712,7 +727,7 @@ void MainWindow::onOpenCfgFileBtnClicked()
 void MainWindow::onSaveCfgFileBtnClicked()
 {
     QString fileName = QFileDialog::getSaveFileName(this, tr("Save File"),
-                                                     "",
+                                                     ".",
                                                      tr("Files (*.cfg)"));
 
     if (fileName.isEmpty())
@@ -727,7 +742,7 @@ void MainWindow::onSaveCfgFileBtnClicked()
 void MainWindow::onLoadAlgParasFileBtnClicked()
 {
     QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"),
-                                                     "",
+                                                     ".",
                                                      tr("Files (*.xml)"));
 
     if (fileName.isEmpty())
@@ -749,7 +764,7 @@ void MainWindow::onSaveAlgParasBtnClicked()
 void MainWindow::onSaveAlgParasToFileBtnClicked()
 {
     QString fileName = QFileDialog::getSaveFileName(this, tr("Save File"),
-                                                     "",
+                                                     ".",
                                                      tr("Files (*.xml)"));
 
     if (fileName.isEmpty())

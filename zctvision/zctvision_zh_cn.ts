@@ -114,7 +114,7 @@
     <message>
         <location filename="mainwindow.cpp" line="227"/>
         <source>Inspect Output Result:</source>
-        <translation>检测输出结果</translation>
+        <translation>检测输出结果：</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="230"/>
@@ -176,31 +176,36 @@
         <location filename="mainwindow.cpp" line="657"/>
         <source>Current Frame id: %1
 </source>
-        <translation></translation>
+        <translation>当前帧序号： %1
+</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="659"/>
         <source>Current Inspect result: Faile
 </source>
-        <translation>本次检测结果：失败</translation>
+        <translation>本次检测结果：失败
+</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="661"/>
         <source>Current Inspect result: Succeed
 </source>
-        <translation>本次检测结果：成功</translation>
+        <translation>本次检测结果：成功
+</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="662"/>
         <source>Left Colume Grade Result: %1
 </source>
-        <translation>左列枣类别：%1</translation>
+        <translation>左列枣类别：%1
+</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="663"/>
         <source>Right Colume Grade Result: %1
 </source>
-        <translation>右列枣类别：%1</translation>
+        <translation>右列枣类别：%1
+</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="681"/>

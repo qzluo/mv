@@ -87,6 +87,7 @@ private:
     QToolButton *nextImageToolBtn;
     QToolButton *lastImageToolBtn;
 
+    QToolButton *cameraParasToolBtn;
     QToolButton *ctlboardParasToolBtn;
     QToolButton *staticsInfosToolBtn;
 
