@@ -24,5 +24,6 @@
         <file>images/stastics.png</file>
         <file>images/sys_paras.png</file>
         <file>images/select_camera.png</file>
+        <file>images/about.png</file>
     </qresource>
 </RCC>

@@ -8,6 +8,14 @@
 using namespace cv;
 
 
+typedef struct tagCameraFeature {
+    int dataType;
+    QString value;
+    QString min;
+    QString max;
+    QStringList enumStrings;
+} CameraFeature, * PCamearaFeature;
+
 class CameraCtl : public QObject
 {
     Q_OBJECT
@@ -23,7 +31,8 @@ public:
 
     virtual int GetCamWidth()=0;//获取当前相机所设宽度
     virtual int GetCamHeight()=0;//获取当前相机所设高度
-    virtual void SetPara()=0;//相机参数控制
+    virtual int SetPara(QString featureName, QString value)=0;//相机参数控制
+    virtual int GetPara(QString featureName, CameraFeature* pCamearaFeature) = 0;
 
 signals:
     void hasImage(const QImage& image);

@@ -37,7 +37,9 @@ SOURCES += main.cpp\
     ui/qrealtimeresultwidget.cpp \
     ui/qinspectparassetupdlg.cpp \
     ui/qgradeparassetupdlg.cpp \
-    ui/qsysparassetupdlg.cpp
+    ui/qsysparassetupdlg.cpp \
+    ui/qcameraparassetupdlg.cpp \
+    ui/qctrlboardparassetupdlg.cpp
 
 HEADERS  += mainwindow.h \
     graphicswidget.h \
@@ -52,7 +54,9 @@ HEADERS  += mainwindow.h \
     ui/qrealtimeresultwidget.h \
     ui/qinspectparassetupdlg.h \
     ui/qgradeparassetupdlg.h \
-    ui/qsysparassetupdlg.h
+    ui/qsysparassetupdlg.h \
+    ui/qcameraparassetupdlg.h \
+    ui/qctrlboardparassetupdlg.h
 
 FORMS    += mainwindow.ui
 

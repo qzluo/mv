@@ -61,6 +61,8 @@ public:
     int saveAlgParas(void);
     int saveAlgParasToFile(QString& fileName);
 
+    int setCameraParas(QString featureName, QString value);
+
     //检测单张图片
     int inspectSingleImage(const QImage& image,
                           QList<ZaoInfo>& cur_left_col_result,
@@ -78,6 +80,14 @@ public:
 
     QRWCommController *getRwCommInst() const;
     void setRwCommInst(QRWCommController *value);
+
+    CameraCtl *getPCamCtl() const;
+    void setPCamCtl(CameraCtl *value);
+
+    int getInspectCount() const;
+    void setInspectCount(int value);
+
+    unsigned long getInspectTime() const;
 
 private:
     //初始化资源
@@ -102,6 +112,8 @@ private:
 
     E_SYS_STATE sysState;
     E_INSPECT_STATE inspectState;
+
+    int inspectCount;   //检测张数，统计信息用
 
     CameraCtl* pCamCtl;
     QInspectCtl* inspectObj;

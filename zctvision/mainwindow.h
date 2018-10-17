@@ -66,7 +66,10 @@ public slots:
     void onGradeParasBtnClicked();
     void onFrameCalActionTriggered();
     void onAlgParasActionTriggered();
+    void onCamParasBtnClicked();
     void onModbusCmdActionTriggered();
+    void onStaticsInfosToolBtnClicked();
+    void onAboutToolBtnClicked();
 
 private:
     Ui::MainWindow *ui;

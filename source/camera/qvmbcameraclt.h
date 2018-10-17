@@ -30,7 +30,9 @@ public:
 
     virtual int GetCamWidth();//获取当前相机所设宽度
     virtual int GetCamHeight();//获取当前相机所设高度
-    virtual void SetPara();//相机参数控制
+    virtual int SetPara(QString featureName, QString value);//相机参数控制
+
+    virtual int GetPara(QString featureName, CameraFeature* pCamearaFeature);
 
 private:
     //

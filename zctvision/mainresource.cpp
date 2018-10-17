@@ -13,6 +13,7 @@ MainResource::MainResource(QObject *parent) : QObject(parent)
     sysState = SYS_STATE_IDLE;
     inspectState = INSPECT_STATE_WAIT;
 
+    inspectCount = 0;
     pCamCtl = NULL;
     rwCommInst = NULL;
 }
@@ -154,8 +155,17 @@ int MainResource::saveAlgParasToFile(QString& fileName)
     return algorithmManager.saveAlgParasToFile(fileName);
 }
 
+int MainResource::setCameraParas(QString featureName, QString value)
+{
+    if (!pCamCtl)
+        return -1;
+
+    return pCamCtl->SetPara(featureName, value);
+}
+
 int MainResource::inspectSingleImage(const QImage &image, QList<ZaoInfo> &cur_left_col_result, QList<ZaoInfo> &cur_right_col_result)
 {
+    inspectCount++;
     algorithmManager.resetImageSize(image.width(), image.height());
 
     return algorithmManager.inspectSingleImage(image, cur_left_col_result,
@@ -291,6 +301,7 @@ void MainResource::onInspectDone()
         }
     }
 
+    inspectCount++;
     emit inspectDone(detectResult);
 }
 
@@ -344,6 +355,31 @@ int MainResource::initRwComm()
         return -1;
 
     return 0;
+}
+
+int MainResource::getInspectCount() const
+{
+    return inspectCount;
+}
+
+void MainResource::setInspectCount(int value)
+{
+    inspectCount = value;
+}
+
+unsigned long MainResource::getInspectTime() const
+{
+    return algorithmManager.getInspectTime();
+}
+
+CameraCtl *MainResource::getPCamCtl() const
+{
+    return pCamCtl;
+}
+
+void MainResource::setPCamCtl(CameraCtl *value)
+{
+    pCamCtl = value;
 }
 
 QRWCommController *MainResource::getRwCommInst() const

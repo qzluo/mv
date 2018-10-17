@@ -223,8 +223,14 @@ int QOpenCVCaptureCtl::GetCamHeight()
     return worker->getCamHeight();
 }
 
-void QOpenCVCaptureCtl::SetPara()
+int QOpenCVCaptureCtl::SetPara(QString featureName, QString value)
 {
+    return 0;
+}
+
+int QOpenCVCaptureCtl::GetPara(QString featureName, CameraFeature *pCamearaFeature)
+{
+    return 0;
 }
 
 void QOpenCVCaptureCtl::showPropertyPage(int nCamID)

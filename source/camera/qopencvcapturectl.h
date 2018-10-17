@@ -74,7 +74,9 @@ public:
     virtual int GetCamHeight();
 
     //相机参数控制
-    virtual void SetPara();
+    virtual int SetPara(QString featureName, QString value);
+
+    virtual int GetPara(QString featureName, CameraFeature* pCamearaFeature);
 
     void showPropertyPage(int nCamID);
 

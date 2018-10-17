@@ -140,7 +140,11 @@ public:
     ///
     int zaoInspect(cv::Mat imageIn, QVector<ZaoInfo>& vecZaoInfo, int *zaoCount);
 
+    unsigned long getInspectTime() const;
+    void setInspectTime(unsigned long value);
+
 private:
+    unsigned long inspectTime;      //检测单张图片的时间，单位ms
     unsigned int last_frame_id;     //上一次检测的图片帧号
     int imageWidth;
     int imageHeight;

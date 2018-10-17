@@ -177,8 +177,13 @@ int QVirtualCameraCtl::GetCamHeight()
     return camHeight;
 }
 
-void QVirtualCameraCtl::SetPara()
+int QVirtualCameraCtl::SetPara(QString featureName, QString value)
 {
+    return 0;
+}
 
+int QVirtualCameraCtl::GetPara(QString featureName, CameraFeature *pCamearaFeature)
+{
+    return 0;
 }
 

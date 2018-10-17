@@ -12,6 +12,8 @@
 #include "qinspectparassetupdlg.h"
 #include "qgradeparassetupdlg.h"
 #include "qsysparassetupdlg.h"
+#include "qcameraparassetupdlg.h"
+#include "qctrlboardparassetupdlg.h"
 
 #include <QDate>
 
@@ -131,8 +133,8 @@ MainWindow::MainWindow(QWidget *parent) :
     cameraParasToolBtn->setToolButtonStyle(Qt::ToolButtonIconOnly);
     cameraParasToolBtn->setIcon(QPixmap(":/images/camera.png"));
     cameraParasToolBtn->setToolTip(tr("Camera Parameters Setup"));
-//    connect(cameraParasToolBtn, &QToolButton::clicked,
-//            this, &MainWindow::onModbusCmdActionTriggered);
+    connect(cameraParasToolBtn, &QToolButton::clicked,
+            this, &MainWindow::onCamParasBtnClicked);
 
 
     //control board paras
@@ -148,8 +150,16 @@ MainWindow::MainWindow(QWidget *parent) :
     staticsInfosToolBtn->setToolButtonStyle(Qt::ToolButtonIconOnly);
     staticsInfosToolBtn->setIcon(QPixmap(":/images/stastics.png"));
     staticsInfosToolBtn->setToolTip(tr("Stastics Infomation"));
-//    connect(ctlboardParasToolBtn, &QToolButton::clicked,
-//            this, &MainWindow::onLastImageBtnClicked);
+    connect(staticsInfosToolBtn, &QToolButton::clicked,
+            this, &MainWindow::onStaticsInfosToolBtnClicked);
+
+    //about
+    QToolButton* aboutToolBtn = new QToolButton(this);
+    aboutToolBtn->setToolButtonStyle(Qt::ToolButtonIconOnly);
+    aboutToolBtn->setIcon(QPixmap(":/images/about.png"));
+    aboutToolBtn->setToolTip(tr("About"));
+    connect(aboutToolBtn, &QToolButton::clicked,
+            this, &MainWindow::onAboutToolBtnClicked);
 
     //setup
 //    setupToolBtn = new QToolButton(this);
@@ -202,6 +212,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->mainToolBar->addWidget(cameraParasToolBtn);
     ui->mainToolBar->addWidget(ctlboardParasToolBtn);
     ui->mainToolBar->addWidget(staticsInfosToolBtn);
+    ui->mainToolBar->addWidget(aboutToolBtn);
 //    ui->mainToolBar->addSeparator();
 //    ui->mainToolBar->addSeparator();
 
@@ -349,6 +360,9 @@ void MainWindow::showStatus()
 
 void MainWindow::onSystemStateStarted()
 {
+//    connect(mic, &MainResource::hasImage,
+//            this, &MainWindow::onHasImage);
+
     selCamTypeToolBtn->setEnabled(false);
     commSetupToolBtn->setEnabled(false);
 
@@ -938,10 +952,38 @@ void MainWindow::onAlgParasActionTriggered()
         mic->resetInspectParas();
 }
 
+void MainWindow::onCamParasBtnClicked()
+{
+    QCameraParasSetupDlg dlg;
+    dlg.setPCamCtl(mic->getPCamCtl());
+    dlg.exec();
+
+//    mic->setCameraParas("Gain", "20");
+
+}
+
 void MainWindow::onModbusCmdActionTriggered()
 {
-    QRtuOperatorDlg dlg;
-    dlg.setRwCommInst(mic->getRwCommInst());
+//    QRtuOperatorDlg dlg;
+//    dlg.setRwCommInst(mic->getRwCommInst());
+    QCtrlBoardParasSetupDlg dlg;
     dlg.exec();
+}
+
+void MainWindow::onStaticsInfosToolBtnClicked()
+{
+    int inspectCount = mic->getInspectCount();
+    unsigned int inspectTime = mic->getInspectTime();
+
+    QString msg = QString(tr("Insect Count: %1\n"
+                             "Inspect Time: %2 ms"))
+            .arg(inspectCount).arg(inspectTime);
+    QMessageBox::information(this, QString(tr("Statics Infomation")), msg);
+}
+
+void MainWindow::onAboutToolBtnClicked()
+{
+    QMessageBox::information(this, QString(tr("About")),
+                             QString(tr("Jujube Inspect Program V1.0")));
 }
 

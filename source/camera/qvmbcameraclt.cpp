@@ -13,6 +13,8 @@ QVmbCameraclt::QVmbCameraclt(QObject *parent) : CameraCtl(parent),
 
     bStarted = false;
     curImg = QImage();
+
+    SP_RESET(pCamera);
 }
 
 QVmbCameraclt::~QVmbCameraclt()
@@ -163,7 +165,10 @@ bool QVmbCameraclt::StopView()
     SP_ACCESS( pCamera )->StopContinuousImageAcquisition();
 
     // Close camera
-    pCamera->Close();
+    if (!SP_ISNULL( pCamera )) {
+        pCamera->Close();
+        SP_RESET(pCamera);
+    }
 
     // Clears all remaining frames that have not been picked up
     SP_DYN_CAST( m_pFrameObserver, AVT::VmbAPI::FrameObserver )->
@@ -198,9 +203,236 @@ int QVmbCameraclt::GetCamHeight()
     return camHeight;
 }
 
-void QVmbCameraclt::SetPara()
+int QVmbCameraclt::SetPara(QString featureName, QString value)
 {
+    //get feature from featureName
+    char msg[1024] = {};
+    AVT::VmbAPI::FeaturePtr pFeature;
+    VmbErrorType err = VmbErrorSuccess;
+    err = SP_ACCESS( pCamera )-> GetFeatureByName( featureName.toLatin1().data(), pFeature );
+    if( VmbErrorSuccess != err ) {
+        sprintf(msg, "GetFeatureByName failed. errcode = %d.", err);
+        logFile(FileLogger::warn, msg);
+        return -1;
+    }
 
+    //check flags
+    VmbFeatureFlagsType flags = VmbFeatureFlagsNone;
+    if ((VmbErrorSuccess != pFeature->GetFlags(flags)) ||
+            ((VmbFeatureFlagsWrite & flags) == 0)) {
+        logFile(FileLogger::warn, "Featrue is not writable!");
+        return -1;
+    }
+
+    //get feature type
+    VmbFeatureDataType dataType = VmbFeatureDataUnknown;
+    if (VmbErrorSuccess != pFeature->GetDataType(dataType)) {
+        logFile(FileLogger::warn, "GetDataType failed!");
+        return -1;
+    }
+
+    switch(dataType) {
+    case VmbFeatureDataInt:
+        break;
+
+    case VmbFeatureDataFloat:
+    {
+        double dMin = 0.0;
+        double dMax = 0.0;
+        VmbBool_t incrementSupported = false;
+        double dInc = 0.0;
+        if( VmbErrorSuccess != pFeature->GetRange(dMin, dMax)) {
+            sprintf(msg, "Feature %s GetRange failed.",
+                    featureName.toLatin1().data());
+            logFile(FileLogger::warn, msg);
+            return -1;
+        }
+
+        if( VmbErrorSuccess != pFeature->HasIncrement(incrementSupported)) {
+            sprintf(msg, "Feature %s HasIncrement failed.",
+                    featureName.toLatin1().data());
+            logFile(FileLogger::warn, msg);
+            return -1;
+        }
+
+        if (incrementSupported) {
+            if( VmbErrorSuccess != pFeature->GetIncrement(dInc)) {
+                sprintf(msg, "Feature %s GetIncrement failed.",
+                        featureName.toLatin1().data());
+                logFile(FileLogger::warn, msg);
+                return -1;
+            }
+        }
+
+        double dValue = value.toDouble();
+        if (dValue < dMin)
+            dValue = dMin;
+        else if (dValue > dMax)
+            dValue = dMax;
+        else if (incrementSupported)
+            dValue = dMin + (int((dValue - dMin) / dInc)) * dInc;
+
+        if ( VmbErrorSuccess != pFeature->SetValue(dValue)) {
+            sprintf(msg, "Feature %s set value failed.",
+                    featureName.toLatin1().data());
+            logFile(FileLogger::warn, msg);
+            return -1;
+        }
+        break;
+    }
+
+    case VmbFeatureDataEnum:
+    {
+        std::string sCurrentValue;
+        bool bIsAvailable = false;
+        pFeature->IsValueAvailable(value.toStdString().c_str(), bIsAvailable );
+        if( VmbErrorSuccess != pFeature->IsValueAvailable(value.toStdString().c_str(), bIsAvailable )) {
+            sprintf(msg, "Feature %s IsValueAvailable failed.",
+                    featureName.toLatin1().data());
+            logFile(FileLogger::warn, msg);
+            return -1;
+        }
+
+        if (!bIsAvailable)
+            return -1;
+
+        if( VmbErrorSuccess != pFeature->GetValue(sCurrentValue)) {
+            sprintf(msg, "Feature %s GetValue failed.",
+                    featureName.toLatin1().data());
+            logFile(FileLogger::warn, msg);
+            return -1;
+        }
+
+        if (sCurrentValue.compare(value.toStdString()) == 0)
+            return 0;
+
+        if ( VmbErrorSuccess != pFeature->SetValue(value.toStdString().c_str())) {
+            sprintf(msg, "Feature %s set value failed.",
+                    featureName.toLatin1().data());
+            logFile(FileLogger::warn, msg);
+            return -1;
+        }
+        break;
+    }
+
+    case VmbFeatureDataString:
+    case VmbFeatureDataBool:
+    case VmbFeatureDataCommand:
+    case VmbFeatureDataRaw:
+        break;
+
+    default:
+        break;
+    }
+
+    return 0;
+}
+
+int QVmbCameraclt::GetPara(QString featureName, CameraFeature *pCamearaFeature)
+{
+    //get feature from featureName
+    char msg[1024] = {};
+    AVT::VmbAPI::FeaturePtr pFeature;
+    VmbErrorType err = VmbErrorSuccess;
+    err = SP_ACCESS( pCamera )-> GetFeatureByName( featureName.toLatin1().data(), pFeature );
+    if( VmbErrorSuccess != err ) {
+        sprintf(msg, "GetFeatureByName failed. errcode = %d.", err);
+        logFile(FileLogger::warn, msg);
+        return -1;
+    }
+
+    //check flags
+    VmbFeatureFlagsType flags = VmbFeatureFlagsNone;
+    if ((VmbErrorSuccess != pFeature->GetFlags(flags)) ||
+            ((VmbFeatureFlagsRead & flags) == 0)) {
+        logFile(FileLogger::warn, "Featrue is not readable!");
+        return -1;
+    }
+
+    //get feature type
+    VmbFeatureDataType dataType = VmbFeatureDataUnknown;
+    if (VmbErrorSuccess != pFeature->GetDataType(dataType)) {
+        logFile(FileLogger::warn, "GetDataType failed!");
+        return -1;
+    }
+
+    pCamearaFeature->dataType = dataType;
+
+    switch(dataType) {
+    case VmbFeatureDataInt:
+        break;
+
+    case VmbFeatureDataFloat:
+    {
+        double dMin = 0.0;
+        double dMax = 0.0;
+        double dValue = 0.0;
+        if( VmbErrorSuccess != pFeature->GetRange(dMin, dMax)) {
+            sprintf(msg, "Feature %s GetRange failed.",
+                    featureName.toLatin1().data());
+            logFile(FileLogger::warn, msg);
+            return -1;
+        }
+
+        if( VmbErrorSuccess != pFeature->GetValue(dValue)) {
+            sprintf(msg, "Feature %s GetValue failed.",
+                    featureName.toLatin1().data());
+            logFile(FileLogger::warn, msg);
+            return -1;
+        }
+
+        pCamearaFeature->min = QString::number(dMin);
+        pCamearaFeature->max = QString::number(dMax);
+        pCamearaFeature->value = QString::number(dValue);
+
+        break;
+    }
+
+    case VmbFeatureDataEnum:
+    {
+        std::vector<std::string>  sEnumEntries;
+        std::string sCurrentValue;
+        if( VmbErrorSuccess != pFeature->GetValues(sEnumEntries)) {
+            sprintf(msg, "Feature %s GetValues failed.",
+                    featureName.toLatin1().data());
+            logFile(FileLogger::warn, msg);
+            return -1;
+        }
+
+        if( VmbErrorSuccess != pFeature->GetValue(sCurrentValue)) {
+            sprintf(msg, "Feature %s GetValue failed.",
+                    featureName.toLatin1().data());
+            logFile(FileLogger::warn, msg);
+            return -1;
+        }
+
+        pCamearaFeature->enumStrings.clear();
+        for (int i = 0; i < sEnumEntries.size(); i++) {
+            bool bIsAvailable = false;
+            pFeature->IsValueAvailable(sEnumEntries.at(i).c_str(), bIsAvailable );
+
+            if(bIsAvailable) {
+                pCamearaFeature->enumStrings.append(QString::
+                                                    fromStdString(sEnumEntries.at(i)));
+            }
+        }
+
+        pCamearaFeature->value = QString::fromStdString(sCurrentValue);
+
+        break;
+    }
+
+    case VmbFeatureDataString:
+    case VmbFeatureDataBool:
+    case VmbFeatureDataCommand:
+    case VmbFeatureDataRaw:
+        break;
+
+    default:
+        break;
+    }
+
+    return 0;
 }
 
 VmbErrorType QVmbCameraclt::CopyToImage(VmbUchar_t *pInBuffer, VmbPixelFormat_t ePixelFormat, QImage &pOutImage, const float *Matrix)
@@ -281,7 +513,7 @@ void QVmbCameraclt::OnFrameReady(int status)
     }
 
     // See if it is not corrupt
-    if( VmbFrameStatusComplete == status ) {
+    if ( VmbFrameStatusComplete == status ) {
         VmbUchar_t *pBuffer;
         VmbErrorType err = SP_ACCESS( pFrame )->GetImage( pBuffer );
 

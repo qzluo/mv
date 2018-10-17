@@ -11,6 +11,8 @@ QZaoInspectAlgApp::QZaoInspectAlgApp()
     imageWidth = 1280;
     imageHeight = 960;
 
+    inspectTime = 0;
+
     detectHandle = NULL;
     recognizeHandle = NULL;
 }
@@ -254,6 +256,8 @@ int QZaoInspectAlgApp::inspectSingleImage(const Mat &mat,
                                          QList<ZaoInfo> &cur_left_col_result,
                                          QList<ZaoInfo> &cur_right_col_result)
 {
+    unsigned long startTime = GetTickCount();
+
     //检测图片及识别种类
     QVector<ZaoInfo> vecZaoInfo;
     int zaoCount = 0;
@@ -291,7 +295,9 @@ int QZaoInspectAlgApp::inspectSingleImage(const Mat &mat,
             cur_left_col_result[regionId] = vecZaoInfo[i];
         else
             cur_right_col_result[regionId] = vecZaoInfo[i];
-    }
+    }    
+
+    inspectTime = GetTickCount() - startTime;
 
     return 0;
 }
@@ -547,4 +553,14 @@ int QZaoInspectAlgApp::zaoInspect(cv::Mat imageIn, QVector<ZaoInfo>& vecZaoInfo,
     }
 
     return 0;
+}
+
+unsigned long QZaoInspectAlgApp::getInspectTime() const
+{
+    return inspectTime;
+}
+
+void QZaoInspectAlgApp::setInspectTime(unsigned long value)
+{
+    inspectTime = value;
 }
