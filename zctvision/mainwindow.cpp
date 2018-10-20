@@ -967,6 +967,7 @@ void MainWindow::onModbusCmdActionTriggered()
 //    QRtuOperatorDlg dlg;
 //    dlg.setRwCommInst(mic->getRwCommInst());
     QCtrlBoardParasSetupDlg dlg;
+    dlg.setRwCommInst(mic->getRwCommInst());
     dlg.exec();
 }
 
@@ -975,7 +976,7 @@ void MainWindow::onStaticsInfosToolBtnClicked()
     int inspectCount = mic->getInspectCount();
     unsigned int inspectTime = mic->getInspectTime();
 
-    QString msg = QString(tr("Insect Count: %1\n"
+    QString msg = QString(tr("Inspect Count: %1\n"
                              "Inspect Time: %2 ms"))
             .arg(inspectCount).arg(inspectTime);
     QMessageBox::information(this, QString(tr("Statics Infomation")), msg);

@@ -2,6 +2,7 @@
 #define QCTRLBOARDPARASSETUPDLG_H
 
 #include <QtWidgets>
+#include "qrwcommcontroller.h"
 
 class QCtrlBoardParasSetupDlg : public QDialog
 {
@@ -9,11 +10,26 @@ class QCtrlBoardParasSetupDlg : public QDialog
 public:
     explicit QCtrlBoardParasSetupDlg(QWidget *parent = 0);
 
+    QRWCommController *getRwCommInst() const;
+    void setRwCommInst(QRWCommController *value);
+
 signals:
 
 public slots:
+    void onReadRegisterBtnClicked();
+    void onValveTimeReadBtnClicked();
+    void onValveTimeWriteBtnClicked();
+
+    void onValveActionBtnClicked();
+    void onSaveValveEnableBtnClicked();
 
 private:
+    QRWCommController* rwCommInst;
+
+    QSpinBox* valveNoSP;
+
+    QDoubleSpinBox* valveOpenTimeSB;
+    QSpinBox* valveDelaySBs[8];
     QLineEdit* registerConts[8];
 };
 
