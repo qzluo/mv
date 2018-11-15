@@ -315,9 +315,10 @@ int MainResource::initCamera()
 
     if (cameraType == ProjectSysInfo::CAMERATYPE_AVT)
         pCamCtl = new QVmbCameraclt(this);
+    else if (cameraType == ProjectSysInfo::CAMERATYPE_DAHENG)
+        pCamCtl = new QDahengCameraCtl(this);
     else
         return 0;
-//        pCamCtl = new QVirtualCameraCtl(this);
 
     if (!pCamCtl->Initiallize(0)) {
         delete pCamCtl;

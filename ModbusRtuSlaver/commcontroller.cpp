@@ -274,8 +274,8 @@ void CommWorker::handleInput(char *input, int dataLen)
 ///
 /// \brief CModBusRtu::readRegisters
 /// 指令： 0x01(从机地址） 0x03(功能码） 0xXX(寄存器地址高八位） 0xXX(寄存器地址低八位）
-///       0xXX（寄存器数量高八位） 0xXX（寄存器数量低八位） CRCH CRCL
-/// 回应: 0x01 0x03 0xXX(返回字节数) Data1H Data1L ... CRCH CRCL
+///       0xXX（寄存器数量高八位） 0xXX（寄存器数量低八位） CRCL CRCH
+/// 回应: 0x01 0x03 0xXX(返回字节数) Data1H Data1L ... CRCL CRCH
 ///
 int CommWorker::handleReadRegister(char *input, int dataLen, char *output, int *outLen)
 {
@@ -309,14 +309,14 @@ int CommWorker::handleReadRegister(char *input, int dataLen, char *output, int *
 
     unsigned short crcData = 0;
     CRC16_Modbus((unsigned char*)output, 3 + 2 * reg_number, &crcData);
-    output[3 + 2 * reg_number] = HIGHBYTE(crcData);
-    output[4 + 2 * reg_number] = LOWBYTE(crcData);
+    output[3 + 2 * reg_number] = LOWBYTE(crcData);
+    output[4 + 2 * reg_number] = HIGHBYTE(crcData);
 
     return 0;
 }
 
 /// 指令： 0x01(从机地址） 0x06(功能码） 0xXX(寄存器地址高八位） 0xXX(寄存器地址低八位）
-///       DataH DataL CRCH CRCL
+///       DataH DataL CRCL CRCH
 /// 回应: 同指令
 int CommWorker::handleWriteRegister(char *input, int dataLen, char *output, int *outLen)
 {
@@ -373,9 +373,9 @@ int CommWorker::handleWriteRegister(char *input, int dataLen, char *output, int 
 
 /// 指令： 0x01(从机地址） 0x10(功能码） 0xXX(寄存器地址高八位） 0xXX(寄存器地址低八位）
 ///       0xXX（寄存器数量高八位） 0xXX（寄存器数量低八位）0xXX(字节数)
-///       Data1H Data1L ... CRCH CRCL
+///       Data1H Data1L ... CRCL CRCH
 /// 回应:  0x01 0x10 0xXX(寄存器地址高八位） 0xXX(寄存器地址低八位）
-///       0xXX（寄存器数量高八位） 0xXX（寄存器数量低八位）CRCH CRCL
+///       0xXX（寄存器数量高八位） 0xXX（寄存器数量低八位）CRCL CRCH
 int CommWorker::handleWriteRegisters(char *input, int dataLen, char *output, int *outLen)
 {
     if (dataLen < 9)
@@ -441,8 +441,8 @@ int CommWorker::handleWriteRegisters(char *input, int dataLen, char *output, int
 
     unsigned short crcData = 0;
     CRC16_Modbus((unsigned char*)output, 6, &crcData);
-    output[6] = HIGHBYTE(crcData);
-    output[7] = LOWBYTE(crcData);
+    output[6] = LOWBYTE(crcData);
+    output[7] = HIGHBYTE(crcData);
 
     return 0;
 }

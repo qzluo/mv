@@ -70,8 +70,8 @@ void CModBusRtu::setSlaveAddr(int slaveAddr)
 ///
 /// \brief CModBusRtu::readRegisters
 /// 指令： 0x01(从机地址） 0x03(功能码） 0xXX(寄存器地址高八位） 0xXX(寄存器地址低八位）
-///       0xXX（寄存器数量高八位） 0xXX（寄存器数量低八位） CRCH CRCL
-/// 回应: 0x01 0x03 0xXX(返回字节数) Data1H Data1L ... CRCH CRCL
+///       0xXX（寄存器数量高八位） 0xXX（寄存器数量低八位） CRCL CRCH
+/// 回应: 0x01 0x03 0xXX(返回字节数) Data1H Data1L ... CRCL CRCH
 ///
 int CModBusRtu::readRegisters(int reg_addr, int reg_num, unsigned short *dest)
 {
@@ -87,8 +87,8 @@ int CModBusRtu::readRegisters(int reg_addr, int reg_num, unsigned short *dest)
     unsigned short crcData = 0;
     CRC16_Modbus((unsigned char*)inBuf, 6, &crcData);
 
-    inBuf[6] = HIGHBYTE(crcData);
-    inBuf[7] = LOWBYTE(crcData);
+    inBuf[6] = LOWBYTE(crcData);
+    inBuf[7] = HIGHBYTE(crcData);
 
     char outBuf[64] = {};
 
@@ -107,8 +107,8 @@ int CModBusRtu::readRegisters(int reg_addr, int reg_num, unsigned short *dest)
     crcData = 0;
     CRC16_Modbus((unsigned char*)outBuf, 3 + 2*reg_num, &crcData);
 
-    if (outBuf[3 + 2*reg_num] != (char)HIGHBYTE(crcData) ||
-            outBuf[4 + 2*reg_num] != (char)LOWBYTE(crcData))
+    if (outBuf[3 + 2*reg_num] != (char)LOWBYTE(crcData) ||
+            outBuf[4 + 2*reg_num] != (char)HIGHBYTE(crcData))
         return -1;
 
     //结果输出
@@ -122,7 +122,7 @@ int CModBusRtu::readRegisters(int reg_addr, int reg_num, unsigned short *dest)
 ///
 /// \brief CModBusRtu::writeRegister
 /// 指令： 0x01(从机地址） 0x06(功能码） 0xXX(寄存器地址高八位） 0xXX(寄存器地址低八位）
-///       DataH DataL CRCH CRCL
+///       DataH DataL CRCL CRCH
 /// 回应: 同指令
 ///
 int CModBusRtu::writeRegister(int reg_addr, int value)
@@ -139,8 +139,8 @@ int CModBusRtu::writeRegister(int reg_addr, int value)
     unsigned short crcData = 0;
     CRC16_Modbus((unsigned char*)inBuf, 6, &crcData);
 
-    inBuf[6] = HIBYTE(crcData);
-    inBuf[7] = LOWBYTE(crcData);
+    inBuf[6] = LOWBYTE(crcData);
+    inBuf[7] = HIBYTE(crcData);
 
     char outBuf[8] = {};
 
@@ -161,9 +161,9 @@ int CModBusRtu::writeRegister(int reg_addr, int value)
 /// \brief CModBusRtu::writeRegisters
 /// 指令： 0x01(从机地址） 0x10(功能码） 0xXX(寄存器地址高八位） 0xXX(寄存器地址低八位）
 ///       0xXX（寄存器数量高八位） 0xXX（寄存器数量低八位）0xXX(字节数)
-///       Data1H Data1L ... CRCH CRCL
+///       Data1H Data1L ... CRCL CRCH
 /// 回应:  0x01 0x10 0xXX(寄存器地址高八位） 0xXX(寄存器地址低八位）
-///       0xXX（寄存器数量高八位） 0xXX（寄存器数量低八位）CRCH CRCL
+///       0xXX（寄存器数量高八位） 0xXX（寄存器数量低八位）CRCL CRCH
 ///
 int CModBusRtu::writeRegisters(int reg_addr, int reg_num, const unsigned short *data)
 {
@@ -185,8 +185,8 @@ int CModBusRtu::writeRegisters(int reg_addr, int reg_num, const unsigned short *
     unsigned short crcData = 0;
     CRC16_Modbus((unsigned char*)inBuf, 7 + 2*reg_num, &crcData);
 
-    inBuf[7+2*reg_num] = HIGHBYTE(crcData);
-    inBuf[8+2*reg_num] = LOWBYTE(crcData);
+    inBuf[7+2*reg_num] = LOWBYTE(crcData);
+    inBuf[8+2*reg_num] = HIGHBYTE(crcData);
 
     char outBuf[8] = {};
 
@@ -201,8 +201,8 @@ int CModBusRtu::writeRegisters(int reg_addr, int reg_num, const unsigned short *
 
     crcData = 0;
     CRC16_Modbus((unsigned char*)outBuf, 6, &crcData);
-    if (outBuf[6] != char(HIGHBYTE(crcData)) ||
-            outBuf[7] != char(LOWBYTE(crcData)))
+    if (outBuf[6] != char(LOWBYTE(crcData)) ||
+            outBuf[7] != char(HIGHBYTE(crcData)))
         return -1;
 
     return 0;

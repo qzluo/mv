@@ -10,6 +10,7 @@
 #include "cameraimagecache.h"
 #include "qvirtualcameractl.h"
 #include "qvmbcameraclt.h"
+#include "qdahengcameractl.h"
 
 #include "qzaoinspectalgapp.h"
 #include "qrwcommcontroller.h"
