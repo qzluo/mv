@@ -954,12 +954,9 @@ void MainWindow::onAlgParasActionTriggered()
 
 void MainWindow::onCamParasBtnClicked()
 {
-    QCameraParasSetupDlg dlg;
+    QCameraParasSetupDlg dlg(mic->getCameraType());
     dlg.setPCamCtl(mic->getPCamCtl());
     dlg.exec();
-
-//    mic->setCameraParas("Gain", "20");
-
 }
 
 void MainWindow::onModbusCmdActionTriggered()

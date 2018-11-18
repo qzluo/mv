@@ -374,6 +374,11 @@ unsigned long MainResource::getInspectTime() const
     return algorithmManager.getInspectTime();
 }
 
+int MainResource::getCameraType()
+{
+    return sysInfo.getCameraType();
+}
+
 CameraCtl *MainResource::getPCamCtl() const
 {
     return pCamCtl;

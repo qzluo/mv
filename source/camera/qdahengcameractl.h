@@ -47,6 +47,9 @@ public:
 
     virtual int GetPara(QString featureName, CameraFeature* pCamearaFeature);
 
+private:
+    QString getDahengCamFeatureName(QString featureName);
+
 public slots:
     void OnFrameReady();
 

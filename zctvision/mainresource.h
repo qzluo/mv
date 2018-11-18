@@ -90,6 +90,8 @@ public:
 
     unsigned long getInspectTime() const;
 
+    int getCameraType(void);
+
 private:
     //初始化资源
     int initRc(void);

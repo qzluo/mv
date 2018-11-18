@@ -11,7 +11,8 @@ class QCameraParasSetupDlg : public QDialog
 {
     Q_OBJECT
 public:
-    explicit QCameraParasSetupDlg(QWidget *parent = 0);
+    //type = 0 -- vmba camera, type = 1 -- daheng camera
+    explicit QCameraParasSetupDlg(int type = 0, QWidget *parent = 0);
 
     CameraCtl *getPCamCtl() const;
     void setPCamCtl(CameraCtl *value);
@@ -26,6 +27,7 @@ public slots:
 
     void onExposureSBValueChanged();
 
+    void onTriggerModeCBActivated();
     void onTriggerSourceCBActivated();
     void onTriggerDelaySBValueChanged();
 
@@ -36,11 +38,14 @@ private:
     GraphicsWidget* plot;
     CameraCtl* pCamCtl;
 
+    int cameraType;
+
     QSlider* gainSlider;
     QDoubleSpinBox* gainSB;
 
     QDoubleSpinBox* exposureSB;
 
+    QComboBox* trigerModeCB;
     QComboBox* trigerSourceCB;
     QDoubleSpinBox* triggerDelaySB;
 

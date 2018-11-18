@@ -1,8 +1,9 @@
 #include "qcameraparassetupdlg.h"
 
-QCameraParasSetupDlg::QCameraParasSetupDlg(QWidget *parent) : QDialog(parent)
+QCameraParasSetupDlg::QCameraParasSetupDlg(int type, QWidget *parent) : QDialog(parent)
 {
     pCamCtl = NULL;
+    cameraType = type;
 
     //exposure
     QGroupBox* exposureGB = new QGroupBox(tr("Exposure"), this);
@@ -41,6 +42,13 @@ QCameraParasSetupDlg::QCameraParasSetupDlg(QWidget *parent) : QDialog(parent)
     QGroupBox* triggerGB = new QGroupBox(tr("Trigger"), this);
     QFormLayout* triggerGBLayout = new QFormLayout(triggerGB);
 
+    if (type == 2) { //daheng camera
+        trigerModeCB = new QComboBox;
+        connect(trigerModeCB, SIGNAL(activated(QString)),
+                this, SLOT(onTriggerModeCBActivated()));
+        triggerGBLayout->addRow(tr("Mode"), trigerModeCB);
+    }
+
     trigerSourceCB = new QComboBox;
     connect(trigerSourceCB, SIGNAL(activated(QString)),
             this, SLOT(onTriggerSourceCBActivated()));
@@ -52,20 +60,7 @@ QCameraParasSetupDlg::QCameraParasSetupDlg(QWidget *parent) : QDialog(parent)
     triggerGBLayout->addRow(tr("Source"), trigerSourceCB);
     triggerGBLayout->addRow(tr("Trigger Delay"), triggerDelaySB);
 
-    //white balance
-    QGroupBox* whiteBalanceGB = new QGroupBox(tr("White Balance"), this);
-    QFormLayout* whiteBalanceGBLayout = new QFormLayout(whiteBalanceGB);
 
-    redSB = new QDoubleSpinBox(this);
-    blueSB = new QDoubleSpinBox(this);
-
-    connect(redSB, SIGNAL(valueChanged(double)),
-            this, SLOT(onRedSBValueChanged()));
-    connect(blueSB, SIGNAL(valueChanged(double)),
-            this, SLOT(onBlueSBValueChanged()));
-
-    whiteBalanceGBLayout->addRow(tr("Red"), redSB);
-    whiteBalanceGBLayout->addRow(tr("Blue"), blueSB);
 
     //param
     QFrame* paramFrame = new QFrame(this);
@@ -81,7 +76,25 @@ QCameraParasSetupDlg::QCameraParasSetupDlg(QWidget *parent) : QDialog(parent)
     parasSetupLayout->addWidget(exposureGB);
     parasSetupLayout->addWidget(gainGB);
     parasSetupLayout->addWidget(triggerGB);
-    parasSetupLayout->addWidget(whiteBalanceGB);
+
+    //white balance
+    if (type == 1) {
+        QGroupBox* whiteBalanceGB = new QGroupBox(tr("White Balance"), this);
+        QFormLayout* whiteBalanceGBLayout = new QFormLayout(whiteBalanceGB);
+
+        redSB = new QDoubleSpinBox(this);
+        blueSB = new QDoubleSpinBox(this);
+
+        connect(redSB, SIGNAL(valueChanged(double)),
+                this, SLOT(onRedSBValueChanged()));
+        connect(blueSB, SIGNAL(valueChanged(double)),
+                this, SLOT(onBlueSBValueChanged()));
+
+        whiteBalanceGBLayout->addRow(tr("Red"), redSB);
+        whiteBalanceGBLayout->addRow(tr("Blue"), blueSB);
+
+        parasSetupLayout->addWidget(whiteBalanceGB);
+    }
 
     parasSetupLayout->addStretch();
 
@@ -111,7 +124,6 @@ void QCameraParasSetupDlg::setPCamCtl(CameraCtl *value)
     connect(pCamCtl, &CameraCtl::hasImage,
             this, &QCameraParasSetupDlg::onHasImage);
 
-
     CameraFeature camearaFeature = {};
 
     //exposure
@@ -138,6 +150,19 @@ void QCameraParasSetupDlg::setPCamCtl(CameraCtl *value)
     }
 
     //trigger
+    if (cameraType == 2) {
+        if (pCamCtl->GetPara("TriggerMode", &camearaFeature) == 0) {
+            trigerModeCB->clear();
+
+            for (int i = 0; i < camearaFeature.enumStrings.size(); ++i) {
+                trigerModeCB->addItem(camearaFeature.enumStrings.at(i));
+            }
+
+            if (trigerModeCB->findText(camearaFeature.value) >= 0)
+                trigerModeCB->setCurrentText(camearaFeature.value);
+        }
+    }
+
     if (pCamCtl->GetPara("TriggerSource", &camearaFeature) == 0) {
         trigerSourceCB->clear();
 
@@ -159,27 +184,29 @@ void QCameraParasSetupDlg::setPCamCtl(CameraCtl *value)
     }
 
     //white balance
-    if (pCamCtl->SetPara("BalanceRatioSelector", "Red") == 0) {
-        if (pCamCtl->GetPara("BalanceRatioAbs", &camearaFeature) == 0) {
-            double dMin = camearaFeature.min.toDouble();
-            double dMax = camearaFeature.max.toDouble();
-            double dValue = camearaFeature.value.toDouble();
+    if (cameraType == 1) {
+        if (pCamCtl->SetPara("BalanceRatioSelector", "Red") == 0) {
+            if (pCamCtl->GetPara("BalanceRatioAbs", &camearaFeature) == 0) {
+                double dMin = camearaFeature.min.toDouble();
+                double dMax = camearaFeature.max.toDouble();
+                double dValue = camearaFeature.value.toDouble();
 
-            redSB->setRange(dMin, dMax);
-            redSB->setSingleStep(0.1);
-            redSB->setValue(dValue);
+                redSB->setRange(dMin, dMax);
+                redSB->setSingleStep(0.1);
+                redSB->setValue(dValue);
+            }
         }
-    }
 
-    if (pCamCtl->SetPara("BalanceRatioSelector", "Blue") == 0) {
-        if (pCamCtl->GetPara("BalanceRatioAbs", &camearaFeature) == 0) {
-            double dMin = camearaFeature.min.toDouble();
-            double dMax = camearaFeature.max.toDouble();
-            double dValue = camearaFeature.value.toDouble();
+        if (pCamCtl->SetPara("BalanceRatioSelector", "Blue") == 0) {
+            if (pCamCtl->GetPara("BalanceRatioAbs", &camearaFeature) == 0) {
+                double dMin = camearaFeature.min.toDouble();
+                double dMax = camearaFeature.max.toDouble();
+                double dValue = camearaFeature.value.toDouble();
 
-            blueSB->setRange(dMin, dMax);
-            blueSB->setSingleStep(0.1);
-            blueSB->setValue(dValue);
+                blueSB->setRange(dMin, dMax);
+                blueSB->setSingleStep(0.1);
+                blueSB->setValue(dValue);
+            }
         }
     }
 }
@@ -209,6 +236,12 @@ void QCameraParasSetupDlg::onExposureSBValueChanged()
 {
     double dValue = exposureSB->value();
     pCamCtl->SetPara("ExposureTimeAbs", QString::number(dValue));
+}
+
+void QCameraParasSetupDlg::onTriggerModeCBActivated()
+{
+    QString curTS = trigerModeCB->currentText();
+    pCamCtl->SetPara("TriggerMode", curTS);
 }
 
 void QCameraParasSetupDlg::onTriggerSourceCBActivated()

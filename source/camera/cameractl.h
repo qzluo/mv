@@ -16,6 +16,19 @@ typedef struct tagCameraFeature {
     QStringList enumStrings;
 } CameraFeature, * PCamearaFeature;
 
+typedef enum CamFeatureDataType
+{
+    CamFeatureDataUnknown     = 0,          // Unknown feature type
+    CamFeatureDataInt         = 1,          // 64 bit integer feature
+    CamFeatureDataFloat       = 2,          // 64 bit floating point feature
+    CamFeatureDataEnum        = 3,          // Enumeration feature
+    CamFeatureDataString      = 4,          // String feature
+    CamFeatureDataBool        = 5,          // Boolean feature
+    CamFeatureDataCommand     = 6,          // Command feature
+    CamFeatureDataRaw         = 7,          // Raw (direct register access) feature
+    CamFeatureDataNone        = 8,          // Feature with no data
+} CamFeatureDataType;
+
 class CameraCtl : public QObject
 {
     Q_OBJECT

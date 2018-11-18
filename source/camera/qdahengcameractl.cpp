@@ -1,5 +1,6 @@
 #include "qdahengcameractl.h"
 
+#include "FileLogger.h"
 #include <QDebug>
 #include <QMutexLocker>
 
@@ -8,7 +9,7 @@ void CSampleCaptureEventHandler::DoOnImageCaptured(CImageDataPointer &objImageDa
     if (objImageDataPointer->GetStatus() == GX_FRAME_STATUS_SUCCESS) {
         GX_PIXEL_FORMAT_ENTRY emPixelFormat = objImageDataPointer->GetPixelFormat();
 
-        void*pRGB24Buffer = NULL;
+        void* pRGB24Buffer = NULL;
 
         if (emPixelFormat & GX_PIXEL_8BIT)
             pRGB24Buffer = objImageDataPointer->ConvertToRGB24(GX_BIT_0_7, GX_RAW2RGB_NEIGHBOUR, true);
@@ -44,8 +45,8 @@ int CSampleCaptureEventHandler::GetFrame(QImage &image)
 QDahengCameraCtl::QDahengCameraCtl(QObject *parent) : CameraCtl(parent)
 {
     bInit = false;
-    camWidth = 0;
-    camHeight = 0;
+    camWidth = 1000;
+    camHeight = 1000;
     pCaptureEventHandler = NULL;
 }
 
@@ -68,11 +69,12 @@ bool QDahengCameraCtl::Initiallize(int DeviceNumber, QString paramPath)
         bInit = true;
     }
 
+
     //枚举设备
-    gxdeviceinfo_vector vectorDeviceInfo;
-    IGXFactory::GetInstance().UpdateDeviceList(1000, vectorDeviceInfo);
-    if (0 == vectorDeviceInfo.size())
-        return false;
+//    gxdeviceinfo_vector vectorDeviceInfo;
+//    IGXFactory::GetInstance().UpdateDeviceList(1000, vectorDeviceInfo);
+//    if (0 == vectorDeviceInfo.size())
+//        return false;
 
     return true;
 }
@@ -164,12 +166,201 @@ int QDahengCameraCtl::GetCamHeight()
 
 int QDahengCameraCtl::SetPara(QString featureName, QString value)
 {
+    QString dahengFeatureName = getDahengCamFeatureName(featureName);
+    if (dahengFeatureName.isEmpty())
+        return -1;
+
+    char msg[1024] = {};
+
+    //获取远端设备属性控制器
+    CGXFeatureControlPointer ObjFeatureControlPtr = ObjDevicePtr->GetRemoteFeatureControl();
+
+    if (!ObjFeatureControlPtr->IsImplemented(dahengFeatureName.toLatin1().data())) {
+        sprintf(msg, "Feature %s is not implemented.", dahengFeatureName.toLatin1().data());
+        logFile(FileLogger::warn, msg);
+        return -1;
+    }
+
+    //check flags
+    if (!ObjFeatureControlPtr->IsWritable(dahengFeatureName.toLatin1().data())) {
+        sprintf(msg, "Feature %s is not writable.", dahengFeatureName.toLatin1().data());
+        logFile(FileLogger::warn, msg);
+        return -1;
+    }
+
+    //get feature type
+    GX_FEATURE_TYPE dataType = ObjFeatureControlPtr->
+            GetFeatureType(dahengFeatureName.toLatin1().data());
+
+    switch (dataType) {
+    case GX_FEATURE_INT:
+    {
+        CIntFeaturePointer objIntPtr = ObjFeatureControlPtr->GetIntFeature(dahengFeatureName.toLatin1().data());
+        int iMin = 0;
+        int iMax = 0;
+        int iValue = value.toInt();
+
+        iMin = objIntPtr->GetMin();
+        iMax = objIntPtr->GetMax();
+
+        if (iValue < iMin)
+            iValue = iMin;
+        else if (iValue > iMax)
+            iValue = iMax;
+
+        objIntPtr->SetValue(iValue);
+        break;
+    }
+
+    case GX_FEATURE_FLOAT:
+    {
+        CFloatFeaturePointer objFloatPtr = ObjFeatureControlPtr->GetFloatFeature(dahengFeatureName.toLatin1().data());
+        double dMin = 0.0;
+        double dMax = 0.0;
+        double dValue = value.toDouble();
+
+        dMin = objFloatPtr->GetMin();
+        dMax = objFloatPtr->GetMax();
+
+        objFloatPtr->SetValue(dValue);
+        break;
+    }
+
+    case GX_FEATURE_ENUM:
+    {
+        CEnumFeaturePointer objEnumPtr = ObjFeatureControlPtr->GetEnumFeature(dahengFeatureName.toLatin1().data());
+        QString sCurrentValue = objEnumPtr->GetValue();
+
+        if (value.compare(sCurrentValue) == 0)
+            return 0;
+
+        objEnumPtr->SetValue(value.toStdString().c_str());
+        break;
+    }
+
+    case GX_FEATURE_BOOL:
+    case GX_FEATURE_STRING:
+    case GX_FEATURE_BUFFER:
+    case GX_FEATURE_COMMAND:
+    default:
+        break;
+    }
+
     return 0;
 }
 
 int QDahengCameraCtl::GetPara(QString featureName, CameraFeature *pCamearaFeature)
 {
+    QString dahengFeatureName = getDahengCamFeatureName(featureName);
+    if (dahengFeatureName.isEmpty())
+        return -1;
+
+    char msg[1024] = {};
+
+    //获取远端设备属性控制器
+    CGXFeatureControlPointer ObjFeatureControlPtr = ObjDevicePtr->GetRemoteFeatureControl();
+
+    if (!ObjFeatureControlPtr->IsImplemented(dahengFeatureName.toLatin1().data())) {
+        sprintf(msg, "Feature %s is not implemented.", dahengFeatureName.toLatin1().data());
+        logFile(FileLogger::warn, msg);
+        return -1;
+    }
+
+    //check flags
+    if (!ObjFeatureControlPtr->IsReadable(dahengFeatureName.toLatin1().data())) {
+        sprintf(msg, "Feature %s is not readable.", dahengFeatureName.toLatin1().data());
+        logFile(FileLogger::warn, msg);
+        return -1;
+    }
+
+    //get feature type
+    GX_FEATURE_TYPE dataType = ObjFeatureControlPtr->
+            GetFeatureType(dahengFeatureName.toLatin1().data());
+
+    switch (dataType) {
+    case GX_FEATURE_INT:
+    {
+        pCamearaFeature->dataType = CamFeatureDataInt;
+        CIntFeaturePointer objIntPtr = ObjFeatureControlPtr->GetIntFeature(dahengFeatureName.toLatin1().data());
+        int iMin = 0;
+        int iMax = 0;
+        int iValue = 0;
+
+        iMin = objIntPtr->GetMin();
+        iMax = objIntPtr->GetMax();
+        iValue = objIntPtr->GetValue();
+
+        pCamearaFeature->min = QString::number(iMin);
+        pCamearaFeature->max = QString::number(iMax);
+        pCamearaFeature->value = QString::number(iValue);
+        break;
+    }
+
+    case GX_FEATURE_FLOAT:
+    {
+        pCamearaFeature->dataType = CamFeatureDataFloat;
+        CFloatFeaturePointer objFloatPtr = ObjFeatureControlPtr->GetFloatFeature(dahengFeatureName.toLatin1().data());
+        double dMin = 0.0;
+        double dMax = 0.0;
+        double dValue = 0.0;
+
+        dMin = objFloatPtr->GetMin();
+        dMax = objFloatPtr->GetMax();
+        dValue = objFloatPtr->GetValue();
+
+        pCamearaFeature->min = QString::number(dMin);
+        pCamearaFeature->max = QString::number(dMax);
+        pCamearaFeature->value = QString::number(dValue);
+        break;
+    }
+
+    case GX_FEATURE_ENUM:
+    {
+        pCamearaFeature->dataType = CamFeatureDataEnum;
+        CEnumFeaturePointer objEnumPtr = ObjFeatureControlPtr->GetEnumFeature(dahengFeatureName.toLatin1().data());
+        GxIAPICPP::gxstring_vector sEnumEntries = objEnumPtr->GetEnumEntryList();
+        GxIAPICPP::gxstring sCurrentValue = objEnumPtr->GetValue();
+
+        pCamearaFeature->enumStrings.clear();
+        for (int i = 0; i < sEnumEntries.size(); i++) {
+            QString entryItem = sEnumEntries.at(i);
+            pCamearaFeature->enumStrings.append(entryItem);
+        }
+
+        pCamearaFeature->value = sCurrentValue;
+
+        break;
+    }
+
+    case GX_FEATURE_BOOL:
+    case GX_FEATURE_STRING:
+    case GX_FEATURE_BUFFER:
+    case GX_FEATURE_COMMAND:
+    default:
+        break;
+    }
+
     return 0;
+}
+
+QString QDahengCameraCtl::getDahengCamFeatureName(QString featureName)
+{
+    if (featureName == "ExposureTimeAbs")
+        return "ExposureTime";
+    else if (featureName == "Gain")
+        return "Gain";
+    else if (featureName == "TriggerMode")
+        return "TriggerMode";
+    else if (featureName == "TriggerSource")
+        return "TriggerSource";
+    else if (featureName == "TriggerDelayAbs")
+        return "TriggerDelay";
+    else if (featureName == "BalanceRatioSelector")
+        return "BalanceRatioSelector";
+    else if (featureName == "BalanceRatioAbs")
+        return "BalanceRatioAbs";
+    else
+        return "";
 }
 
 void QDahengCameraCtl::OnFrameReady()
