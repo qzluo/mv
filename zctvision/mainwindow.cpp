@@ -37,7 +37,7 @@ MainWindow::MainWindow(QWidget *parent) :
     //login
     loginToolBtn = new QToolButton(this);
     loginToolBtn->setToolButtonStyle(Qt::ToolButtonIconOnly);
-    loginToolBtn->setIcon(QPixmap(":/images/open_cfg.png"));
+    loginToolBtn->setIcon(QPixmap(":/images/login.png"));
     loginToolBtn->setToolTip(tr("Login"));
     connect(loginToolBtn, &QToolButton::clicked,
             this, &MainWindow::onLoginBtnClicked);
@@ -746,15 +746,15 @@ void MainWindow::onLoginBtnClicked()
         dlg.setAdministratorPw(mic->getAdministratorPw());
         if (dlg.exec() == QDialog::Accepted) {
             mic->setRole(ROLE_ADMINISTRATOR);
-            loginToolBtn->setIcon(QPixmap(":/images/open_cfg.png"));
-            loginToolBtn->setToolTip(tr("Log Off"));
+            loginToolBtn->setIcon(QPixmap(":/images/logout.png"));
+            loginToolBtn->setToolTip(tr("Log Out"));
         }
         break;
     }
 
     case ROLE_ADMINISTRATOR:
         mic->setRole(ROLE_USER);
-        loginToolBtn->setIcon(QPixmap(":/images/open_cfg.png"));
+        loginToolBtn->setIcon(QPixmap(":/images/login.png"));
         loginToolBtn->setToolTip(tr("Login"));
         break;
 

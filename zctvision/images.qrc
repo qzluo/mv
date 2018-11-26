@@ -25,5 +25,7 @@
         <file>images/sys_paras.png</file>
         <file>images/select_camera.png</file>
         <file>images/about.png</file>
+        <file>images/login.png</file>
+        <file>images/logout.png</file>
     </qresource>
 </RCC>
