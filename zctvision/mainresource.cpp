@@ -16,6 +16,8 @@ MainResource::MainResource(QObject *parent) : QObject(parent)
     inspectCount = 0;
     pCamCtl = NULL;
     rwCommInst = NULL;
+
+    role = ROLE_USER;
 }
 
 MainResource::~MainResource()
@@ -327,7 +329,12 @@ int MainResource::initCamera()
         return -1;
     }
 
-    pCamCtl->StartView();
+    if (!pCamCtl->StartView()) {
+        delete pCamCtl;
+        pCamCtl = NULL;
+
+        return -1;
+    }
 
     //connect
     connect(pCamCtl, &CameraCtl::hasImage,
@@ -359,6 +366,19 @@ int MainResource::initRwComm()
     return 0;
 }
 
+int MainResource::getRole() const
+{
+    return role;
+}
+
+void MainResource::setRole(int value)
+{
+    if (value < ROLE_USER || value > ROLE_ADMINISTRATOR)
+        return;
+
+    role = value;
+}
+
 int MainResource::getInspectCount() const
 {
     return inspectCount;
@@ -377,6 +397,11 @@ unsigned long MainResource::getInspectTime() const
 int MainResource::getCameraType()
 {
     return sysInfo.getCameraType();
+}
+
+QString MainResource::getAdministratorPw()
+{
+    return sysInfo.getAdministratorPw();
 }
 
 CameraCtl *MainResource::getPCamCtl() const

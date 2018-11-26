@@ -27,6 +27,11 @@ enum E_INSPECT_STATE {
     INSPECT_STATE_INSPECTED,
 };
 
+enum E_ROLE {
+    ROLE_USER,
+    ROLE_ADMINISTRATOR,
+};
+
 #define mic MainResource::getInstance()
 
 class MainResource : public QObject
@@ -39,7 +44,7 @@ public:
 private:
     explicit MainResource(QObject *parent = 0);
 
-public:    
+public:
     ~MainResource();
 
     int init(void);
@@ -66,8 +71,8 @@ public:
 
     //检测单张图片
     int inspectSingleImage(const QImage& image,
-                          QList<ZaoInfo>& cur_left_col_result,
-                          QList<ZaoInfo>& cur_right_col_result);
+                           QList<ZaoInfo>& cur_left_col_result,
+                           QList<ZaoInfo>& cur_right_col_result);
 
     ProjectSysInfo* getPSysInfo();
     QFrameCalInfo* getPFrameCalInfo(void);
@@ -91,6 +96,10 @@ public:
     unsigned long getInspectTime() const;
 
     int getCameraType(void);
+    QString getAdministratorPw(void);
+
+    int getRole() const;
+    void setRole(int value);
 
 private:
     //初始化资源
@@ -125,6 +134,8 @@ private:
     QRWCommController* rwCommInst;
 
     ProjectSysInfo sysInfo;
+
+    int role;
 };
 
 #endif // MAINRESOURCE_H

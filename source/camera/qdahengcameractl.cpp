@@ -11,10 +11,12 @@ void CSampleCaptureEventHandler::DoOnImageCaptured(CImageDataPointer &objImageDa
 
         void* pRGB24Buffer = NULL;
 
-        if (emPixelFormat & GX_PIXEL_8BIT)
-            pRGB24Buffer = objImageDataPointer->ConvertToRGB24(GX_BIT_0_7, GX_RAW2RGB_NEIGHBOUR, true);
-        else if (emPixelFormat & GX_PIXEL_8BIT == 0)
+        if ((emPixelFormat & GX_PIXEL_12BIT) == GX_PIXEL_12BIT)
             pRGB24Buffer = objImageDataPointer->ConvertToRGB24(GX_BIT_4_11, GX_RAW2RGB_NEIGHBOUR, true);
+        else if ((emPixelFormat & GX_PIXEL_10BIT) == GX_PIXEL_10BIT)
+            pRGB24Buffer = objImageDataPointer->ConvertToRGB24(GX_BIT_2_9, GX_RAW2RGB_NEIGHBOUR, true);
+        else if ((emPixelFormat & GX_PIXEL_8BIT) == GX_PIXEL_8BIT)
+            pRGB24Buffer = objImageDataPointer->ConvertToRGB24(GX_BIT_0_7, GX_RAW2RGB_NEIGHBOUR, true);
 
         QImage image((uchar*)pRGB24Buffer,
                      objImageDataPointer->GetWidth(),
@@ -84,8 +86,10 @@ bool QDahengCameraCtl::StartView()
     //枚举设备
     gxdeviceinfo_vector vectorDeviceInfo;
     IGXFactory::GetInstance().UpdateDeviceList(1000, vectorDeviceInfo);
-    if (0 == vectorDeviceInfo.size())
+    if (0 == vectorDeviceInfo.size()) {
+        logFile(FileLogger::warn, "Failed to start daheng camera.");
         return false;
+    }
 
     //打开第一台设备以及设备下面第一个流
     ObjDevicePtr = IGXFactory::GetInstance().OpenDeviceBySN(

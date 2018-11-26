@@ -48,6 +48,7 @@ private:
 public slots:
     void onHasImage(const QImage& image);
     void onInspectDone(DetectResult result);
+    void onLoginBtnClicked();
     void onOpenCfgFileBtnClicked();
     void onSaveCfgFileBtnClicked();
     void onLoadAlgParasFileBtnClicked();
@@ -74,6 +75,7 @@ public slots:
 private:
     Ui::MainWindow *ui;
 
+    QToolButton *loginToolBtn;
     QToolButton *openCfgFileToolBtn;
     QToolButton *saveCfgFileToolBtn;
     QToolButton *loadAlgParasFileToolBtn;

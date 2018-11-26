@@ -18,12 +18,14 @@ signals:
 public slots:
     void onOkBtnClicked();
     void onSelectPathBtnClicked();
+    void onModifyAdminPwBtnClicked();
 
 private:
     QCheckBox* outputIsOpenedCB;
     QCheckBox* saveImageOpenedCB;
     QCheckBox* logOutputIsOpenedCB;
     QLineEdit* tmpFilePathLE;
+    QString adminPw;
 
     ProjectSysInfo* pSysInfo;
 };

@@ -12,6 +12,7 @@ ProjectSysInfo::ProjectSysInfo()
     logOutputIsOpened = true;
     tmpFilePath = "D:\\jujubeInspectTmpFile\\";
     closingDateTime = QDateTime::currentDateTime();
+    administratorPw = "";
 }
 
 void ProjectSysInfo::load()
@@ -82,6 +83,8 @@ int ProjectSysInfo::saveToFile(QString &fileName)
                                       QString("%1").arg(logOutputIsOpened ? 1 : 0)));
     root.appendChild(QDomDocumentRW::createDomElement(doc, "tmpFilePath",
                                       QString("%1").arg(tmpFilePath)));
+    root.appendChild(QDomDocumentRW::createDomElement(doc, "administratorPw",
+                                      QString("%1").arg(administratorPw)));
 
     if (closingDateTime.isValid())
         root.appendChild(QDomDocumentRW::createDomElement(doc, "ClosingDate",
@@ -108,9 +111,21 @@ void ProjectSysInfo::loadElement(QDomElement &element)
         logOutputIsOpened = element.text().toInt() ? true : false;
     else if("tmpFilePath" == tagName)
         tmpFilePath = element.text();
+    else if("administratorPw" == tagName)
+        administratorPw = element.text();
     else if("ClosingDate" == tagName)
         closingDateTime = QDateTime::fromString(element.text(),
                                                 "yyyy-MM-dd HH:mm:ss");
+}
+
+QString ProjectSysInfo::getAdministratorPw() const
+{
+    return administratorPw;
+}
+
+void ProjectSysInfo::setAdministratorPw(const QString &value)
+{
+    administratorPw = value;
 }
 
 QString ProjectSysInfo::getTmpFilePath() const

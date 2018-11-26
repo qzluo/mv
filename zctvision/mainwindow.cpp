@@ -14,6 +14,7 @@
 #include "qsysparassetupdlg.h"
 #include "qcameraparassetupdlg.h"
 #include "qctrlboardparassetupdlg.h"
+#include "qlogindlg.h"
 
 #include <QDate>
 
@@ -32,6 +33,15 @@ MainWindow::MainWindow(QWidget *parent) :
     setIconSize(QSize(35,35));
 
     //init UI
+
+    //login
+    loginToolBtn = new QToolButton(this);
+    loginToolBtn->setToolButtonStyle(Qt::ToolButtonIconOnly);
+    loginToolBtn->setIcon(QPixmap(":/images/open_cfg.png"));
+    loginToolBtn->setToolTip(tr("Login"));
+    connect(loginToolBtn, &QToolButton::clicked,
+            this, &MainWindow::onLoginBtnClicked);
+
     //open cfg file
     openCfgFileToolBtn = new QToolButton(this);
     openCfgFileToolBtn->setToolButtonStyle(Qt::ToolButtonIconOnly);
@@ -187,6 +197,10 @@ MainWindow::MainWindow(QWidget *parent) :
 
 //    setupToolBtn->setMenu(setupMenu);
 //    setupToolBtn->setPopupMode(QToolButton::MenuButtonPopup);
+
+    ui->mainToolBar->addWidget(loginToolBtn);
+    ui->mainToolBar->addSeparator();
+    ui->mainToolBar->addSeparator();
 
     ui->mainToolBar->addWidget(openCfgFileToolBtn);
     ui->mainToolBar->addWidget(saveCfgFileToolBtn);
@@ -721,6 +735,34 @@ void MainWindow::onInspectDone(DetectResult result)
         cic->startNewInspect();
 }
 
+void MainWindow::onLoginBtnClicked()
+{
+    int role = mic->getRole();
+
+    switch (role) {
+    case ROLE_USER:
+    {
+        QLoginDlg dlg;
+        dlg.setAdministratorPw(mic->getAdministratorPw());
+        if (dlg.exec() == QDialog::Accepted) {
+            mic->setRole(ROLE_ADMINISTRATOR);
+            loginToolBtn->setIcon(QPixmap(":/images/open_cfg.png"));
+            loginToolBtn->setToolTip(tr("Log Off"));
+        }
+        break;
+    }
+
+    case ROLE_ADMINISTRATOR:
+        mic->setRole(ROLE_USER);
+        loginToolBtn->setIcon(QPixmap(":/images/open_cfg.png"));
+        loginToolBtn->setToolTip(tr("Login"));
+        break;
+
+    default:
+        break;
+    }
+}
+
 void MainWindow::onOpenCfgFileBtnClicked()
 {
     QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"),
@@ -793,6 +835,7 @@ void MainWindow::onSaveAlgParasToFileBtnClicked()
 void MainWindow::onSelCamTypeBtnClicked()
 {
     QSelectCameraTypeDlg dlg;
+    dlg.setEnabled(mic->getRole() == ROLE_ADMINISTRATOR);
     dlg.setPSysInfo(mic->getPSysInfo());
     dlg.exec();
 }
@@ -800,6 +843,7 @@ void MainWindow::onSelCamTypeBtnClicked()
 void MainWindow::onCommSetupBtnClicked()
 {
     QCommSetupDlg dlg;
+    dlg.setEnabled(mic->getRole() == ROLE_ADMINISTRATOR);
     dlg.setPSysInfo(mic->getPSysInfo());
     dlg.exec();
 }
@@ -807,6 +851,7 @@ void MainWindow::onCommSetupBtnClicked()
 void MainWindow::onSysParasSetupBtnClicked()
 {
     QSysParasSetupDlg dlg;
+    dlg.setEnabled(mic->getRole() == ROLE_ADMINISTRATOR);
     dlg.setPSysInfo(mic->getPSysInfo());
     dlg.exec();
 }
@@ -955,6 +1000,7 @@ void MainWindow::onAlgParasActionTriggered()
 void MainWindow::onCamParasBtnClicked()
 {
     QCameraParasSetupDlg dlg(mic->getCameraType());
+    dlg.setEnabled(mic->getRole() == ROLE_ADMINISTRATOR);
     dlg.setPCamCtl(mic->getPCamCtl());
     dlg.exec();
 }

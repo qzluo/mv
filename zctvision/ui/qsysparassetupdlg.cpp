@@ -1,7 +1,9 @@
 #include "qsysparassetupdlg.h"
+#include "qmodifypassworddlg.h"
 
 QSysParasSetupDlg::QSysParasSetupDlg(QWidget *parent) : QDialog(parent)
 {
+    adminPw = "";
     pSysInfo = NULL;
 
     outputIsOpenedCB = new QCheckBox(tr("Output In Running"), this);
@@ -17,6 +19,11 @@ QSysParasSetupDlg::QSysParasSetupDlg(QWidget *parent) : QDialog(parent)
 
     connect(selectPathBtn, &QPushButton::clicked,
             this, &QSysParasSetupDlg::onSelectPathBtnClicked);
+
+    QPushButton* modifyAdminPwBtn = new QPushButton(tr("Modify Administrator Password"),
+                                                    this);
+    connect(modifyAdminPwBtn, &QPushButton::clicked,
+            this, &QSysParasSetupDlg::onModifyAdminPwBtnClicked);
 
     //ok btn
     QPushButton* okBtn = new QPushButton(tr("Ok"), this);
@@ -38,6 +45,7 @@ QSysParasSetupDlg::QSysParasSetupDlg(QWidget *parent) : QDialog(parent)
     topLayout->addWidget(saveImageOpenedCB);
     topLayout->addWidget(logOutputIsOpenedCB);
     topLayout->addLayout(tmpFilePathLayout);
+    topLayout->addWidget(modifyAdminPwBtn);
     topLayout->addSpacing(10);
     topLayout->addLayout(btnLayout);
 
@@ -51,6 +59,7 @@ void QSysParasSetupDlg::onOkBtnClicked()
     bool saveImageOpened = pSysInfo->getSaveImageIsOpened();
     bool logOutputIsOpened = pSysInfo->getLogOutputIsOpened();
     QString tmeFilePath = pSysInfo->getTmpFilePath();
+    QString tmpAdminPw = pSysInfo->getAdministratorPw();
     bool changed = false;
 
     if (outputIsOpenedCB->isChecked() != outputIsOpened) {
@@ -73,6 +82,11 @@ void QSysParasSetupDlg::onOkBtnClicked()
         changed = true;
     }
 
+    if (adminPw.compare(tmpAdminPw)) {
+        pSysInfo->setAdministratorPw(adminPw);
+        changed = true;
+    }
+
     if (changed)
         pSysInfo->save();
 
@@ -92,6 +106,15 @@ void QSysParasSetupDlg::onSelectPathBtnClicked()
     tmpFilePathLE->setText(dir);
 }
 
+void QSysParasSetupDlg::onModifyAdminPwBtnClicked()
+{
+    QModifyPasswordDlg dlg;
+    dlg.setAdminPw(adminPw);
+    if (dlg.exec() == QDialog::Accepted) {
+        adminPw = dlg.getAdminPw();
+    }
+}
+
 ProjectSysInfo *QSysParasSetupDlg::getPSysInfo() const
 {
     return pSysInfo;
@@ -108,4 +131,5 @@ void QSysParasSetupDlg::setPSysInfo(ProjectSysInfo *value)
     saveImageOpenedCB->setChecked(pSysInfo->getSaveImageIsOpened());
     logOutputIsOpenedCB->setChecked(pSysInfo->getLogOutputIsOpened());
     tmpFilePathLE->setText(pSysInfo->getTmpFilePath());
+    adminPw = pSysInfo->getAdministratorPw();
 }

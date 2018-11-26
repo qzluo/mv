@@ -42,6 +42,9 @@ public:
     QString getTmpFilePath() const;
     void setTmpFilePath(const QString &value);
 
+    QString getAdministratorPw() const;
+    void setAdministratorPw(const QString &value);
+
 private:
     void loadElement(QDomElement& element);
 
@@ -54,6 +57,8 @@ private:
     bool logOutputIsOpened;
     QString tmpFilePath;
     QDateTime closingDateTime;
+
+    QString administratorPw;
 };
 
 #endif // PROJECTSYSINFO_H

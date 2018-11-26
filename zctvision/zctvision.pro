@@ -39,7 +39,9 @@ SOURCES += main.cpp\
     ui/qgradeparassetupdlg.cpp \
     ui/qsysparassetupdlg.cpp \
     ui/qcameraparassetupdlg.cpp \
-    ui/qctrlboardparassetupdlg.cpp
+    ui/qctrlboardparassetupdlg.cpp \
+    ui/qlogindlg.cpp \
+    ui/qmodifypassworddlg.cpp
 
 HEADERS  += mainwindow.h \
     graphicswidget.h \
@@ -56,7 +58,9 @@ HEADERS  += mainwindow.h \
     ui/qgradeparassetupdlg.h \
     ui/qsysparassetupdlg.h \
     ui/qcameraparassetupdlg.h \
-    ui/qctrlboardparassetupdlg.h
+    ui/qctrlboardparassetupdlg.h \
+    ui/qlogindlg.h \
+    ui/qmodifypassworddlg.h
 
 FORMS    += mainwindow.ui
 
