@@ -41,7 +41,8 @@ SOURCES += main.cpp\
     ui/qcameraparassetupdlg.cpp \
     ui/qctrlboardparassetupdlg.cpp \
     ui/qlogindlg.cpp \
-    ui/qmodifypassworddlg.cpp
+    ui/qmodifypassworddlg.cpp \
+    ui/qclasssetupdlg.cpp
 
 HEADERS  += mainwindow.h \
     graphicswidget.h \
@@ -60,9 +61,11 @@ HEADERS  += mainwindow.h \
     ui/qcameraparassetupdlg.h \
     ui/qctrlboardparassetupdlg.h \
     ui/qlogindlg.h \
-    ui/qmodifypassworddlg.h
+    ui/qmodifypassworddlg.h \
+    ui/qclasssetupdlg.h
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+    ui/qclasssetupdlg.ui
 
 RESOURCES += \
     images.qrc

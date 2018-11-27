@@ -11,6 +11,7 @@
 #include "qrtuoperatordlg.h"
 #include "qinspectparassetupdlg.h"
 #include "qgradeparassetupdlg.h"
+#include "qclasssetupdlg.h"
 #include "qsysparassetupdlg.h"
 #include "qcameraparassetupdlg.h"
 #include "qctrlboardparassetupdlg.h"
@@ -976,7 +977,8 @@ void MainWindow::onRecognizeParasBtnClicked()
 
 void MainWindow::onGradeParasBtnClicked()
 {
-    QGradeParasSetupDlg dlg(this);
+//    QGradeParasSetupDlg dlg(this);
+    QClassSetupDlg dlg(this);
     dlg.setPInspectAlgParas(mic->getPInspectAlgParas());
     dlg.exec();
 }
