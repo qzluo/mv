@@ -19,9 +19,7 @@ int main(int argc, char *argv[])
     qApp->installTranslator(&translator);
 
     MainWindow w;
-
     w.init();
-
     w.show();
 
     return a.exec();

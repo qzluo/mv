@@ -698,6 +698,9 @@ void MainWindow::onHasImage(const QImage& image)
 
 void MainWindow::onInspectDone(DetectResult result)
 {
+    if (mic->getSysState() == SYS_STATE_IDLE)
+        return;
+
     QString strText = QString(tr("Current Frame id: %1\n")).arg(result.frameId);
     if (result.result < 0)
         strText += QString(tr("Current Inspect result: Faile\n"));
@@ -731,6 +734,8 @@ void MainWindow::onInspectDone(DetectResult result)
     }
 
     resultTB->setText(strText);
+
+    logFile(FileLogger::info, "MainWindow::onInspectDone");
 
     if (mic->getInspectState() == INSPECT_STATE_INSPECTED)
         cic->startNewInspect();
@@ -860,8 +865,15 @@ void MainWindow::onSysParasSetupBtnClicked()
 void MainWindow::onStartSysBtnClicked()
 {
     if (mic->getSysState() == SYS_STATE_IDLE) {
-        if (mic->startSys() == 0) {
+        int ret = mic->startSys();
+        if (ret == 0) {
             onSystemStateStarted();
+        }
+        else if (ret == -3) {
+            QMessageBox::information(this, QString(tr("Start System Failed")),
+                                     QString(tr("Start system failed."
+                                                " Please check whether the"
+                                                " network segment is set correctly.")));
         }
         else
             QMessageBox::information(this, QString(tr("Start System Failed")),
@@ -871,6 +883,18 @@ void MainWindow::onStartSysBtnClicked()
                                                 " is connect correctly.")));
     }
     else {
+        //stop inspect first
+        if (mic->getInspectState() == INSPECT_STATE_INSPECTED) {
+            if (mic->stopInspect() == 0) {
+                //disconnect
+                disconnect(mic, &MainResource::hasImage,
+                           this, &MainWindow::onHasImage);
+
+                disconnect(mic, &MainResource::inspectDone,
+                           this, &MainWindow::onInspectDone);
+            }
+        }
+
         if (mic->stopSys() == 0) {
             onSystemStateStopped();
         }
@@ -1001,7 +1025,11 @@ void MainWindow::onAlgParasActionTriggered()
 
 void MainWindow::onCamParasBtnClicked()
 {
-    QCameraParasSetupDlg dlg(mic->getCameraType());
+    int camType = mic->getCameraType();
+    if (camType == 0)
+        return;
+
+    QCameraParasSetupDlg dlg(camType);
     dlg.setEnabled(mic->getRole() == ROLE_ADMINISTRATOR);
     dlg.setPCamCtl(mic->getPCamCtl());
     dlg.exec();

@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui xml serialport
+QT       += core gui xml serialport network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -22,6 +22,7 @@ include($$PWD\..\source\comm\comm.pri)
 include($$PWD\..\source\algorithm\algorithm.pri)
 
 INCLUDEPATH += $$PWD/ui
+INCLUDEPATH += $$PWD/dataUpdate
 
 SOURCES += main.cpp\
         mainwindow.cpp \
@@ -42,7 +43,9 @@ SOURCES += main.cpp\
     ui/qctrlboardparassetupdlg.cpp \
     ui/qlogindlg.cpp \
     ui/qmodifypassworddlg.cpp \
-    ui/qclasssetupdlg.cpp
+    ui/qclasssetupdlg.cpp \
+    dataUpdate/qudpserver.cpp \
+    ui/qipsegmentctl.cpp
 
 HEADERS  += mainwindow.h \
     graphicswidget.h \
@@ -62,7 +65,9 @@ HEADERS  += mainwindow.h \
     ui/qctrlboardparassetupdlg.h \
     ui/qlogindlg.h \
     ui/qmodifypassworddlg.h \
-    ui/qclasssetupdlg.h
+    ui/qclasssetupdlg.h \
+    dataUpdate/qudpserver.h \
+    ui/qipsegmentctl.h
 
 FORMS    += mainwindow.ui \
     ui/qclasssetupdlg.ui
@@ -71,3 +76,9 @@ RESOURCES += \
     images.qrc
 
 TRANSLATIONS = zctvision_zh_cn.ts
+
+DISTFILES += \
+    zctvision_zh_cn.qm \
+    images/serialcomm1.png \
+    main_icon.ico \
+    zctvision_zh_cn.ts

@@ -1,3 +1,0 @@
-[2018-09-14 17:36:48.214] [file_logger] [info] Init zctvision
-[2018-09-14 17:36:48.303] [file_logger] [info] frameDir = 2, factorMmToPix = 1.000000, distBtFrms = 100.000000
-[2018-09-14 17:36:48.339] [file_logger] [info] class_good1_length = 10.000000, class_good1_width = 5.000000, class_good2_length = 8.000000, class_good2_width = 4.000000, class_good3_length = 6.000000, class_good3_width = 3.000000, 

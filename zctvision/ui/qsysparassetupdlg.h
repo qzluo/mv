@@ -3,6 +3,7 @@
 
 #include <QtWidgets>
 #include "projectsysinfo.h"
+#include "qipsegmentctl.h"
 
 class QSysParasSetupDlg : public QDialog
 {
@@ -25,6 +26,7 @@ private:
     QCheckBox* saveImageOpenedCB;
     QCheckBox* logOutputIsOpenedCB;
     QLineEdit* tmpFilePathLE;
+    QIPSegmentCtl* tmpNetworkSegmentLE;
     QString adminPw;
 
     ProjectSysInfo* pSysInfo;

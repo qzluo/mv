@@ -34,10 +34,10 @@ bool QVmbCameraclt::Initiallize(int DeviceNumber, QString paramPath)
 
     AVT::VmbAPI::CameraPtrVector cameras;
     err = sys.GetCameras( cameras );            // Fetch all cameras known to Vimba
-    sys.Shutdown();
 
     if (err != VmbErrorSuccess) {
         logFile(FileLogger::warn, "Failed to get cameras.");
+        sys.Shutdown();
         return false;
     }
 
@@ -51,6 +51,8 @@ bool QVmbCameraclt::Initiallize(int DeviceNumber, QString paramPath)
         sprintf(msg, "The input camera id (%d) should less than %d",
                 DeviceNumber, cameraCount);
         logFile(FileLogger::warn, msg);
+
+        sys.Shutdown();
         return false;
     }
 
@@ -61,14 +63,9 @@ bool QVmbCameraclt::StartView()
 {
     bStarted = false;
 
-    //启动系统
-    VmbErrorType err = sys.Startup();               // Initialize the Vimba API
-    if ( VmbErrorSuccess != err )
-        return false;
-
     //打开相机
     AVT::VmbAPI::CameraPtrVector cameras;
-    err = sys.GetCameras( cameras );
+    VmbErrorType err = sys.GetCameras( cameras );
     if (VmbErrorSuccess != err || cameras.empty()) {
         sys.Shutdown();
         return false;

@@ -11,7 +11,7 @@ ProjectSysInfo::ProjectSysInfo()
     saveImageIsOpened = false;
     logOutputIsOpened = true;
     tmpFilePath = "D:\\jujubeInspectTmpFile\\";
-    closingDateTime = QDateTime::currentDateTime();
+    networkSegment = "192.168.0";
     administratorPw = "";
 }
 
@@ -83,12 +83,10 @@ int ProjectSysInfo::saveToFile(QString &fileName)
                                       QString("%1").arg(logOutputIsOpened ? 1 : 0)));
     root.appendChild(QDomDocumentRW::createDomElement(doc, "tmpFilePath",
                                       QString("%1").arg(tmpFilePath)));
+    root.appendChild(QDomDocumentRW::createDomElement(doc, "networkSegment",
+                                      QString("%1").arg(networkSegment)));
     root.appendChild(QDomDocumentRW::createDomElement(doc, "administratorPw",
                                       QString("%1").arg(administratorPw)));
-
-    if (closingDateTime.isValid())
-        root.appendChild(QDomDocumentRW::createDomElement(doc, "ClosingDate",
-            closingDateTime.toString("yyyy-MM-dd HH:mm:ss")));
 
     return QDomDocumentRW::saveToFile(doc, fileName);
 }
@@ -111,11 +109,20 @@ void ProjectSysInfo::loadElement(QDomElement &element)
         logOutputIsOpened = element.text().toInt() ? true : false;
     else if("tmpFilePath" == tagName)
         tmpFilePath = element.text();
+    else if("networkSegment" == tagName)
+        networkSegment = element.text();
     else if("administratorPw" == tagName)
         administratorPw = element.text();
-    else if("ClosingDate" == tagName)
-        closingDateTime = QDateTime::fromString(element.text(),
-                                                "yyyy-MM-dd HH:mm:ss");
+}
+
+QString ProjectSysInfo::getNetworkSegment() const
+{
+    return networkSegment;
+}
+
+void ProjectSysInfo::setNetworkSegment(const QString &value)
+{
+    networkSegment = value;
 }
 
 QString ProjectSysInfo::getAdministratorPw() const

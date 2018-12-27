@@ -44,6 +44,10 @@ int MainResource::init()
         return -1;
     }
 
+    //udp data handle
+    connect(&udpServer, &QUdpServer::receiveDatagrams,
+            this, &MainResource::onReceiveDatagrams);
+
     return 0;
 }
 
@@ -52,10 +56,11 @@ int MainResource::startSys()
     if (getSysState() != SYS_STATE_IDLE)
         return -1;
 
-    if (initRc() < 0) {
+    int ret = initRc();
+    if (ret < 0) {
         logFile(FileLogger::info, "Init rc failed!");
         releaseRc();
-        return -1;
+        return ret;
     }
 
     logFile(FileLogger::info, "startSys.");
@@ -188,6 +193,13 @@ int MainResource::initRc()
         return -2;
     }
 
+    //init udp server
+    udpServer.setNetworkSegment(sysInfo.getNetworkSegment());
+    if (udpServer.initSocket() < 0) {
+        logFile(FileLogger::warn, "Initalize udp server failed!");
+        return -3;
+    }
+
     return 0;
 }
 
@@ -204,6 +216,8 @@ int MainResource::releaseRc()
         delete rwCommInst;
         rwCommInst = NULL;
     }
+
+    udpServer.closeSocket();
 
     return 0;
 }
@@ -226,6 +240,9 @@ int MainResource::updateFrameId()
 
 void MainResource::onInspectDone()
 {
+    if (getSysState() != SYS_STATE_STARTED)
+        return ;
+
     //inspect done
     DetectResult detectResult = {};
     QVariant var;
@@ -267,6 +284,11 @@ void MainResource::onInspectDone()
 
         if (sysInfo.getOutputIsOpened()) {
             //发送结果给串口
+            if (!rwCommInst) {
+                logFile(FileLogger::warn, "Comm is not opened!");
+                return;
+            }
+
             if (rwCommInst->setInspectResult(detectResult.left_col_grade_result,
                                              detectResult.right_col_grade_result,
                                              detectResult.frameId & 0xFFFF) < 0)
@@ -304,7 +326,15 @@ void MainResource::onInspectDone()
     }
 
     inspectCount++;
+
+    logFile(FileLogger::info, "emit signal inspectDone");
     emit inspectDone(detectResult);
+}
+
+void MainResource::onReceiveDatagrams(const QByteArray &datagram)
+{
+    qDebug() << datagram.data();
+
 }
 
 int MainResource::initCamera()
@@ -322,12 +352,17 @@ int MainResource::initCamera()
     else
         return 0;
 
+//    QTime time;
+//    time.start();
+
     if (!pCamCtl->Initiallize(0)) {
         delete pCamCtl;
         pCamCtl = NULL;
 
         return -1;
     }
+
+//    qDebug() << time.elapsed() << "ms";
 
     if (!pCamCtl->StartView()) {
         delete pCamCtl;

@@ -1,7 +1,6 @@
 #ifndef PROJECTSYSINFO_H
 #define PROJECTSYSINFO_H
 
-#include <QDateTime>
 #include <QtXml>
 
 class ProjectSysInfo
@@ -45,6 +44,9 @@ public:
     QString getAdministratorPw() const;
     void setAdministratorPw(const QString &value);
 
+    QString getNetworkSegment() const;
+    void setNetworkSegment(const QString &value);
+
 private:
     void loadElement(QDomElement& element);
 
@@ -56,7 +58,8 @@ private:
     bool saveImageIsOpened;
     bool logOutputIsOpened;
     QString tmpFilePath;
-    QDateTime closingDateTime;
+
+    QString networkSegment;
 
     QString administratorPw;
 };

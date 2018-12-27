@@ -15,6 +15,7 @@
 #include "qzaoinspectalgapp.h"
 #include "qrwcommcontroller.h"
 #include "projectsysinfo.h"
+#include "qudpserver.h"
 
 //系统状态
 enum E_SYS_STATE {
@@ -114,6 +115,7 @@ signals:
 
 public slots:
     void onInspectDone();
+    void onReceiveDatagrams(const QByteArray& datagram);
 
 private:
     int initCamera(void);
@@ -136,6 +138,9 @@ private:
     ProjectSysInfo sysInfo;
 
     int role;
+
+    //同步算法参数用
+    QUdpServer udpServer;
 };
 
 #endif // MAINRESOURCE_H

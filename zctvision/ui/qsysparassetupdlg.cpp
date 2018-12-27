@@ -20,6 +20,12 @@ QSysParasSetupDlg::QSysParasSetupDlg(QWidget *parent) : QDialog(parent)
     connect(selectPathBtn, &QPushButton::clicked,
             this, &QSysParasSetupDlg::onSelectPathBtnClicked);
 
+    tmpNetworkSegmentLE = new QIPSegmentCtl(this);
+    QHBoxLayout* tmpNetWorkSegmentLayout = new QHBoxLayout();
+    tmpNetWorkSegmentLayout->addWidget(new QLabel(tr("Network Segment:")));
+    tmpNetWorkSegmentLayout->addWidget(tmpNetworkSegmentLE);
+    tmpNetWorkSegmentLayout->addStretch();
+
     QPushButton* modifyAdminPwBtn = new QPushButton(tr("Modify Administrator Password"),
                                                     this);
     connect(modifyAdminPwBtn, &QPushButton::clicked,
@@ -45,6 +51,7 @@ QSysParasSetupDlg::QSysParasSetupDlg(QWidget *parent) : QDialog(parent)
     topLayout->addWidget(saveImageOpenedCB);
     topLayout->addWidget(logOutputIsOpenedCB);
     topLayout->addLayout(tmpFilePathLayout);
+    topLayout->addLayout(tmpNetWorkSegmentLayout);
     topLayout->addWidget(modifyAdminPwBtn);
     topLayout->addSpacing(10);
     topLayout->addLayout(btnLayout);
@@ -59,6 +66,7 @@ void QSysParasSetupDlg::onOkBtnClicked()
     bool saveImageOpened = pSysInfo->getSaveImageIsOpened();
     bool logOutputIsOpened = pSysInfo->getLogOutputIsOpened();
     QString tmeFilePath = pSysInfo->getTmpFilePath();
+    QString tmeNetworkSegment = pSysInfo->getNetworkSegment();
     QString tmpAdminPw = pSysInfo->getAdministratorPw();
     bool changed = false;
 
@@ -79,6 +87,11 @@ void QSysParasSetupDlg::onOkBtnClicked()
 
     if (tmpFilePathLE->text().compare(tmeFilePath)) {
         pSysInfo->setTmpFilePath(tmpFilePathLE->text());
+        changed = true;
+    }
+
+    if (tmpNetworkSegmentLE->text().compare(tmeNetworkSegment)) {
+        pSysInfo->setNetworkSegment(tmpNetworkSegmentLE->text());
         changed = true;
     }
 
@@ -131,5 +144,6 @@ void QSysParasSetupDlg::setPSysInfo(ProjectSysInfo *value)
     saveImageOpenedCB->setChecked(pSysInfo->getSaveImageIsOpened());
     logOutputIsOpenedCB->setChecked(pSysInfo->getLogOutputIsOpened());
     tmpFilePathLE->setText(pSysInfo->getTmpFilePath());
+    tmpNetworkSegmentLE->setText(pSysInfo->getNetworkSegment());
     adminPw = pSysInfo->getAdministratorPw();
 }
