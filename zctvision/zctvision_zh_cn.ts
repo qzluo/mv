@@ -9,20 +9,20 @@
         <translation>MainWindow</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="79"/>
+        <location filename="mainwindow.cpp" line="99"/>
         <source>Select Camera Type</source>
         <translation>选择相机类型</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="103"/>
-        <location filename="mainwindow.cpp" line="388"/>
+        <location filename="mainwindow.cpp" line="123"/>
+        <location filename="mainwindow.cpp" line="410"/>
         <source>Start System</source>
         <translation>启动系统</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="231"/>
-        <location filename="mainwindow.cpp" line="391"/>
-        <location filename="mainwindow.cpp" line="454"/>
+        <location filename="mainwindow.cpp" line="256"/>
+        <location filename="mainwindow.cpp" line="413"/>
+        <location filename="mainwindow.cpp" line="479"/>
         <source>Start Inspect</source>
         <translation>开始检测</translation>
     </message>
@@ -47,252 +47,273 @@
         <translation type="vanished">检测结果</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="39"/>
+        <location filename="mainwindow.cpp" line="43"/>
+        <location filename="mainwindow.cpp" line="775"/>
+        <source>Login</source>
+        <translation>登录</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="51"/>
         <source>Open Config File</source>
         <translation>打开配置文件</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="47"/>
+        <location filename="mainwindow.cpp" line="59"/>
         <source>Save Config File</source>
         <translation>保存配置文件</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="55"/>
+        <location filename="mainwindow.cpp" line="67"/>
         <source>Load Algorithm Parameters File</source>
         <translation>选择算法参数文件</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="63"/>
+        <location filename="mainwindow.cpp" line="75"/>
         <source>Save Algorithm Parameters</source>
         <translation>保存算法参数文件</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="71"/>
+        <location filename="mainwindow.cpp" line="83"/>
         <source>Save Algorithm Parameters To File</source>
         <translation>算法参数文件另存为</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="87"/>
+        <location filename="mainwindow.cpp" line="91"/>
+        <source>Update Algtithm Parameters On Network</source>
+        <translation>网络更新算法参数</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="107"/>
         <source>Serial Setup</source>
         <translation>串口参数设置</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="95"/>
+        <location filename="mainwindow.cpp" line="115"/>
         <source>System Parameters</source>
         <translation>系统参数设置</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="111"/>
+        <location filename="mainwindow.cpp" line="131"/>
         <source>Open Image</source>
         <translation>打开图像文件</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="119"/>
+        <location filename="mainwindow.cpp" line="139"/>
         <source>Next Image</source>
         <translation>下一张</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="127"/>
+        <location filename="mainwindow.cpp" line="147"/>
         <source>Last Image</source>
         <translation>上一张</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="135"/>
+        <location filename="mainwindow.cpp" line="155"/>
         <source>Camera Parameters Setup</source>
         <translation>相机参数设置</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="144"/>
+        <location filename="mainwindow.cpp" line="164"/>
         <source>Control Board Parameters</source>
         <translation>控制板参数</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="152"/>
+        <location filename="mainwindow.cpp" line="172"/>
         <source>Stastics Infomation</source>
         <translation>统计信息</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="160"/>
-        <location filename="mainwindow.cpp" line="987"/>
+        <location filename="mainwindow.cpp" line="180"/>
+        <location filename="mainwindow.cpp" line="1079"/>
         <source>About</source>
         <translation>帮助</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="238"/>
+        <location filename="mainwindow.cpp" line="263"/>
         <source>Run Once</source>
         <translation>运行一次</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="248"/>
+        <location filename="mainwindow.cpp" line="273"/>
         <source>Inspect Output Result:</source>
         <translation>检测输出结果：</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="251"/>
+        <location filename="mainwindow.cpp" line="276"/>
         <source>Real Time Result</source>
         <translation>当前图片结果</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="258"/>
+        <location filename="mainwindow.cpp" line="283"/>
         <source>Inspect Parameter Setup</source>
         <translation>检测算法参数设置</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="260"/>
+        <location filename="mainwindow.cpp" line="285"/>
         <source>Recognize Parameters</source>
         <translation>识别参数</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="261"/>
+        <location filename="mainwindow.cpp" line="286"/>
         <source>Grade Parameters</source>
         <translation>等级参数</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="292"/>
+        <location filename="mainwindow.cpp" line="317"/>
         <source>Jujube Inspect Program</source>
         <translation>红枣检测程序</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="349"/>
+        <location filename="mainwindow.cpp" line="368"/>
         <source>Stopped</source>
         <translation>停止</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="349"/>
-        <location filename="mainwindow.cpp" line="352"/>
+        <location filename="mainwindow.cpp" line="368"/>
+        <location filename="mainwindow.cpp" line="371"/>
         <source>Started</source>
         <translation>启动</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="352"/>
+        <location filename="mainwindow.cpp" line="371"/>
         <source>Unstarted</source>
         <translation>未开始</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="354"/>
+        <location filename="mainwindow.cpp" line="373"/>
         <source>System state: %1.	    Inspect state: %2.</source>
         <translation>系统状态： %1.	    检测状态： %2.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="370"/>
+        <location filename="mainwindow.cpp" line="389"/>
         <source>Stop System</source>
         <translation>停止系统</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="418"/>
+        <location filename="mainwindow.cpp" line="442"/>
         <source>Stop Inspect</source>
         <translation>停止检测</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="686"/>
+        <location filename="mainwindow.cpp" line="715"/>
         <source>Current Frame id: %1
 </source>
         <translation>当前帧序号： %1
 </translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="688"/>
+        <location filename="mainwindow.cpp" line="717"/>
         <source>Current Inspect result: Faile
 </source>
         <translation>本次检测结果：失败
 </translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="690"/>
+        <location filename="mainwindow.cpp" line="719"/>
         <source>Current Inspect result: Succeed
 </source>
         <translation>本次检测结果：成功
 </translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="691"/>
+        <location filename="mainwindow.cpp" line="720"/>
         <source>Left Colume Grade Result: %1
 </source>
         <translation>左列枣类别：%1
 </translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="692"/>
+        <location filename="mainwindow.cpp" line="721"/>
         <source>Right Colume Grade Result: %1
 </source>
         <translation>右列枣类别：%1
 </translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="710"/>
-        <location filename="mainwindow.cpp" line="907"/>
-        <location filename="mainwindow.cpp" line="915"/>
+        <location filename="mainwindow.cpp" line="739"/>
+        <location filename="mainwindow.cpp" line="996"/>
+        <location filename="mainwindow.cpp" line="1004"/>
         <source>NULL</source>
         <translation>无</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="726"/>
-        <location filename="mainwindow.cpp" line="758"/>
-        <location filename="mainwindow.cpp" line="857"/>
+        <location filename="mainwindow.cpp" line="767"/>
+        <source>Log Out</source>
+        <translation>登出</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="785"/>
+        <location filename="mainwindow.cpp" line="817"/>
+        <location filename="mainwindow.cpp" line="946"/>
         <source>Open File</source>
         <translation>打开文件</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="728"/>
-        <location filename="mainwindow.cpp" line="745"/>
+        <location filename="mainwindow.cpp" line="787"/>
+        <location filename="mainwindow.cpp" line="804"/>
         <source>Files (*.cfg)</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="734"/>
+        <location filename="mainwindow.cpp" line="793"/>
         <source>Load Config File Failed</source>
         <translation>打开配置文件失败</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="735"/>
+        <location filename="mainwindow.cpp" line="794"/>
         <source>Load config file failed. Please check whether the file is a valid config file.</source>
         <translation>打开配置文件失败！请检查待打开的文件是否是有效的配置文件。</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="743"/>
-        <location filename="mainwindow.cpp" line="780"/>
+        <location filename="mainwindow.cpp" line="802"/>
+        <location filename="mainwindow.cpp" line="839"/>
         <source>Save File</source>
         <translation>保存文件</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="751"/>
+        <location filename="mainwindow.cpp" line="810"/>
         <source>Save Config File Failed</source>
         <translation>保存配置文件失败</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="752"/>
-        <location filename="mainwindow.cpp" line="789"/>
+        <location filename="mainwindow.cpp" line="811"/>
+        <location filename="mainwindow.cpp" line="848"/>
         <source>Failed to save file.</source>
         <translation>保存文件失败。</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="760"/>
-        <location filename="mainwindow.cpp" line="782"/>
+        <location filename="mainwindow.cpp" line="819"/>
+        <location filename="mainwindow.cpp" line="841"/>
         <source>Files (*.xml)</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="766"/>
+        <location filename="mainwindow.cpp" line="825"/>
         <source>Load File Failed</source>
         <translation>打开文件失败</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="767"/>
+        <location filename="mainwindow.cpp" line="826"/>
         <source>Load algorithm parameters file failed. Please check whether the file is a valid algorithm parameters file.</source>
         <translation>打开算法参数文件失败！请检查待打开的参数文件是否有效。</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="788"/>
+        <location filename="mainwindow.cpp" line="847"/>
         <source>Save Parameters File Failed</source>
         <translation>保存参数文件失败</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="859"/>
+        <location filename="mainwindow.cpp" line="893"/>
+        <source>Start system failed. Please check whether the network segment is set correctly.</source>
+        <translation>启动系统失败。请检查网段是否配置正确。</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="948"/>
         <source>Images (*.png *.bmp *.jpg)</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="979"/>
+        <location filename="mainwindow.cpp" line="1071"/>
         <source>Inspect Count: %1
 Inspect Time: %2 ms</source>
         <oldsource>Insect Count: %1
@@ -301,12 +322,12 @@ Inspect Time: %2 ms</oldsource>
 检测时间： %2 ms</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="982"/>
+        <location filename="mainwindow.cpp" line="1074"/>
         <source>Statics Infomation</source>
         <translation>统计信息</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="988"/>
+        <location filename="mainwindow.cpp" line="1080"/>
         <source>Jujube Inspect Program V1.0</source>
         <translation>红枣检测程序 V1.0</translation>
     </message>
@@ -331,12 +352,13 @@ Inspect Time: %2 ms</oldsource>
         <translation type="vanished">检测信息：\n</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="821"/>
+        <location filename="mainwindow.cpp" line="892"/>
+        <location filename="mainwindow.cpp" line="898"/>
         <source>Start System Failed</source>
         <translation>启动系统失败</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="822"/>
+        <location filename="mainwindow.cpp" line="899"/>
         <source>Start system failed. Please check whether the camera or the serial com is connect correctly.</source>
         <translation>系统启动失败。请检查相机或串口是否正确连接！</translation>
     </message>
@@ -467,49 +489,125 @@ Inspect Time: %2 ms</oldsource>
 <context>
     <name>QCameraParasSetupDlg</name>
     <message>
-        <location filename="ui/qcameraparassetupdlg.cpp" line="8"/>
+        <location filename="ui/qcameraparassetupdlg.cpp" line="9"/>
         <source>Exposure</source>
         <translation>曝光时间</translation>
     </message>
     <message>
-        <location filename="ui/qcameraparassetupdlg.cpp" line="22"/>
+        <location filename="ui/qcameraparassetupdlg.cpp" line="23"/>
         <source>Gain</source>
         <translation>增益</translation>
     </message>
     <message>
-        <location filename="ui/qcameraparassetupdlg.cpp" line="41"/>
+        <location filename="ui/qcameraparassetupdlg.cpp" line="42"/>
         <source>Trigger</source>
         <translation>相机触发</translation>
     </message>
     <message>
-        <location filename="ui/qcameraparassetupdlg.cpp" line="52"/>
+        <location filename="ui/qcameraparassetupdlg.cpp" line="49"/>
+        <source>Mode</source>
+        <translation>模式</translation>
+    </message>
+    <message>
+        <location filename="ui/qcameraparassetupdlg.cpp" line="60"/>
         <source>Source</source>
         <translation>触发源</translation>
     </message>
     <message>
-        <location filename="ui/qcameraparassetupdlg.cpp" line="53"/>
+        <location filename="ui/qcameraparassetupdlg.cpp" line="61"/>
         <source>Trigger Delay</source>
         <translation>触发延时</translation>
     </message>
     <message>
-        <location filename="ui/qcameraparassetupdlg.cpp" line="56"/>
+        <location filename="ui/qcameraparassetupdlg.cpp" line="82"/>
         <source>White Balance</source>
         <translation>白平衡</translation>
     </message>
     <message>
-        <location filename="ui/qcameraparassetupdlg.cpp" line="67"/>
+        <location filename="ui/qcameraparassetupdlg.cpp" line="93"/>
         <source>Red</source>
         <translation>红</translation>
     </message>
     <message>
-        <location filename="ui/qcameraparassetupdlg.cpp" line="68"/>
+        <location filename="ui/qcameraparassetupdlg.cpp" line="94"/>
         <source>Blue</source>
         <translation>蓝</translation>
     </message>
     <message>
-        <location filename="ui/qcameraparassetupdlg.cpp" line="95"/>
+        <location filename="ui/qcameraparassetupdlg.cpp" line="108"/>
         <source>Camera Parameters Setup</source>
         <translation>相机参数设置</translation>
+    </message>
+</context>
+<context>
+    <name>QClassSetupDlg</name>
+    <message>
+        <location filename="ui/qclasssetupdlg.ui" line="20"/>
+        <source>Dialog</source>
+        <translation>对话框</translation>
+    </message>
+    <message>
+        <location filename="ui/qclasssetupdlg.ui" line="48"/>
+        <source>长度</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="ui/qclasssetupdlg.ui" line="61"/>
+        <source>宽度</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="ui/qclasssetupdlg.ui" line="96"/>
+        <source>特等枣</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="ui/qclasssetupdlg.ui" line="155"/>
+        <location filename="ui/qclasssetupdlg.ui" line="339"/>
+        <location filename="ui/qclasssetupdlg.ui" line="523"/>
+        <source>&gt;</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="ui/qclasssetupdlg.ui" line="214"/>
+        <location filename="ui/qclasssetupdlg.ui" line="398"/>
+        <location filename="ui/qclasssetupdlg.ui" line="582"/>
+        <source>|</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="ui/qclasssetupdlg.ui" line="273"/>
+        <location filename="ui/qclasssetupdlg.ui" line="457"/>
+        <location filename="ui/qclasssetupdlg.ui" line="641"/>
+        <source>&lt;</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="ui/qclasssetupdlg.ui" line="280"/>
+        <source>一等枣</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="ui/qclasssetupdlg.ui" line="464"/>
+        <source>二等枣</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="ui/qclasssetupdlg.ui" line="648"/>
+        <source>三等枣</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="ui/qclasssetupdlg.ui" line="667"/>
+        <location filename="ui/qclasssetupdlg.ui" line="674"/>
+        <location filename="ui/qclasssetupdlg.ui" line="681"/>
+        <source>使能</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="ui/qclasssetupdlg.cpp" line="11"/>
+        <source>Class Parameters Setup</source>
+        <translation>类参数设置</translation>
     </message>
 </context>
 <context>
@@ -781,6 +879,76 @@ Inspect Time: %2 ms</oldsource>
     </message>
 </context>
 <context>
+    <name>QLoginDlg</name>
+    <message>
+        <location filename="ui/qlogindlg.cpp" line="11"/>
+        <source>Password</source>
+        <translation>密码</translation>
+    </message>
+    <message>
+        <location filename="ui/qlogindlg.cpp" line="14"/>
+        <source>Ok</source>
+        <translation>确定</translation>
+    </message>
+    <message>
+        <location filename="ui/qlogindlg.cpp" line="15"/>
+        <source>Cancel</source>
+        <translation>取消</translation>
+    </message>
+    <message>
+        <location filename="ui/qlogindlg.cpp" line="32"/>
+        <location filename="ui/qlogindlg.cpp" line="45"/>
+        <source>Login</source>
+        <translation>登录</translation>
+    </message>
+    <message>
+        <location filename="ui/qlogindlg.cpp" line="46"/>
+        <source>The input password is incorrect!</source>
+        <translation>输入密码不正确！</translation>
+    </message>
+</context>
+<context>
+    <name>QModifyPasswordDlg</name>
+    <message>
+        <location filename="ui/qmodifypassworddlg.cpp" line="16"/>
+        <location filename="ui/qmodifypassworddlg.cpp" line="17"/>
+        <source>Input new Password</source>
+        <translation>请输入新密码</translation>
+    </message>
+    <message>
+        <location filename="ui/qmodifypassworddlg.cpp" line="18"/>
+        <source>Comfirm new Password</source>
+        <translation>确认新密码</translation>
+    </message>
+    <message>
+        <location filename="ui/qmodifypassworddlg.cpp" line="21"/>
+        <source>Ok</source>
+        <translation>确定</translation>
+    </message>
+    <message>
+        <location filename="ui/qmodifypassworddlg.cpp" line="22"/>
+        <source>Cancel</source>
+        <translation>取消</translation>
+    </message>
+    <message>
+        <location filename="ui/qmodifypassworddlg.cpp" line="39"/>
+        <location filename="ui/qmodifypassworddlg.cpp" line="45"/>
+        <location filename="ui/qmodifypassworddlg.cpp" line="51"/>
+        <source>Modify Password</source>
+        <translation>修改密码</translation>
+    </message>
+    <message>
+        <location filename="ui/qmodifypassworddlg.cpp" line="46"/>
+        <source>The input new password is incorrect!</source>
+        <translation>输入的密码不正确</translation>
+    </message>
+    <message>
+        <location filename="ui/qmodifypassworddlg.cpp" line="52"/>
+        <source>Password and Confirm Password inconsistent!</source>
+        <translation>两次输入的密码不一致！</translation>
+    </message>
+</context>
+<context>
     <name>QObject</name>
     <message>
         <location filename="qsysdefine.cpp" line="45"/>
@@ -935,49 +1103,167 @@ Inspect Time: %2 ms</oldsource>
 <context>
     <name>QSysParasSetupDlg</name>
     <message>
-        <location filename="ui/qsysparassetupdlg.cpp" line="7"/>
+        <location filename="ui/qsysparassetupdlg.cpp" line="9"/>
         <source>Output In Running</source>
         <translation>运行时输出</translation>
     </message>
     <message>
-        <location filename="ui/qsysparassetupdlg.cpp" line="8"/>
+        <location filename="ui/qsysparassetupdlg.cpp" line="10"/>
         <source>Save Image In Running</source>
         <translation>运行时保存图片</translation>
     </message>
     <message>
-        <location filename="ui/qsysparassetupdlg.cpp" line="9"/>
+        <location filename="ui/qsysparassetupdlg.cpp" line="11"/>
         <source>Record Output In Running</source>
         <translation>运行时记录输出</translation>
     </message>
     <message>
-        <location filename="ui/qsysparassetupdlg.cpp" line="12"/>
+        <location filename="ui/qsysparassetupdlg.cpp" line="14"/>
         <source>Select ...</source>
         <translation>选择 ...</translation>
     </message>
     <message>
-        <location filename="ui/qsysparassetupdlg.cpp" line="14"/>
+        <location filename="ui/qsysparassetupdlg.cpp" line="16"/>
         <source>Save Image File Path:</source>
         <translation>保存图片路径：</translation>
     </message>
     <message>
-        <location filename="ui/qsysparassetupdlg.cpp" line="22"/>
+        <location filename="ui/qsysparassetupdlg.cpp" line="25"/>
+        <source>Network Segment:</source>
+        <translation>网段：</translation>
+    </message>
+    <message>
+        <location filename="ui/qsysparassetupdlg.cpp" line="29"/>
+        <source>Modify Administrator Password</source>
+        <translation>修改管理员密码</translation>
+    </message>
+    <message>
+        <location filename="ui/qsysparassetupdlg.cpp" line="35"/>
         <source>Ok</source>
         <translation>确定</translation>
     </message>
     <message>
-        <location filename="ui/qsysparassetupdlg.cpp" line="23"/>
+        <location filename="ui/qsysparassetupdlg.cpp" line="36"/>
         <source>Cancel</source>
         <translation>取消</translation>
     </message>
     <message>
-        <location filename="ui/qsysparassetupdlg.cpp" line="45"/>
+        <location filename="ui/qsysparassetupdlg.cpp" line="60"/>
         <source>System Parameters Setup</source>
         <translation>系统参数设置</translation>
     </message>
     <message>
-        <location filename="ui/qsysparassetupdlg.cpp" line="84"/>
+        <location filename="ui/qsysparassetupdlg.cpp" line="111"/>
         <source>Open Directory</source>
         <translation>打开路径</translation>
+    </message>
+</context>
+<context>
+    <name>QUpdateAlgParasOnNetworkDlg</name>
+    <message>
+        <location filename="ui/qupdatealgparasonnetworkdlg.cpp" line="12"/>
+        <source>Class1 Length: </source>
+        <translation>优等枣长度：</translation>
+    </message>
+    <message>
+        <location filename="ui/qupdatealgparasonnetworkdlg.cpp" line="16"/>
+        <source>Class1 Width: </source>
+        <translation>优等枣宽度：</translation>
+    </message>
+    <message>
+        <location filename="ui/qupdatealgparasonnetworkdlg.cpp" line="21"/>
+        <source>Class2 Length: </source>
+        <translation>一等枣长度：</translation>
+    </message>
+    <message>
+        <location filename="ui/qupdatealgparasonnetworkdlg.cpp" line="25"/>
+        <source>Class2 Width: </source>
+        <translation>一等枣宽度：</translation>
+    </message>
+    <message>
+        <location filename="ui/qupdatealgparasonnetworkdlg.cpp" line="30"/>
+        <source>Class3 Length: </source>
+        <translation>二等枣长度：</translation>
+    </message>
+    <message>
+        <location filename="ui/qupdatealgparasonnetworkdlg.cpp" line="34"/>
+        <source>Class3 Width: </source>
+        <translation>二等枣宽度：</translation>
+    </message>
+    <message>
+        <location filename="ui/qupdatealgparasonnetworkdlg.cpp" line="40"/>
+        <source>Imin: </source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="ui/qupdatealgparasonnetworkdlg.cpp" line="44"/>
+        <source>Imax: </source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="ui/qupdatealgparasonnetworkdlg.cpp" line="49"/>
+        <source>Bmin: </source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="ui/qupdatealgparasonnetworkdlg.cpp" line="53"/>
+        <source>Bmax: </source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="ui/qupdatealgparasonnetworkdlg.cpp" line="58"/>
+        <source>Rmin: </source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="ui/qupdatealgparasonnetworkdlg.cpp" line="62"/>
+        <source>Rmax: </source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="ui/qupdatealgparasonnetworkdlg.cpp" line="67"/>
+        <source>Wmin: </source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="ui/qupdatealgparasonnetworkdlg.cpp" line="71"/>
+        <source>Hmin: </source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="ui/qupdatealgparasonnetworkdlg.cpp" line="75"/>
+        <source>Max Ratio: </source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="ui/qupdatealgparasonnetworkdlg.cpp" line="112"/>
+        <source>Parameters</source>
+        <translation>参数</translation>
+    </message>
+    <message>
+        <location filename="ui/qupdatealgparasonnetworkdlg.cpp" line="113"/>
+        <source>New Value</source>
+        <translation>新值</translation>
+    </message>
+    <message>
+        <location filename="ui/qupdatealgparasonnetworkdlg.cpp" line="114"/>
+        <source>Old Value</source>
+        <translation>旧值</translation>
+    </message>
+    <message>
+        <location filename="ui/qupdatealgparasonnetworkdlg.cpp" line="195"/>
+        <source>Update</source>
+        <translation>更新</translation>
+    </message>
+    <message>
+        <location filename="ui/qupdatealgparasonnetworkdlg.cpp" line="196"/>
+        <source>Exit</source>
+        <translation>退出</translation>
+    </message>
+    <message>
+        <location filename="ui/qupdatealgparasonnetworkdlg.cpp" line="212"/>
+        <source>Update Algrithm Parameters</source>
+        <translation>更新算法参数</translation>
     </message>
 </context>
 </TS>
