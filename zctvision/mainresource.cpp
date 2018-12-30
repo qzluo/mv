@@ -1,6 +1,9 @@
 #include "mainresource.h"
 #include "FileLogger.h"
 
+#include <QJsonDocument>
+#include <QJsonObject>
+
 MainResource* MainResource::instance = new MainResource();
 
 MainResource *MainResource::getInstance()
@@ -200,6 +203,8 @@ int MainResource::initRc()
         return -3;
     }
 
+    udpClient.setNetworkSegment(sysInfo.getNetworkSegment());
+
     return 0;
 }
 
@@ -333,8 +338,12 @@ void MainResource::onInspectDone()
 
 void MainResource::onReceiveDatagrams(const QByteArray &datagram)
 {
-    qDebug() << datagram.data();
+    logFile(FileLogger::info, "Receive algorithm parameter datagram");
 
+    qDebug() << "Receive algorithm parameter datagram";
+
+    //update algrithm parameters
+    getPInspectAlgParas()->updateParasWithIncrement(datagram);
 }
 
 int MainResource::initCamera()
@@ -412,6 +421,11 @@ void MainResource::setRole(int value)
         return;
 
     role = value;
+}
+
+int MainResource::broadcastUdpDatagram(const char *data, qint64 size)
+{
+    return udpClient.broadcastUdpDatagram(data, size);
 }
 
 int MainResource::getInspectCount() const

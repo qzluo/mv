@@ -62,6 +62,8 @@ public:
     float getRatioMax() const;
     void setRatioMax(float value);
 
+    void updateParasWithIncrement(const QByteArray& incrementDatagram);
+
 private:
     void loadElement(QDomElement& element);
 

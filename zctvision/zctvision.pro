@@ -45,7 +45,8 @@ SOURCES += main.cpp\
     ui/qmodifypassworddlg.cpp \
     ui/qclasssetupdlg.cpp \
     dataUpdate/qudpserver.cpp \
-    ui/qipsegmentctl.cpp
+    ui/qipsegmentctl.cpp \
+    ui/qupdatealgparasonnetworkdlg.cpp
 
 HEADERS  += mainwindow.h \
     graphicswidget.h \
@@ -67,7 +68,8 @@ HEADERS  += mainwindow.h \
     ui/qmodifypassworddlg.h \
     ui/qclasssetupdlg.h \
     dataUpdate/qudpserver.h \
-    ui/qipsegmentctl.h
+    ui/qipsegmentctl.h \
+    ui/qupdatealgparasonnetworkdlg.h
 
 FORMS    += mainwindow.ui \
     ui/qclasssetupdlg.ui

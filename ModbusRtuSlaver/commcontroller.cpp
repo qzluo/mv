@@ -154,12 +154,12 @@ void CommWorker::setRegData(int reg_addr, unsigned short value)
 
     setYcDataVal(reg_addr, value);
 
-    int new_value = 0;
-    getYcDataVal(reg_addr, &new_value);
+    int old_value = 0;
+    getYcDataVal(reg_addr, &old_value);
 
-    qDebug() << QString("addr: %1, new_value: 0x%2").
+    qDebug() << QString("addr: %1, old_value: 0x%2").
                 arg(reg_addr).
-                arg(new_value & 0xFFFF, 0, 16);
+                arg(old_value & 0xFFFF, 0, 16);
 }
 
 int CommWorker::readRegAdd(int reg_addr, unsigned short *value)

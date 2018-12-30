@@ -27,5 +27,6 @@
         <file>images/about.png</file>
         <file>images/login.png</file>
         <file>images/logout.png</file>
+        <file>images/nwupdate.png</file>
     </qresource>
 </RCC>

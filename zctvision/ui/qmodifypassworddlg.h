@@ -22,8 +22,8 @@ private:
     QString adminPw;
 
     QLineEdit* oldPwLE;
-    QLineEdit* newPwLE1;
-    QLineEdit* newPwLE2;
+    QLineEdit* oldPwLE1;
+    QLineEdit* oldPwLE2;
 };
 
 #endif // QMODIFYPASSWORDDLG_H

@@ -8,7 +8,7 @@ QSysParasSetupDlg::QSysParasSetupDlg(QWidget *parent) : QDialog(parent)
 
     outputIsOpenedCB = new QCheckBox(tr("Output In Running"), this);
     saveImageOpenedCB = new QCheckBox(tr("Save Image In Running"), this);
-    logOutputIsOpenedCB = new QCheckBox(tr("Record Output In Running"), this);    
+    logOutputIsOpenedCB = new QCheckBox(tr("Record Output In Running"), this);
 
     tmpFilePathLE = new QLineEdit(this);
     QPushButton* selectPathBtn = new QPushButton(tr("Select ..."), this);

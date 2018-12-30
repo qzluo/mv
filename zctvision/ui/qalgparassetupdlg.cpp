@@ -339,11 +339,11 @@ void QAlgParasSetupDlg::onSelImgBtnClicked()
                                                      ".",
                                                      tr("Images (*.png *.bmp *.jpg)"));
 
-    QImage newImage = QImage(fileName);
-    if (newImage.isNull())
+    QImage oldImage = QImage(fileName);
+    if (oldImage.isNull())
         return;
 
-    image = newImage;
+    image = oldImage;
     plot->setImage(QPixmap::fromImage(image));
 }
 
@@ -368,8 +368,8 @@ void QAlgParasSetupDlg::onTestBtnClicked()
         return;
     }
 
-    QImage newImage = image.copy();
-    QPainter painter(&newImage);
+    QImage oldImage = image.copy();
+    QPainter painter(&oldImage);
     QPen pen(Qt::green, 3, Qt::DashDotLine, Qt::RoundCap, Qt::RoundJoin);
     painter.setPen(pen);
 
@@ -382,5 +382,5 @@ void QAlgParasSetupDlg::onTestBtnClicked()
                          getIdDesc(vecZaoInfo[i].classId));
     }
 
-    plot->setImage(QPixmap::fromImage(newImage));
+    plot->setImage(QPixmap::fromImage(oldImage));
 }

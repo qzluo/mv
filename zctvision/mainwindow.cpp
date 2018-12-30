@@ -16,6 +16,7 @@
 #include "qcameraparassetupdlg.h"
 #include "qctrlboardparassetupdlg.h"
 #include "qlogindlg.h"
+#include "qupdatealgparasonnetworkdlg.h"
 
 #include <QDate>
 
@@ -82,6 +83,14 @@ MainWindow::MainWindow(QWidget *parent) :
     saveAlgParasToFileToolBtn->setToolTip(tr("Save Algorithm Parameters To File"));
     connect(saveAlgParasToFileToolBtn, &QToolButton::clicked,
             this, &MainWindow::onSaveAlgParasToFileBtnClicked);
+
+    //updateAlgParasOnNetwork
+    updateAlgParasOnNetwork = new QToolButton(this);
+    updateAlgParasOnNetwork->setToolButtonStyle(Qt::ToolButtonIconOnly);
+    updateAlgParasOnNetwork->setIcon(QPixmap(":/images/nwupdate.png"));
+    updateAlgParasOnNetwork->setToolTip(tr("Update Algtithm Parameters On Network"));
+    connect(updateAlgParasOnNetwork, &QToolButton::clicked,
+            this, &MainWindow::onUpdateAlgParasOnNetworkBtnClicked);
 
     //select camera type
     selCamTypeToolBtn = new QToolButton(this);
@@ -215,6 +224,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->mainToolBar->addWidget(loadAlgParasFileToolBtn);
     ui->mainToolBar->addWidget(saveAlgParasToolBtn);
     ui->mainToolBar->addWidget(saveAlgParasToFileToolBtn);
+    ui->mainToolBar->addWidget(updateAlgParasOnNetwork);
     ui->mainToolBar->addSeparator();
     ui->mainToolBar->addSeparator();
 
@@ -322,6 +332,7 @@ MainWindow::MainWindow(QWidget *parent) :
     loadAlgParasFileToolBtn->setEnabled(true);
     saveAlgParasToolBtn->setEnabled(true);
     saveAlgParasToFileToolBtn->setEnabled(true);
+    updateAlgParasOnNetwork->setEnabled(false);
 
     selCamTypeToolBtn->setEnabled(true);
     commSetupToolBtn->setEnabled(true);
@@ -339,13 +350,6 @@ MainWindow::MainWindow(QWidget *parent) :
     runOnceBtn->setEnabled(false);
 
     qDebug() << "Current currentThreadId" << QThread::currentThreadId();
-
-//    tester.test();
-
-//    tester.testInit();
-//    tester.testInspectSigleImage();
-
-//    testHasNextAndLastFile();
 }
 
 MainWindow::~MainWindow()
@@ -386,6 +390,9 @@ void MainWindow::onSystemStateStarted()
 
     startInspectToolBtn->setEnabled(true);
 
+    //udp启动
+    updateAlgParasOnNetwork->setEnabled(true);
+
     //相机及串口资源已初始化，不能更改
     openCfgFileToolBtn->setEnabled(false);
     selCamTypeToolBtn->setEnabled(false);
@@ -412,6 +419,8 @@ void MainWindow::onSystemStateStopped()
     loadAlgParasFileToolBtn->setEnabled(true);
     saveAlgParasToolBtn->setEnabled(true);
     saveAlgParasToFileToolBtn->setEnabled(true);
+
+    updateAlgParasOnNetwork->setEnabled(false);
 
     selCamTypeToolBtn->setEnabled(true);
     commSetupToolBtn->setEnabled(true);
@@ -454,6 +463,7 @@ void MainWindow::onInspectStateStarted()
     loadAlgParasFileToolBtn->setEnabled(false);
     saveAlgParasToolBtn->setEnabled(false);
     saveAlgParasToFileToolBtn->setEnabled(false);
+    updateAlgParasOnNetwork->setEnabled(false);
     openImageToolBtn->setEnabled(false);
 
     runOnceBtn->setEnabled(false);
@@ -480,6 +490,7 @@ void MainWindow::onInspectStateStopped()
     loadAlgParasFileToolBtn->setEnabled(true);
     saveAlgParasToolBtn->setEnabled(true);
     saveAlgParasToFileToolBtn->setEnabled(true);
+    updateAlgParasOnNetwork->setEnabled(true);
     sysParasToolBtn->setEnabled(true);
     openImageToolBtn->setEnabled(true);
 
@@ -836,6 +847,14 @@ void MainWindow::onSaveAlgParasToFileBtnClicked()
         QMessageBox::information(this, QString(tr("Save Parameters File Failed")),
                                  QString(tr("Failed to save file.")));
     }
+}
+
+void MainWindow::onUpdateAlgParasOnNetworkBtnClicked()
+{
+    QUpdateAlgParasOnNetworkDlg dlg;
+    dlg.setPInspectAlgParas(mic->getPInspectAlgParas());
+    if (dlg.exec() == QDialog::Accepted)
+        mic->resetInspectParas();
 }
 
 void MainWindow::onSelCamTypeBtnClicked()

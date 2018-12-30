@@ -102,6 +102,8 @@ public:
     int getRole() const;
     void setRole(int value);
 
+    int broadcastUdpDatagram(const char *data, qint64 size);
+
 private:
     //初始化资源
     int initRc(void);
@@ -141,6 +143,7 @@ private:
 
     //同步算法参数用
     QUdpServer udpServer;
+    QUdpClientBroadcast udpClient;
 };
 
 #endif // MAINRESOURCE_H

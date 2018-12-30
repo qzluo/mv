@@ -54,6 +54,7 @@ public slots:
     void onLoadAlgParasFileBtnClicked();
     void onSaveAlgParasBtnClicked();
     void onSaveAlgParasToFileBtnClicked();
+    void onUpdateAlgParasOnNetworkBtnClicked();
     void onSelCamTypeBtnClicked();
     void onCommSetupBtnClicked();
     void onSysParasSetupBtnClicked();
@@ -81,6 +82,7 @@ private:
     QToolButton *loadAlgParasFileToolBtn;
     QToolButton *saveAlgParasToolBtn;
     QToolButton *saveAlgParasToFileToolBtn;
+    QToolButton *updateAlgParasOnNetwork;
 
     QToolButton *selCamTypeToolBtn;
     QToolButton *commSetupToolBtn;
