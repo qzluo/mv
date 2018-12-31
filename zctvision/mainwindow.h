@@ -118,8 +118,6 @@ private:
     QString curImageFileName;
     bool hasNext;
     bool hasPrev;
-
-    QZaoInspectAlgAppTester tester;
 };
 
 #endif // MAINWINDOW_H

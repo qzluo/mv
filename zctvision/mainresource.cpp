@@ -340,8 +340,6 @@ void MainResource::onReceiveDatagrams(const QByteArray &datagram)
 {
     logFile(FileLogger::info, "Receive algorithm parameter datagram");
 
-    qDebug() << "Receive algorithm parameter datagram";
-
     //update algrithm parameters
     getPInspectAlgParas()->updateParasWithIncrement(datagram);
 }
@@ -361,17 +359,12 @@ int MainResource::initCamera()
     else
         return 0;
 
-//    QTime time;
-//    time.start();
-
     if (!pCamCtl->Initiallize(0)) {
         delete pCamCtl;
         pCamCtl = NULL;
 
         return -1;
     }
-
-//    qDebug() << time.elapsed() << "ms";
 
     if (!pCamCtl->StartView()) {
         delete pCamCtl;

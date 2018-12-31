@@ -1,4 +1,6 @@
 #include "qudpserver.h"
+#include "FileLogger.h"
+
 #include <qnetworkinterface.h>
 #include <QDebug>
 
@@ -39,7 +41,10 @@ int QUdpServer::initSocket()
     if (!isIpFinded)
         return -1;
 
-    qDebug() << hostAddr;
+    char msg[1024] = {};
+    sprintf(msg, "Start udp server, the server ip address is %s",
+            hostAddr.toString().toLatin1().data());
+    logFile(FileLogger::info, msg);
 
     if (!udpSocket->bind(hostAddr, DEFAULT_DATAUPDATE_PORT)) {
         delete udpSocket;
@@ -75,7 +80,8 @@ void QUdpServer::readPendingDatagrams()
         udpSocket->readDatagram(datagram.data(), datagram.size(),
                                 &sender, &senderPort);
 
-        qDebug() << datagram.data();
+        logFile(FileLogger::info, "receive datagrams:");
+        logFile(FileLogger::info, datagram.data());
 
         if (!isIpAddrHost(sender))
             emit receiveDatagrams(datagram);
@@ -131,6 +137,8 @@ void QUdpClientBroadcast::setNetworkSegment(const QString &value)
 
 int QUdpClientBroadcast::broadcastUdpDatagram(const char *data, qint64 size)
 {
+    logFile(FileLogger::info, "broadcastUdpDatagram:");
+    logFile(FileLogger::info, data);
     QString ipAddr = networkSegment + ".255";
     QUdpSocket udpClient;
     return udpClient.writeDatagram(data, size, QHostAddress(ipAddr), port);

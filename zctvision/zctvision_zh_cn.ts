@@ -911,13 +911,14 @@ Inspect Time: %2 ms</oldsource>
     <name>QModifyPasswordDlg</name>
     <message>
         <location filename="ui/qmodifypassworddlg.cpp" line="16"/>
-        <location filename="ui/qmodifypassworddlg.cpp" line="17"/>
-        <source>Input new Password</source>
-        <translation>请输入新密码</translation>
+        <source>Input Old Password</source>
+        <oldsource>Input new Password</oldsource>
+        <translation>请输入旧密码</translation>
     </message>
     <message>
         <location filename="ui/qmodifypassworddlg.cpp" line="18"/>
-        <source>Comfirm new Password</source>
+        <source>Comfirm New Password</source>
+        <oldsource>Comfirm new Password</oldsource>
         <translation>确认新密码</translation>
     </message>
     <message>
@@ -939,8 +940,9 @@ Inspect Time: %2 ms</oldsource>
     </message>
     <message>
         <location filename="ui/qmodifypassworddlg.cpp" line="46"/>
-        <source>The input new password is incorrect!</source>
-        <translation>输入的密码不正确</translation>
+        <source>The input old password is incorrect!</source>
+        <oldsource>The input new password is incorrect!</oldsource>
+        <translation>输入的密码不正确！</translation>
     </message>
     <message>
         <location filename="ui/qmodifypassworddlg.cpp" line="52"/>
@@ -1045,7 +1047,7 @@ Inspect Time: %2 ms</oldsource>
     <message>
         <location filename="ui/qrtuoperatordlg.cpp" line="67"/>
         <source>Write Successfully.</source>
-        <translation>写入成功</translation>
+        <translation>写入成功。</translation>
     </message>
     <message>
         <location filename="ui/qrtuoperatordlg.cpp" line="69"/>

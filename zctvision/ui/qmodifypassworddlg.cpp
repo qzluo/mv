@@ -7,15 +7,15 @@ QModifyPasswordDlg::QModifyPasswordDlg(QWidget *parent) : QDialog(parent)
     QFormLayout* pwLayout = new QFormLayout();
 
     oldPwLE = new QLineEdit();
-    oldPwLE1 = new QLineEdit();
-    oldPwLE2 = new QLineEdit();
+    newPwLE1 = new QLineEdit();
+    newPwLE2 = new QLineEdit();
     oldPwLE->setEchoMode(QLineEdit::Password);
-    oldPwLE1->setEchoMode(QLineEdit::Password);
-    oldPwLE2->setEchoMode(QLineEdit::Password);
+    newPwLE1->setEchoMode(QLineEdit::Password);
+    newPwLE2->setEchoMode(QLineEdit::Password);
 
-    pwLayout->addRow(new QLabel(tr("Input new Password")), oldPwLE);
-    pwLayout->addRow(new QLabel(tr("Input new Password")), oldPwLE1);
-    pwLayout->addRow(new QLabel(tr("Comfirm new Password")), oldPwLE2);
+    pwLayout->addRow(new QLabel(tr("Input Old Password")), oldPwLE);
+    pwLayout->addRow(new QLabel(tr("Input New Password")), newPwLE1);
+    pwLayout->addRow(new QLabel(tr("Comfirm New Password")), newPwLE2);
 
     //btn
     QPushButton* okBtn = new QPushButton(tr("Ok"), this);
@@ -43,17 +43,17 @@ void QModifyPasswordDlg::onOkBtnClicked()
 {
     if (oldPwLE->text().compare(adminPw)) {
         QMessageBox::information(NULL, tr("Modify Password"),
-                                 QString(tr("The input new password is incorrect!")));
+                                 QString(tr("The input old password is incorrect!")));
         return;
     }
 
-    if (oldPwLE1->text().compare(oldPwLE2->text())) {
+    if (newPwLE1->text().compare(newPwLE2->text())) {
         QMessageBox::information(NULL, tr("Modify Password"),
                                  QString(tr("Password and Confirm Password inconsistent!")));
         return;
     }
 
-    adminPw = oldPwLE1->text();
+    adminPw = newPwLE1->text();
 
     accept();
 }
